@@ -1,0 +1,9 @@
+compound,target,concentration_um,response,replicate
+Example-01,Cyclin D3,0.01,101,1
+Example-01,Cyclin D3,0.01,99,2
+Example-01,Cyclin D3,0.1,115,1
+Example-01,Cyclin D3,0.1,111,2
+Example-01,Cyclin D3,1,158,1
+Example-01,Cyclin D3,1,162,2
+Example-01,Cyclin D3,10,184,1
+Example-01,Cyclin D3,10,180,2

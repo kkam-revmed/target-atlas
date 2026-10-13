@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Target Atlas</title><link rel="stylesheet" href="./style.css"></head>
+<body>
+<aside class="sidebar">
+  <a href="#" class="brand"><span class="brand-mark">TA</span><span>Target Atlas<small>Compound response explorer</small></span></a>
+  <div class="workspace-label">ANALYSIS WORKSPACE</div>
+  <nav aria-label="Analysis views">
+    <button class="nav-item selected" data-view="overview"><span>01</span>Activity overview</button>
+    <button class="nav-item" data-view="curves"><span>02</span>Dose–response curves</button>
+    <button class="nav-item" data-view="map"><span>03</span>Compound map</button>
+    <button class="nav-item" data-view="results"><span>04</span>Parameters & hits</button>
+    <button class="nav-item" data-view="methods"><span>05</span>Analysis methods</button>
+  </nav>
+  <section class="upload-panel"><h2>Add your experiment</h2><p>Upload corrected wells and the matching parameter export together.</p>
+    <label class="upload-box" for="files">Choose Excel or CSV files<input id="files" type="file" accept=".xlsx,.csv" multiple><span id="fileNames">.xlsx or tidy .csv</span></label>
+    <button id="analyze" class="primary full">Analyze files</button>
+    <details><summary>Paste a data table</summary><label class="sr-only" for="paste">CSV or tab-separated data</label><textarea id="paste" placeholder="compound,target,concentration_um,response,replicate" rows="6"></textarea><button id="analyzePaste" class="secondary full">Analyze pasted values</button></details>
+    <a class="subtle-link" href="./template.csv" download>Download input template</a>
+    <button id="demo" class="text-button">Load anonymized example</button>
+  </section>
+  <div class="local-tag"><span></span>Local analysis · No cloud uploads</div>
+</aside>
+<main>
+  <header class="page-header"><div><div class="eyebrow">CORRECTED RESPONSE ANALYSIS</div><h1 id="pageTitle">Activity overview</h1><p id="datasetLabel">Loading your example experiment…</p></div><div class="threshold-field"><label for="threshold">Active when Cmax &gt;</label><input id="threshold" type="number" value="120" step="1"><span>Strict cutoff · unrounded values</span></div></header>
+  <div id="status" class="status" role="status" aria-live="polite" hidden></div>
+  <div id="basisNote" class="basis-note"></div>
+  <section id="overview" class="view">
+    <div id="metrics" class="metrics"></div>
+    <div class="two-col"><section class="panel"><div class="panel-heading"><div><h2>Which target has the most hits?</h2><p>Active compounds / compounds tested per target</p></div><button class="export-svg" data-plot="ranking" aria-label="Export target ranking as SVG">Export SVG</button></div><div id="ranking" class="plot"></div></section>
+    <section class="panel"><div class="panel-heading"><div><h2>Activity overlap</h2><p>Exact combinations of active targets</p></div><button class="export-svg" data-plot="overlap" aria-label="Export activity overlap as SVG">Export SVG</button></div><div id="overlap" class="plot"></div></section></div>
+    <section class="panel heat-panel"><div class="panel-heading"><div><h2>Compound × target activity map</h2><p>Click a cell to inspect its dose–response curve.</p></div><div class="compact-controls"><label>Order<select id="heatOrder"><option value="activity">Active target count</option><option value="cluster">Clustered response profiles</option><option value="name">Compound name</option></select></label><label>Display<select id="heatMode"><option value="cmax">Cmax values</option><option value="binary">Active / below cutoff</option></select></label></div></div><div id="heatLegend" class="heat-legend"></div><div id="heatmap" class="table-scroll"></div></section>
+  </section>
+  <section id="curves" class="view" hidden>
+    <div class="toolbar"><label>Compound<select id="compound"></select></label><label class="check"><input id="sharedScale" type="checkbox" checked>Shared response scale</label><label class="check"><input id="showWells" type="checkbox" checked>Show individual wells</label><label class="check"><input id="residuals" type="checkbox">Show residuals</label><button id="pdfSelected" class="secondary">Print / save compound PDF</button><button id="pdfAll" class="secondary">Print / save all curves PDF</button></div>
+    <p id="curveSummary" class="section-note"></p><div id="curveGrid" class="curve-grid"></div>
+    <div class="legend"><span><i class="legend-line"></i>Dose means ± SD</span><span><i class="legend-line dashed"></i>Independent 4PL</span><span>○ Individual wells</span><span><i class="legend-line cutoff"></i>Activity cutoff</span></div>
+  </section>
+  <section id="map" class="view" hidden>
+    <div class="two-col map-layout"><section class="panel"><div class="panel-heading"><div><h2>Compound response similarity</h2><p>PCA of standardized Cmax profiles. Nearby points have similar measured responses.</p></div><button class="export-svg" data-plot="pca">Export SVG</button></div><div id="pca" class="plot"></div><div id="mapLegend" class="legend"></div><p id="pcaNote" class="section-note"></p></section>
+    <section class="panel profile-panel"><h2>Response fingerprint</h2><label class="stacked-label">Selected compound<select id="mapCompound"></select></label><div id="fingerprint" class="plot"></div><button id="mapToCurves" class="secondary full">Inspect dose–response curves</button><p class="section-note">Point colors identify the highest-response target. This map describes assay profiles, not chemical structures or mechanisms.</p></section></div>
+    <section class="panel"><div class="panel-heading"><div><h2>Target profile relationships</h2><p>Spearman correlation of compound Cmax ranks across targets</p></div></div><div id="correlation" class="table-scroll"></div><p class="section-note">Descriptive correlations only. Shared activity does not demonstrate a shared mechanism.</p></section>
+  </section>
+  <section id="results" class="view" hidden>
+    <div class="toolbar"><label>Search compound<input id="search" type="search" placeholder="RMC-…"></label><label>Target<select id="targetFilter"><option value="">All targets</option></select></label><label class="check"><input id="activeOnly" type="checkbox">Active only</label><button id="exportResults" class="secondary">Export all parameters CSV</button><button id="exportActive" class="primary">Export active compounds CSV</button></div><p id="resultCount" class="section-note"></p><div id="resultsTable" class="table-scroll result-table"></div>
+  </section>
+  <section id="methods" class="view" hidden><div class="methods-layout"><section class="panel"><h2>How the analysis works</h2>
+    <dl><dt>Corrected input</dt><dd>The analyzer format uses the QC Layer “Corrected” column. For tidy CSV, response values are used exactly as entered. All concentrations are in µM. Files are parsed locally without executing workbook instructions.</dd>
+    <dt>Activity definition</dt><dd>Cmax strictly above the adjustable cutoff is active. When available, the matching parameter export’s “Activity (cmax)” is used. With corrected wells only, Cmax is the maximum observed dose mean and is labeled accordingly. These definitions can produce different hit lists.</dd>
+    <dt>Reported parameters</dt><dd>Reported qAC50 values are converted from M to µM. Qualifiers such as “&gt;” are retained. Reported Sinf, S0, R², Valid and QC issues are kept separate from independent refits.</dd>
+    <dt>Independent 4PL fit</dt><dd>Unweighted least squares on individual positive-dose wells. The baseline, high-dose plateau, EC50 and Hill slope are estimated. Increasing and decreasing curves are supported. Hill is bounded to 0.1–5; the EC50 search extends two log units beyond the tested doses. These fits do not reproduce the analyzer’s custom constraints.</dd>
+    <dt>Model equation</dt><dd><code>y = S0 + (Sinf − S0) / [1 + (EC50 / x)^Hill]</code><br>The EC50 is the midpoint between fitted plateaus, not necessarily the concentration at which the response equals 50 or 120.</dd>
+    <dt>Fit limitations</dt><dd>Flags identify out-of-range EC50, R² below 0.70, a slope at its bound, amplitude below 20 response units, extreme plateau extrapolation and non-monotonic dose means. Flags do not remove doses or override your Cmax activity rule.</dd>
+    <dt>Replicates and exclusions</dt><dd>Masked or ignored wells are excluded. Zero-dose observations are shown in the dose table but excluded from log-axis fitting. SD reflects variation between wells at each dose; it is not a confidence interval or proof of biological reproducibility.</dd>
+    <dt>PCA compound map</dt><dd>Complete Cmax profiles are standardized separately for each target and decomposed by SVD. Axis labels show variance explained. Compounds with missing target values are excluded from PCA, with the excluded count displayed. Arrows show target loading directions, scaled for display.</dd>
+    <dt>Heatmap clustering</dt><dd>Average-linkage hierarchical clustering using Euclidean distances between standardized Cmax profiles. The ordering highlights similar assay profiles; it does not discover chemical scaffolds.</dd>
+    <dt>Activity overlap</dt><dd>Compounds are grouped by their exact set of active targets, including a “None” group. Each compound is counted once in the overlap view.</dd>
+    <dt>Spearman relationships</dt><dd>Pairwise Spearman rank correlations use compounds tested on both targets. Ties receive average ranks. The pairwise sample size is shown; no p-values or causal interpretations are assigned.</dd>
+    <dt>Scope</dt><dd>This is an exploratory local application, not a validated replacement for Prism. It analyzes one matched experiment at a time; no biological significance tests, structure-based predictions, UMAP, or confidence intervals are supplied. For inferential comparisons, add independent biological replicates and an agreed statistical design.</dd></dl>
+    <p><a href="https://www.graphpad.com/support/faq/will-prism-do-a-three-parameter-or-four-parameter-logistic-fit-to-my-data/" target="_blank" rel="noreferrer">GraphPad: four-parameter dose–response models</a> · <a href="https://scikit-learn.org/stable/modules/decomposition.html#pca" target="_blank" rel="noreferrer">PCA reference</a></p>
+    </section><section class="panel"><h2>Current experiment</h2><div id="experimentDetails"></div><h3>Upload formats</h3><p>Use the well-level and optional parameter-level analyzer exports from the same experiment. Do not combine experimental repeats or time points in this version.</p><p>Tidy input columns:</p><pre>compound,target,concentration_um,response,replicate</pre><p>One well per row. Optional columns: masked, ignored. Paste CSV or a table copied from Excel with these headers.</p><p>Uploaded values are parsed and analyzed inside your browser, with no data upload to a server. Reloading clears the analysis; export results you want to retain. The included example has anonymized compound identifiers.</p></section></div></section>
+  <footer>Target Atlas · Browser-based scientific exploration <span id="footerStats"></span></footer>
+</main>
+<div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+<script src="./parse.js"></script><script src="./client.js"></script><script src="./exports.js"></script><script src="./app.js"></script>
+</body></html>

@@ -1,0 +1,19 @@
+function parameterCSV(activeOnly=false) {
+  const headers=['compound','target','active','threshold','cmax','cmax_basis','reported_ec50_qualifier','reported_ec50_um','reported_r2','reported_s0','reported_sinf','source_valid','source_qc','source_data_mode','exclude_from_reporting','refit_ec50_um','refit_hill','refit_s0','refit_sinf','refit_amplitude','refit_r2','refit_rmse','refit_direction','refit_flags','peak_mean','peak_dose_um','included_wells','excluded_wells','doses'];
+  const rows=[headers];
+  for(const q of state.data.curves) {
+    if(activeOnly&&!active(q))continue;
+    const r=q.report||{},f=q.fit||{};
+    rows.push([q.compound,q.target,active(q),state.threshold,q.cmax,q.cmax_basis,r.qualifier,r.ec50,r.source_r2,r.source_s0,r.source_sinf,r.source_valid,r.source_qc,r.source_mode,r.exclude_from_reporting,f.ec50,f.hill,f.s0,f.sinf,f.amplitude,f.r2,f.rmse,f.direction,q.fit_flags.join('; '),q.peak_mean,q.peak_dose,q.n_wells,q.excluded_wells,q.n_doses]);
+  }
+  return rows.map(row=>row.map(v=>{if(v==null)return '';let s=String(v);if(typeof v==='string'&&/^[=+\-@]/.test(v))s="'"+s;return '"'+s.replaceAll('"','""')+'"';}).join(',')).join('\r\n');
+}
+function printReport(compound) {
+  const pop=window.open('','_blank');
+  if(!pop){status('Allow a new tab for this app to print or save the curve report as PDF.',true);return;}
+  const names=compound?[compound]:state.data.compounds;
+  const pieces=[];
+  for(const name of names){const all=curvesFor(name);for(let i=0;i<all.length;i+=4){const qs=all.slice(i,i+4),domain=responseDomain(qs);pieces.push(`<section class="page"><h1>${esc(name)}</h1><p>Corrected dose–response · Active when Cmax &gt; ${fmt(state.threshold)} · Technical-well means ± SD</p><div class="grid">${qs.map(q=>`<article><h2>${esc(q.target)} — ${active(q)?'Active':'Below cutoff'}</h2><p>Cmax ${fmt(q.cmax,1)} · Reported EC50 ${esc(ecText(q))}<br>${esc(q.cmax_basis)}</p><div class="plot">${curvePlot(q,495,domain)}</div><p>Source QC: ${esc(q.report?.source_qc||'none')}<br>4PL: ${esc(q.fit_flags.join('; ')||'Within range; inspect source QC')}</p></article>`).join('')}</div><p class="foot">Solid: dose means ± SD · Dashed: exploratory 4PL · Open circles: individual wells · No biological significance tests</p></section>`);}}
+  pop.document.write(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Target Atlas curve report</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{margin:0;color:#172b45;font-family:Arial,sans-serif;background:#fff}.controls{background:#eef3fa;padding:18px;position:sticky;top:0}.controls button{padding:10px 15px;background:#2465cb;color:white;border:0;border-radius:6px;cursor:pointer}.controls span{margin-left:15px;font-size:13px;color:#60718a}.page{width:1020px;max-width:100%;padding:20px;page-break-after:always}.page:last-child{page-break-after:auto}h1{font-size:22px;margin:0 0 7px}h2{font-size:13px;margin:10px 0}p{font-size:10px;line-height:1.6;color:#60718a;margin:5px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 25px}.plot svg{display:block;width:100%;height:auto}.foot{font-size:9px;margin-top:15px}@media print{.controls{display:none}.page{width:auto;padding:0;break-inside:avoid}.grid{gap:8px 20px}article{break-inside:avoid}.plot svg{max-height:68mm}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}@media(max-width:700px){.grid{grid-template-columns:1fr}.page{width:auto}}</style></head><body><div class="controls"><button id="print">Print / save as PDF</button><span>Choose “Save as PDF” in your browser’s print dialog.</span></div>${pieces.join('')}</body></html>`);
+  pop.document.close();pop.document.getElementById('print').addEventListener('click',()=>pop.print());
+}
