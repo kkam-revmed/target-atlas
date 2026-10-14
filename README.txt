@@ -4,7 +4,7 @@ This version can be hosted on GitHub Pages or any static HTTPS web host.
 It needs no Python server, accounts, database, or external JavaScript library.
 Keep every file in this folder together when publishing it.
 
-The example dataset has anonymized compound IDs and source filenames.
+The dataset uses original full RMC identifiers. Source filenames are generic.
 Uploaded Excel/CSV values are read and analyzed inside the visitor's browser.
 The analysis engine runs in a Web Worker. No uploaded data is sent to the host.
 Graphs export as SVG, parameter tables as CSV, and curve reports can be printed

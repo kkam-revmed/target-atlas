@@ -17,7 +17,7 @@
     <button id="analyze" class="primary full">Analyze files</button>
     <details><summary>Paste a data table</summary><label class="sr-only" for="paste">CSV or tab-separated data</label><textarea id="paste" placeholder="compound,target,concentration_um,response,replicate" rows="6"></textarea><button id="analyzePaste" class="secondary full">Analyze pasted values</button></details>
     <a class="subtle-link" href="./template.csv" download>Download input template</a>
-    <button id="demo" class="text-button">Load anonymized example</button>
+    <button id="demo" class="text-button">Load RMC dataset</button>
   </section>
   <div class="local-tag"><span></span>Local analysis · No cloud uploads</div>
 </aside>
@@ -58,9 +58,9 @@
     <dt>Spearman relationships</dt><dd>Pairwise Spearman rank correlations use compounds tested on both targets. Ties receive average ranks. The pairwise sample size is shown; no p-values or causal interpretations are assigned.</dd>
     <dt>Scope</dt><dd>This is an exploratory local application, not a validated replacement for Prism. It analyzes one matched experiment at a time; no biological significance tests, structure-based predictions, UMAP, or confidence intervals are supplied. For inferential comparisons, add independent biological replicates and an agreed statistical design.</dd></dl>
     <p><a href="https://www.graphpad.com/support/faq/will-prism-do-a-three-parameter-or-four-parameter-logistic-fit-to-my-data/" target="_blank" rel="noreferrer">GraphPad: four-parameter dose–response models</a> · <a href="https://scikit-learn.org/stable/modules/decomposition.html#pca" target="_blank" rel="noreferrer">PCA reference</a></p>
-    </section><section class="panel"><h2>Current experiment</h2><div id="experimentDetails"></div><h3>Upload formats</h3><p>Use the well-level and optional parameter-level analyzer exports from the same experiment. Do not combine experimental repeats or time points in this version.</p><p>Tidy input columns:</p><pre>compound,target,concentration_um,response,replicate</pre><p>One well per row. Optional columns: masked, ignored. Paste CSV or a table copied from Excel with these headers.</p><p>Uploaded values are parsed and analyzed inside your browser, with no data upload to a server. Reloading clears the analysis; export results you want to retain. The included example has anonymized compound identifiers.</p></section></div></section>
+    </section><section class="panel"><h2>Current experiment</h2><div id="experimentDetails"></div><h3>Upload formats</h3><p>Use the well-level and optional parameter-level analyzer exports from the same experiment. Do not combine experimental repeats or time points in this version.</p><p>Tidy input columns:</p><pre>compound,target,concentration_um,response,replicate</pre><p>One well per row. Optional columns: masked, ignored. Paste CSV or a table copied from Excel with these headers.</p><p>Uploaded values are parsed and analyzed inside your browser, with no data upload to a server. Reloading clears the analysis; export results you want to retain. The included dataset uses the original full RMC identifiers.</p></section></div></section>
   <footer>Target Atlas · Browser-based scientific exploration <span id="footerStats"></span></footer>
 </main>
 <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
-<script src="./parse.js"></script><script src="./client.js"></script><script src="./exports.js"></script><script src="./app.js"></script>
+<script src="./parse.js"></script><script src="./client.js"></script><script src="./exports.js"></script><script src="./app.js?v=rmc-ids"></script>
 </body></html>
