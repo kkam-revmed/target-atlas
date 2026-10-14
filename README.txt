@@ -28,3 +28,14 @@ version runs independently and can be published on any static HTTPS host.
 
 Test locally using a standard static HTTP server. Do not open index.html via
 file://: browsers block the worker and sample-file requests in that mode.
+
+EC50 RANGE FILTER
+Reported EC50 bins are <=1, >1 to <=3, >3 to <=10, and >10 uM. Selecting
+one bin combines it with the Cmax activity rule for counts, highlighting
+and active CSV exports. All ranges uses Cmax alone. Missing reported values
+are not filled with independent refits. Bounds are classified only when their
+full interval fits a bin. The Methods view documents boundary precision.
+
+Experiment context and raw QC
+Editable experiment title, description, experiment ID and Benchling reference are saved only in browser storage. EXP26007301 is the export experiment ID; no Benchling identity is inferred. The user-described 26-compound selection is not reconciled with the 28 imported full IDs (27 base IDs).
+Raw plate QC preserves four raw channels, physical plate positions, source controls and mask state. It reports per-channel sample SD/positive mean CV for paired wells and controls in columns 22 and 23. Review thresholds are exploratory; no automatic exclusions. Technical replicate review combines raw CV, corrected gaps and observed peak cutoff disagreements.

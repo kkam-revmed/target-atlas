@@ -3,6 +3,7 @@ globalThis.AtlasInput = (() => {
   const decoder = new TextDecoder('utf-8');
   const num = v => v === null || v === undefined || String(v).trim() === '' ? null : Number.isFinite(Number(v)) ? Number(v) : null;
   const yes = v => ['true','yes','1','masked','x'].includes(String(v ?? '').trim().toLowerCase());
+  const masked = v => {const text=String(v??'').trim().toLowerCase();return text!==''&&!['false','no','0'].includes(text);};
   function csvRows(text) {
     text = text.replace(/^\uFEFF/,'');
     const separator = text.split(/\r?\n/)[0].includes('\t') ? '\t' : ',';
@@ -86,6 +87,18 @@ globalThis.AtlasInput = (() => {
     }
     return rows;
   }
+  function rawPlateRows(rows,name) {
+    const groups=rows[0]||[],headers=rows[1]||[],columns=new Map(headers.map((h,i)=>[String(h),i]));
+    const val=(r,key,def='')=>columns.has(key)?r[columns.get(key)]??def:def;
+    const rawColumns=[],correctedColumns=[];let channel='';
+    headers.forEach((h,i)=>{if(groups[i])channel=String(groups[i]);if(h==='Raw'&&/^Channel |^QC Layer$/.test(channel))rawColumns.push([channel,i]);if(h==='Corrected'&&channel==='QC Layer')correctedColumns.push(i);});
+    if(!rawColumns.length||!columns.has('Plate ID')||!columns.has('Row')||!columns.has('Column'))return [];
+    const records=[];
+    rows.forEach((r,i)=>{if(i<2||!r)return;const plate_id=String(val(r,'Plate ID')).trim(),row=String(val(r,'Row')).trim(),column=num(val(r,'Column',null));if(!plate_id||!row||!Number.isInteger(column))return;
+      const transfection=String(val(r,'Cyclins - Transfections')).trim();
+      records.push({plate_id,row,column,well:row+column,compound:String(val(r,'Sample ID')).trim(),target:transfection.replace(/ Plate [^]*$/,''),transfection,x:num(val(r,columns.has('Conc. [μM]')?'Conc. [μM]':'Conc. [µM]',null)),well_type:String(val(r,'Well Type')),excluded:masked(val(r,'Masked'))||yes(val(r,'Ignored')),masking_reason:String(val(r,'Masking Reason')),raw:Object.fromEntries(rawColumns.map(([ch,col])=>[ch,num(r[col])])),corrected:correctedColumns.length?num(r[correctedColumns[0]]):null,source:name,source_row:i+1});
+    });return records;
+  }
   async function parse(file) {
     const name=file.name,bytes=file.bytes instanceof Uint8Array?file.bytes:new Uint8Array(file.bytes),ext=name.toLowerCase().split('.').pop();
     if(ext==='csv') {
@@ -94,7 +107,7 @@ globalThis.AtlasInput = (() => {
       const wells=rows.map((r,i)=>{const v=key=>r[headers.indexOf(key)],compound=String(v('compound')||'').trim(),target=String(v('target')||'').trim(),x=num(v('concentration_um')),y=num(v('response'));
         if(!compound||!target||x===null||x<0||y===null)throw new Error(`${name}, row ${i+2}: identifiers, nonnegative concentration and numeric response are required.`);
         return {compound,target,transfection:target,x,y,replicate:v('replicate')||'',excluded:yes(v('masked'))||yes(v('ignored')),source:name,source_row:i+2};});
-      return {wells,parameters:[],notes:[]};
+      return {wells,parameters:[],raw_plate_records:[],notes:[]};
     }
     if(ext!=='xlsx')throw new Error('Upload .xlsx analyzer exports or a tidy .csv file.');
     const rows=await excelRows(bytes),groups=rows[0]||[],headers=rows[1]||[],columns=new Map(headers.map((h,i)=>[String(h),i]));
@@ -105,8 +118,8 @@ globalThis.AtlasInput = (() => {
       if(corrected===null)throw new Error(`${name}: QC Layer Corrected is missing.`);
       const wells=[];rows.forEach((r,i)=>{if(i<2||!r||val(r,'Well Type')!=='Sample')return;const compound=String(val(r,'Sample ID')).trim(),trans=String(val(r,'Cyclins - Transfections')).trim(),x=num(val(r,columns.has('Conc. [μM]')?'Conc. [μM]':'Conc. [µM]',null)),y=num(r[corrected]);
         if(!compound||!trans||x===null||x<0||y===null)throw new Error(`${name}, Results row ${i+1}: sample identifiers, concentration or corrected response missing.`);
-        wells.push({compound,target:trans.replace(/ Plate [^]*$/,''),transfection:trans,x,y,replicate:String(val(r,'Row'))+String(val(r,'Column')),excluded:!!val(r,'Masked')||yes(val(r,'Ignored')),source:name,source_row:i+1});});
-      return {wells,parameters:[],notes:[]};
+        wells.push({compound,target:trans.replace(/ Plate [^]*$/,''),transfection:trans,x,y,replicate:String(val(r,'Row'))+String(val(r,'Column')),excluded:masked(val(r,'Masked'))||yes(val(r,'Ignored')),source:name,source_row:i+1});});
+      return {wells,parameters:[],raw_plate_records:rawPlateRows(rows,name),notes:[]};
     }
     if(columns.has('Activity (cmax)')&&columns.has('qAC50 [M]')) {
       const parameters=[];rows.forEach((r,i)=>{if(i<2||!r||!val(r,'Sample ID'))return;const trans=String(val(r,'Cyclins - Transfections')),ec=num(val(r,'qAC50 [M]',null));if(!trans)throw new Error(`${name}, row ${i+1}: transfection missing.`);
@@ -115,5 +128,5 @@ globalThis.AtlasInput = (() => {
     }
     throw new Error(`${name}: unrecognized Results columns. Use a supported analyzer export or tidy CSV.`);
   }
-  return {parse,csvRows,excelRows};
+  return {parse,csvRows,excelRows,rawPlateRows};
 })();

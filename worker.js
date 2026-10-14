@@ -1,4 +1,4 @@
-importScripts('./engine.js');
+importScripts('./plate-qc.js?v=plate-qc-1','./engine.js?v=plate-qc-1');
 self.onmessage = event => {
   const {id,inputs}=event.data;
   try {
