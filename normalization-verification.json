@@ -1,0 +1,1351 @@
+{
+  "experiment": "EXP26003438",
+  "source": "EXP26003438_CyclinD1 CYPA NanoBRET_TCI Library + CypA inhibitor_RevMed_Dose Response_20260902_COMP_QC.xlsx",
+  "conclusion": "GDS QC Layer Normalized is derived from the acceptor/donor ratio, not from donor intensity alone.",
+  "formula": "100 \u00d7 (well ratio \u2212 plate median no-HaloTag ratio) / (plate median DMSO ratio \u2212 plate median no-HaloTag ratio)",
+  "gds_column_map": {
+    "acceptor": "Channel 2 Raw (645 nm)",
+    "donor": "Channel 1 Raw (460 nm)",
+    "ratio": "Channel 3 Raw",
+    "scaled_ratio": "QC Layer Raw = 1000 \u00d7 Channel 3 Raw",
+    "analyzed_response": "QC Layer Normalized"
+  },
+  "gds_plate_count": 24,
+  "gds_measured_wells": 7392,
+  "gds_ratio_formula_max_absolute_error": 2.473260883562034e-05,
+  "gds_ratio_formula_rmse": 2.367914364952492e-06,
+  "donor_only_linear_r2_range": [
+    0.1012032957745923,
+    0.46446775454232314
+  ],
+  "instrument_files": 96,
+  "instrument_ratio_comparisons": 29568,
+  "instrument_ratio_max_absolute_difference_from_quotient": 0.0024140312058031875,
+  "instrument_ratio_differences_beyond_rounding": [
+    {
+      "file": "20260904/Cyclins-DR-15B.csv",
+      "well": "B22",
+      "acceptor": 921.0,
+      "donor": 44094.0,
+      "exported_ratio": 0.02316,
+      "recalculated_ratio": 0.020887195536807728,
+      "error": 0.0022728044631922725
+    },
+    {
+      "file": "20260904/Cyclins-DR-15B.csv",
+      "well": "C22",
+      "acceptor": 962.0,
+      "donor": 47269.0,
+      "exported_ratio": 0.02247,
+      "recalculated_ratio": 0.020351604645750913,
+      "error": 0.002118395354249087
+    },
+    {
+      "file": "20260904/Cyclins-DR-15B.csv",
+      "well": "E22",
+      "acceptor": 998.0,
+      "donor": 43538.0,
+      "exported_ratio": 0.02099,
+      "recalculated_ratio": 0.022922504478846067,
+      "error": 0.001932504478846065
+    },
+    {
+      "file": "20260904/Cyclins-DR-15B.csv",
+      "well": "F22",
+      "acceptor": 1033.0,
+      "donor": 43838.0,
+      "exported_ratio": 0.02115,
+      "recalculated_ratio": 0.023564031205803186,
+      "error": 0.0024140312058031875
+    },
+    {
+      "file": "20260904/Cyclins-DR-18B.csv",
+      "well": "B23",
+      "acceptor": 242.0,
+      "donor": 44474.0,
+      "exported_ratio": 0.00444,
+      "recalculated_ratio": 0.005441381481314926,
+      "error": 0.0010013814813149254
+    },
+    {
+      "file": "20260904/Cyclins-DR-18B.csv",
+      "well": "D23",
+      "acceptor": 245.0,
+      "donor": 60633.0,
+      "exported_ratio": 0.00417,
+      "recalculated_ratio": 0.004040703907113288,
+      "error": 0.0001292960928867123
+    },
+    {
+      "file": "20260904/Cyclins-DR-18B.csv",
+      "well": "E23",
+      "acceptor": 338.0,
+      "donor": 61114.0,
+      "exported_ratio": 0.00445,
+      "recalculated_ratio": 0.0055306476421114635,
+      "error": 0.0010806476421114635
+    },
+    {
+      "file": "20260904/Cyclins-DR-18B.csv",
+      "well": "K23",
+      "acceptor": 219.0,
+      "donor": 45307.0,
+      "exported_ratio": 0.00411,
+      "recalculated_ratio": 0.004833690158253691,
+      "error": 0.0007236901582536913
+    },
+    {
+      "file": "20260904/Cyclins-DR-18B.csv",
+      "well": "L23",
+      "acceptor": 200.0,
+      "donor": 41150.0,
+      "exported_ratio": 0.00391,
+      "recalculated_ratio": 0.004860267314702308,
+      "error": 0.0009502673147023079
+    },
+    {
+      "file": "20260904/Cyclins-DR-18B.csv",
+      "well": "N23",
+      "acceptor": 248.0,
+      "donor": 44156.0,
+      "exported_ratio": 0.0045,
+      "recalculated_ratio": 0.005616450765467886,
+      "error": 0.0011164507654678867
+    },
+    {
+      "file": "20260904/Cyclins-DR-18B.csv",
+      "well": "O23",
+      "acceptor": 263.0,
+      "donor": 41692.0,
+      "exported_ratio": 0.00509,
+      "recalculated_ratio": 0.006308164635901372,
+      "error": 0.0012181646359013722
+    },
+    {
+      "file": "20260904/Cyclins-DR-22B.csv",
+      "well": "C22",
+      "acceptor": 1346.0,
+      "donor": 51733.0,
+      "exported_ratio": 0.02415,
+      "recalculated_ratio": 0.026018208880211856,
+      "error": 0.0018682088802118545
+    }
+  ],
+  "affected_plate_sensitivity": [
+    {
+      "folder": "20260904",
+      "plate": "Cyclins-DR-15B",
+      "affected_control_wells": [
+        "B22",
+        "C22",
+        "E22",
+        "F22"
+      ],
+      "exported_dmso_median": 0.02096,
+      "recalculated_dmso_median": 0.020898558313513567,
+      "exported_noht_median": 0.0042,
+      "recalculated_noht_median": 0.004200484069897962,
+      "normalization_span_change_percent": -0.36948541995464046,
+      "sample_area_max_normalized_difference": 0.6174141461989109,
+      "compound_cmax_comparison": [
+        {
+          "compound": "RMC-0716428-001",
+          "exported_ratio_cmax": 128.27366945107397,
+          "intensity_quotient_cmax": 128.7464798082486,
+          "difference": 0.4728103571746374,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0729892-001",
+          "exported_ratio_cmax": 135.77808770883055,
+          "intensity_quotient_cmax": 136.27873090158164,
+          "difference": 0.5006431927510846,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0737110-001",
+          "exported_ratio_cmax": 141.96458830548926,
+          "intensity_quotient_cmax": 142.4881723451227,
+          "difference": 0.5235840396334481,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0738182-001",
+          "exported_ratio_cmax": 148.76910501193316,
+          "intensity_quotient_cmax": 149.31792493683258,
+          "difference": 0.5488199248994192,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741053-001",
+          "exported_ratio_cmax": 119.96316229116945,
+          "intensity_quotient_cmax": 120.40515076125642,
+          "difference": 0.44198847008696873,
+          "activity_change_at_120": true
+        },
+        {
+          "compound": "RMC-0739182-001",
+          "exported_ratio_cmax": 112.95149463007161,
+          "intensity_quotient_cmax": 113.3674829326848,
+          "difference": 0.41598830261318653,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0739804-001",
+          "exported_ratio_cmax": 130.6515214797136,
+          "intensity_quotient_cmax": 131.13315079471536,
+          "difference": 0.4816293150017543,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0734073-001",
+          "exported_ratio_cmax": 150.07066229116944,
+          "intensity_quotient_cmax": 150.62431046078086,
+          "difference": 0.5536481696114208,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741901-001",
+          "exported_ratio_cmax": 153.7146121718377,
+          "intensity_quotient_cmax": 154.2817730894168,
+          "difference": 0.5671609175790877,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0742154-001",
+          "exported_ratio_cmax": 132.8920316229117,
+          "intensity_quotient_cmax": 133.3819716112684,
+          "difference": 0.4899399883566957,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0742512-001",
+          "exported_ratio_cmax": 147.23414081145586,
+          "intensity_quotient_cmax": 147.77726844378827,
+          "difference": 0.5431276323324141,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741058-001",
+          "exported_ratio_cmax": 162.38928997613368,
+          "intensity_quotient_cmax": 162.98862122016794,
+          "difference": 0.5993312440342606,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741051-001",
+          "exported_ratio_cmax": 149.33837410501195,
+          "intensity_quotient_cmax": 149.88930565109368,
+          "difference": 0.5509315460817277,
+          "activity_change_at_120": false
+        }
+      ],
+      "activity_changes_at_120": [
+        "RMC-0741053-001"
+      ]
+    },
+    {
+      "folder": "20260904",
+      "plate": "Cyclins-DR-18B",
+      "affected_control_wells": [
+        "B23",
+        "D23",
+        "E23",
+        "K23",
+        "L23",
+        "N23",
+        "O23"
+      ],
+      "exported_dmso_median": 0.0247105035,
+      "recalculated_dmso_median": 0.024710503463898137,
+      "exported_noht_median": 0.00431,
+      "recalculated_noht_median": 0.004716012942696314,
+      "normalization_span_change_percent": -1.990210578862328,
+      "sample_area_max_normalized_difference": 0.7996042755093526,
+      "compound_cmax_comparison": [
+        {
+          "compound": "RMC-0715894-001",
+          "exported_ratio_cmax": 138.86356040183026,
+          "intensity_quotient_cmax": 139.65273334387896,
+          "difference": 0.7891729420487081,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0729887-001",
+          "exported_ratio_cmax": 107.58126141347442,
+          "intensity_quotient_cmax": 107.73520789895635,
+          "difference": 0.15394648548192436,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0731501-001",
+          "exported_ratio_cmax": 115.28184586228471,
+          "intensity_quotient_cmax": 115.59216195300002,
+          "difference": 0.31031609071530397,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0736802-001",
+          "exported_ratio_cmax": 105.0674386541489,
+          "intensity_quotient_cmax": 105.1703397478686,
+          "difference": 0.10290109371969436,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0737885-001",
+          "exported_ratio_cmax": 116.70222011922402,
+          "intensity_quotient_cmax": 117.04138074179909,
+          "difference": 0.33916062257506496,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0739049-001",
+          "exported_ratio_cmax": 110.14875686769201,
+          "intensity_quotient_cmax": 110.35483984964551,
+          "difference": 0.20608298195350017,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0740918-001",
+          "exported_ratio_cmax": 127.57802276791845,
+          "intensity_quotient_cmax": 128.13802830108426,
+          "difference": 0.5600055331658069,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0739493-001",
+          "exported_ratio_cmax": 115.04474877298986,
+          "intensity_quotient_cmax": 115.35025025992095,
+          "difference": 0.30550148693109236,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0740039-001",
+          "exported_ratio_cmax": 108.26434014238916,
+          "intensity_quotient_cmax": 108.43215687610027,
+          "difference": 0.16781673371110628,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741554-001",
+          "exported_ratio_cmax": 109.02419883901396,
+          "intensity_quotient_cmax": 109.2074461313418,
+          "difference": 0.18324729232783454,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741509-001",
+          "exported_ratio_cmax": 105.29089882511968,
+          "intensity_quotient_cmax": 105.39833797099422,
+          "difference": 0.10743914587453673,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0742420-001",
+          "exported_ratio_cmax": 108.9001528810306,
+          "intensity_quotient_cmax": 109.08088247056526,
+          "difference": 0.1807295895346499,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0742153-001",
+          "exported_ratio_cmax": 127.83227629651395,
+          "intensity_quotient_cmax": 128.3974460958683,
+          "difference": 0.5651697993543507,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741051-001",
+          "exported_ratio_cmax": 120.81442009507265,
+          "intensity_quotient_cmax": 121.23708091329601,
+          "difference": 0.4226608182233633,
+          "activity_change_at_120": false
+        }
+      ],
+      "activity_changes_at_120": []
+    },
+    {
+      "folder": "20260904",
+      "plate": "Cyclins-DR-22B",
+      "affected_control_wells": [
+        "C22"
+      ],
+      "exported_dmso_median": 0.02416,
+      "recalculated_dmso_median": 0.02418407956969523,
+      "exported_noht_median": 0.004235,
+      "recalculated_noht_median": 0.00423861905020781,
+      "normalization_span_change_percent": 0.10268767622292341,
+      "sample_area_max_normalized_difference": 0.30487992105588546,
+      "compound_cmax_comparison": [
+        {
+          "compound": "RMC-0719636-001",
+          "exported_ratio_cmax": 117.86017816813049,
+          "intensity_quotient_cmax": 117.72112862830951,
+          "difference": -0.13904953982097368,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0738221-001",
+          "exported_ratio_cmax": 113.52194981179422,
+          "intensity_quotient_cmax": 113.38735334641109,
+          "difference": -0.13459646538312597,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0740668-001",
+          "exported_ratio_cmax": 129.7082409033877,
+          "intensity_quotient_cmax": 129.55703847036972,
+          "difference": -0.15120243301797132,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0740044-001",
+          "exported_ratio_cmax": 126.31717189460477,
+          "intensity_quotient_cmax": 126.16944746409277,
+          "difference": -0.14772443051199957,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0740673-001",
+          "exported_ratio_cmax": 121.47581681304891,
+          "intensity_quotient_cmax": 121.3330608818481,
+          "difference": -0.14275593120080998,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0733575-001",
+          "exported_ratio_cmax": 107.67619824341278,
+          "intensity_quotient_cmax": 107.54759689514859,
+          "difference": -0.12860134826419767,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741565-001",
+          "exported_ratio_cmax": 120.28935006273525,
+          "intensity_quotient_cmax": 120.14781002932158,
+          "difference": -0.14154003341367627,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741653-001",
+          "exported_ratio_cmax": 126.58838143036385,
+          "intensity_quotient_cmax": 126.44038016670905,
+          "difference": -0.14800126365480537,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0742112-001",
+          "exported_ratio_cmax": 144.16016311166874,
+          "intensity_quotient_cmax": 143.99413500100582,
+          "difference": -0.16602811066292134,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0742500-001",
+          "exported_ratio_cmax": 139.3500828105395,
+          "intensity_quotient_cmax": 139.18899082778762,
+          "difference": -0.1610919827518842,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0740934-001",
+          "exported_ratio_cmax": 117.26506398996234,
+          "intensity_quotient_cmax": 117.12662497581877,
+          "difference": -0.13843901414357163,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0729893-001",
+          "exported_ratio_cmax": 270.8237289836888,
+          "intensity_quotient_cmax": 270.52776552208763,
+          "difference": -0.29596346160116127,
+          "activity_change_at_120": false
+        },
+        {
+          "compound": "RMC-0741051-001",
+          "exported_ratio_cmax": 129.25326976160602,
+          "intensity_quotient_cmax": 129.1025353147074,
+          "difference": -0.15073444689861049,
+          "activity_change_at_120": false
+        }
+      ],
+      "activity_changes_at_120": []
+    }
+  ],
+  "gds_raw_intensity_comparisons": 14784,
+  "gds_raw_intensity_max_difference": 0.0,
+  "gds_instrument_ratio_max_difference": 2.584457398091544e-09,
+  "unmasked_sample_comparisons": 6596,
+  "instrument_ratio_to_gds_sample_max_error": 2.949419280184884e-05,
+  "other_channel_normalized_numeric_counts": {
+    "Channel 2": 7392,
+    "Channel 1": 7392,
+    "Channel 3": 7392
+  },
+  "other_channel_normalized_max_difference_from_raw": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.0
+  },
+  "example": {
+    "plate": "Cyclins-DR-01B",
+    "well": "B2",
+    "excel_row": 1948,
+    "acceptor": 1058.0,
+    "donor": 47587.0,
+    "quotient": 0.022232962783953602,
+    "exported_ratio": 0.02222999930381775,
+    "qc_raw": 22.229999542236328,
+    "dmso_median_ratio": 0.020326749421656132,
+    "noht_median_ratio": 0.004435000009834766,
+    "gds_normalized": 111.97634887695312,
+    "recalculated": 111.97633962656025
+  },
+  "limits": [
+    "The supplied GDS well export covers biological replicate 1 B plates. Other conditions are reconstructed from their own source ratios and plate controls; no GDS corrected export was supplied for those conditions.",
+    "Exported ratios have finite displayed precision, so acceptor/donor recalculated from the intensities can differ slightly from the supplied ratio.",
+    "A ratio-based response can still be influenced by changes in donor or acceptor intensity; this calculation check does not establish the biological mechanism."
+  ],
+  "plates": [
+    {
+      "plate": "Cyclins-DR-01B",
+      "wells": 308,
+      "dmso_median_ratio": 0.020326749421656132,
+      "noht_median_ratio": 0.004435000009834766,
+      "ratio_formula_max_absolute_error": 6.763075134585961e-06,
+      "ratio_formula_rmse": 2.3412315999047605e-06,
+      "channel3_ratio_formula_max_error": 1.4865807855812818e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 6292.573672933206,
+        "intercept": -27.907564832057904,
+        "r2": 0.9999999999999746,
+        "max_absolute_error": 9.960146115872703e-06
+      },
+      "donor_fit": {
+        "slope": -0.0010956847828888273,
+        "intercept": 159.4327576894957,
+        "r2": 0.13763670951901041,
+        "max_absolute_error": 101.67029956052335
+      },
+      "acceptor_fit": {
+        "slope": 0.06516851179067454,
+        "intercept": 33.86763200082264,
+        "r2": 0.40368210028821705,
+        "max_absolute_error": 68.27718368281208
+      }
+    },
+    {
+      "plate": "Cyclins-DR-02B",
+      "wells": 308,
+      "dmso_median_ratio": 0.020558860152959824,
+      "noht_median_ratio": 0.004104999825358391,
+      "ratio_formula_max_absolute_error": 7.589665301566129e-06,
+      "ratio_formula_rmse": 2.268085383849185e-06,
+      "channel3_ratio_formula_max_error": 1.2767151829962131e-05,
+      "qc_raw_minus_1000_ratio_max": 1.0728836059570312e-06,
+      "ratio_fit": {
+        "slope": 6077.600919527217,
+        "intercept": -24.94855122500653,
+        "r2": 0.9999999999999761,
+        "max_absolute_error": 8.851018023392498e-06
+      },
+      "donor_fit": {
+        "slope": -0.0009003960269459916,
+        "intercept": 148.28038973984903,
+        "r2": 0.1517638223720652,
+        "max_absolute_error": 97.21639947126953
+      },
+      "acceptor_fit": {
+        "slope": 0.047239201426244555,
+        "intercept": 46.598703708258626,
+        "r2": 0.26598944142978176,
+        "max_absolute_error": 104.01051161055925
+      }
+    },
+    {
+      "plate": "Cyclins-DR-03B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018704239279031754,
+      "noht_median_ratio": 0.004075000062584877,
+      "ratio_formula_max_absolute_error": 6.870294413374722e-06,
+      "ratio_formula_rmse": 2.5312810134394317e-06,
+      "channel3_ratio_formula_max_error": 1.589386758382716e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 6835.625320564433,
+        "intercept": -27.855175426107014,
+        "r2": 0.9999999999999796,
+        "max_absolute_error": 1.3158615274733165e-05
+      },
+      "donor_fit": {
+        "slope": -0.0017305178040833598,
+        "intercept": 194.30895127582556,
+        "r2": 0.3278986746327075,
+        "max_absolute_error": 107.49801810623104
+      },
+      "acceptor_fit": {
+        "slope": 0.0607058586729662,
+        "intercept": 50.79423680504705,
+        "r2": 0.22907004740650716,
+        "max_absolute_error": 78.81620627393227
+      }
+    },
+    {
+      "plate": "Cyclins-DR-04B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018358828499913216,
+      "noht_median_ratio": 0.004265000112354755,
+      "ratio_formula_max_absolute_error": 6.955320657198172e-06,
+      "ratio_formula_rmse": 2.4407928925726866e-06,
+      "channel3_ratio_formula_max_error": 1.2666032716879272e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7095.3041791862615,
+        "intercept": -30.26147299755391,
+        "r2": 0.9999999999999676,
+        "max_absolute_error": 1.2076473467459437e-05
+      },
+      "donor_fit": {
+        "slope": -0.001696281604710127,
+        "intercept": 189.7378614462671,
+        "r2": 0.25562255499041975,
+        "max_absolute_error": 94.05018132708909
+      },
+      "acceptor_fit": {
+        "slope": 0.08229078182949442,
+        "intercept": 27.445772648407257,
+        "r2": 0.39341402610078546,
+        "max_absolute_error": 98.50141521771981
+      }
+    },
+    {
+      "plate": "Cyclins-DR-05B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018503776751458645,
+      "noht_median_ratio": 0.0042149999644607306,
+      "ratio_formula_max_absolute_error": 7.62802184794964e-06,
+      "ratio_formula_rmse": 2.5108655292433125e-06,
+      "channel3_ratio_formula_max_error": 1.077249267211755e-05,
+      "qc_raw_minus_1000_ratio_max": 1.8775463104248047e-06,
+      "ratio_fit": {
+        "slope": 6998.499675697362,
+        "intercept": -29.498674212859623,
+        "r2": 0.9999999999999765,
+        "max_absolute_error": 1.1219106767157427e-05
+      },
+      "donor_fit": {
+        "slope": -0.001059570302677076,
+        "intercept": 179.78508076989422,
+        "r2": 0.11770758230037315,
+        "max_absolute_error": 113.86014404032191
+      },
+      "acceptor_fit": {
+        "slope": 0.06842253554812927,
+        "intercept": 19.246994445452046,
+        "r2": 0.4602072070390961,
+        "max_absolute_error": 123.14502878285164
+      }
+    },
+    {
+      "plate": "Cyclins-DR-06B",
+      "wells": 308,
+      "dmso_median_ratio": 0.019330553710460663,
+      "noht_median_ratio": 0.004405000014230609,
+      "ratio_formula_max_absolute_error": 7.556521012475059e-06,
+      "ratio_formula_rmse": 2.3183732554037672e-06,
+      "channel3_ratio_formula_max_error": 1.3519638969228254e-05,
+      "qc_raw_minus_1000_ratio_max": 1.8775463104248047e-06,
+      "ratio_fit": {
+        "slope": 6699.919174856353,
+        "intercept": -29.513143270391392,
+        "r2": 0.9999999999999764,
+        "max_absolute_error": 1.3322163823659139e-05
+      },
+      "donor_fit": {
+        "slope": -0.0011744293777061383,
+        "intercept": 196.62993460371757,
+        "r2": 0.12956635444492615,
+        "max_absolute_error": 112.68589443857438
+      },
+      "acceptor_fit": {
+        "slope": 0.06839902258438385,
+        "intercept": 1.343030826413216,
+        "r2": 0.6016806319894676,
+        "max_absolute_error": 129.4042473842286
+      }
+    },
+    {
+      "plate": "Cyclins-DR-07B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018368071876466274,
+      "noht_median_ratio": 0.004044999834150076,
+      "ratio_formula_max_absolute_error": 7.539409551782228e-06,
+      "ratio_formula_rmse": 2.2864063631855914e-06,
+      "channel3_ratio_formula_max_error": 1.3132442461483151e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 6981.742659585677,
+        "intercept": -28.24114847011568,
+        "r2": 0.9999999999999704,
+        "max_absolute_error": 9.393940942459267e-06
+      },
+      "donor_fit": {
+        "slope": -0.001375632490427519,
+        "intercept": 185.8922804140637,
+        "r2": 0.11083406739501289,
+        "max_absolute_error": 106.4682619577637
+      },
+      "acceptor_fit": {
+        "slope": 0.09535016469024626,
+        "intercept": 3.1261730498615363,
+        "r2": 0.6635227422219255,
+        "max_absolute_error": 60.67432580061475
+      }
+    },
+    {
+      "plate": "Cyclins-DR-08B",
+      "wells": 308,
+      "dmso_median_ratio": 0.01884775422513485,
+      "noht_median_ratio": 0.004115000134333968,
+      "ratio_formula_max_absolute_error": 6.9973058600680815e-06,
+      "ratio_formula_rmse": 2.2520687708173356e-06,
+      "channel3_ratio_formula_max_error": 1.1641280536878185e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 6787.5971181827745,
+        "intercept": -27.93096392805584,
+        "r2": 0.9999999999999706,
+        "max_absolute_error": 9.897881653841978e-06
+      },
+      "donor_fit": {
+        "slope": -0.0013602494516511356,
+        "intercept": 170.3588073521718,
+        "r2": 0.1012032957745923,
+        "max_absolute_error": 102.07626751910827
+      },
+      "acceptor_fit": {
+        "slope": 0.10179581109243897,
+        "intercept": 2.318315908426785,
+        "r2": 0.6791367394357586,
+        "max_absolute_error": 66.44993054717054
+      }
+    },
+    {
+      "plate": "Cyclins-DR-09B",
+      "wells": 308,
+      "dmso_median_ratio": 0.01789308339357376,
+      "noht_median_ratio": 0.003984999842941761,
+      "ratio_formula_max_absolute_error": 7.540085618984449e-06,
+      "ratio_formula_rmse": 2.3346470008444367e-06,
+      "channel3_ratio_formula_max_error": 1.417572673290124e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7190.063085795804,
+        "intercept": -28.65239953703535,
+        "r2": 0.9999999999999639,
+        "max_absolute_error": 1.1869532443142816e-05
+      },
+      "donor_fit": {
+        "slope": -0.0016375623326021365,
+        "intercept": 194.35779349008052,
+        "r2": 0.16881738791892642,
+        "max_absolute_error": 97.34456809794095
+      },
+      "acceptor_fit": {
+        "slope": 0.09943773241050508,
+        "intercept": 3.3111953178875693,
+        "r2": 0.623127919757708,
+        "max_absolute_error": 75.4063781054313
+      }
+    },
+    {
+      "plate": "Cyclins-DR-10B",
+      "wells": 308,
+      "dmso_median_ratio": 0.017681093886494637,
+      "noht_median_ratio": 0.0041699998546391726,
+      "ratio_formula_max_absolute_error": 7.475704791204407e-06,
+      "ratio_formula_rmse": 2.2060605485744387e-06,
+      "channel3_ratio_formula_max_error": 1.2975567813100497e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7401.325004767097,
+        "intercept": -30.863524170503837,
+        "r2": 0.9999999999999648,
+        "max_absolute_error": 1.051141154562174e-05
+      },
+      "donor_fit": {
+        "slope": -0.0016490081942096924,
+        "intercept": 190.9844116281336,
+        "r2": 0.14907069391101557,
+        "max_absolute_error": 97.4357616220137
+      },
+      "acceptor_fit": {
+        "slope": 0.10799022765161766,
+        "intercept": -0.970215360153279,
+        "r2": 0.6778350501826768,
+        "max_absolute_error": 74.17597215998335
+      }
+    },
+    {
+      "plate": "Cyclins-DR-11B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018176766112446785,
+      "noht_median_ratio": 0.004195000045001507,
+      "ratio_formula_max_absolute_error": 7.308860261900918e-06,
+      "ratio_formula_rmse": 2.200444192715842e-06,
+      "channel3_ratio_formula_max_error": 1.3641502306427356e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7152.172020780043,
+        "intercept": -30.003360207119485,
+        "r2": 0.9999999999999689,
+        "max_absolute_error": 9.932101761478407e-06
+      },
+      "donor_fit": {
+        "slope": -0.0018310166841187044,
+        "intercept": 198.59292542389338,
+        "r2": 0.16321193783935517,
+        "max_absolute_error": 97.46904730710268
+      },
+      "acceptor_fit": {
+        "slope": 0.10919075429071255,
+        "intercept": -2.568841575494153,
+        "r2": 0.6959462002421603,
+        "max_absolute_error": 80.39013356909511
+      }
+    },
+    {
+      "plate": "Cyclins-DR-12B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018125873990356922,
+      "noht_median_ratio": 0.004239999921992421,
+      "ratio_formula_max_absolute_error": 5.911212298315149e-06,
+      "ratio_formula_rmse": 2.2572873020848383e-06,
+      "channel3_ratio_formula_max_error": 1.2581264400068903e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7201.5633566543265,
+        "intercept": -30.534627101367683,
+        "r2": 0.9999999999999694,
+        "max_absolute_error": 1.1405760830029976e-05
+      },
+      "donor_fit": {
+        "slope": -0.0018669137991761142,
+        "intercept": 198.80259676686376,
+        "r2": 0.12746308106759363,
+        "max_absolute_error": 105.82590879401579
+      },
+      "acceptor_fit": {
+        "slope": 0.11809465145035407,
+        "intercept": -8.742541418214863,
+        "r2": 0.7242226648834342,
+        "max_absolute_error": 78.5347715256058
+      }
+    },
+    {
+      "plate": "Cyclins-DR-13B",
+      "wells": 308,
+      "dmso_median_ratio": 0.01832149736583233,
+      "noht_median_ratio": 0.004094999982044101,
+      "ratio_formula_max_absolute_error": 5.3778700248585665e-06,
+      "ratio_formula_rmse": 2.1196010281067866e-06,
+      "channel3_ratio_formula_max_error": 1.243996963751215e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7029.137308024897,
+        "intercept": -28.784318444907967,
+        "r2": 0.9999999999999691,
+        "max_absolute_error": 9.634501410005214e-06
+      },
+      "donor_fit": {
+        "slope": -0.0014308403298956334,
+        "intercept": 181.80241681412062,
+        "r2": 0.1340082332578284,
+        "max_absolute_error": 96.67180404151651
+      },
+      "acceptor_fit": {
+        "slope": 0.09502071220345748,
+        "intercept": 2.557789729083254,
+        "r2": 0.650382974372292,
+        "max_absolute_error": 78.26045826946475
+      }
+    },
+    {
+      "plate": "Cyclins-DR-15B",
+      "wells": 308,
+      "dmso_median_ratio": 0.019363914616405964,
+      "noht_median_ratio": 0.004074999829754233,
+      "ratio_formula_max_absolute_error": 6.572237055024743e-06,
+      "ratio_formula_rmse": 2.3603495592547e-06,
+      "channel3_ratio_formula_max_error": 1.1106514563152814e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 6540.686690080337,
+        "intercept": -26.653297605966042,
+        "r2": 0.999999999999968,
+        "max_absolute_error": 9.55767363564064e-06
+      },
+      "donor_fit": {
+        "slope": -0.0015568794931667053,
+        "intercept": 173.71911586557647,
+        "r2": 0.38266082958706604,
+        "max_absolute_error": 86.81498927948388
+      },
+      "acceptor_fit": {
+        "slope": 0.046225091360247154,
+        "intercept": 52.36779614300593,
+        "r2": 0.14982453115298533,
+        "max_absolute_error": 106.59101053018122
+      }
+    },
+    {
+      "plate": "Cyclins-DR-16B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018366334028542042,
+      "noht_median_ratio": 0.004175000125542283,
+      "ratio_formula_max_absolute_error": 7.3265068181171955e-06,
+      "ratio_formula_rmse": 2.48789924072592e-06,
+      "channel3_ratio_formula_max_error": 2.2343166790506075e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7046.553515502118,
+        "intercept": -29.419361882480914,
+        "r2": 0.9999999999999741,
+        "max_absolute_error": 1.2243720277638204e-05
+      },
+      "donor_fit": {
+        "slope": -0.002116006081888488,
+        "intercept": 215.76099247752597,
+        "r2": 0.44838637620410504,
+        "max_absolute_error": 100.77837043722955
+      },
+      "acceptor_fit": {
+        "slope": 0.07201170548558528,
+        "intercept": 33.11687746545356,
+        "r2": 0.25732678421578126,
+        "max_absolute_error": 100.97368190650997
+      }
+    },
+    {
+      "plate": "Cyclins-DR-17B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018805827014148235,
+      "noht_median_ratio": 0.0039900001138448715,
+      "ratio_formula_max_absolute_error": 7.539947603163455e-06,
+      "ratio_formula_rmse": 2.455763051409219e-06,
+      "channel3_ratio_formula_max_error": 1.266902620500332e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 6749.538778927812,
+        "intercept": -26.930659476480024,
+        "r2": 0.9999999999999771,
+        "max_absolute_error": 1.1220404928735661e-05
+      },
+      "donor_fit": {
+        "slope": -0.0014651696778698515,
+        "intercept": 178.89946320843498,
+        "r2": 0.38487288812746956,
+        "max_absolute_error": 88.02651442543662
+      },
+      "acceptor_fit": {
+        "slope": 0.04396201000001757,
+        "intercept": 56.61013477448699,
+        "r2": 0.14806762206669244,
+        "max_absolute_error": 80.97483648757786
+      }
+    },
+    {
+      "plate": "Cyclins-DR-18B",
+      "wells": 308,
+      "dmso_median_ratio": 0.01658796425908804,
+      "noht_median_ratio": 0.004010000033304095,
+      "ratio_formula_max_absolute_error": 7.517952184343812e-06,
+      "ratio_formula_rmse": 2.560883358708503e-06,
+      "channel3_ratio_formula_max_error": 1.3827570711555381e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7950.412421997624,
+        "intercept": -31.88115558672927,
+        "r2": 0.9999999999999708,
+        "max_absolute_error": 1.2451536463231605e-05
+      },
+      "donor_fit": {
+        "slope": -0.0016247152147209646,
+        "intercept": 199.05564730701337,
+        "r2": 0.32167427164617224,
+        "max_absolute_error": 107.98176745200652
+      },
+      "acceptor_fit": {
+        "slope": 0.05946042457412745,
+        "intercept": 51.583250244087516,
+        "r2": 0.18451031795309092,
+        "max_absolute_error": 130.20283028209724
+      }
+    },
+    {
+      "plate": "Cyclins-DR-19B",
+      "wells": 308,
+      "dmso_median_ratio": 0.016724999994039536,
+      "noht_median_ratio": 0.004239999921992421,
+      "ratio_formula_max_absolute_error": 2.473260883562034e-05,
+      "ratio_formula_rmse": 2.798705639232937e-06,
+      "channel3_ratio_formula_max_error": 0.00014257231532610604,
+      "qc_raw_minus_1000_ratio_max": 5.9604644775390625e-06,
+      "ratio_fit": {
+        "slope": 8009.612264226982,
+        "intercept": -33.96076166738511,
+        "r2": 0.9999999999999944,
+        "max_absolute_error": 3.6514619694116845e-05
+      },
+      "donor_fit": {
+        "slope": -0.00388804778588812,
+        "intercept": 330.35072449867135,
+        "r2": 0.2588433498799968,
+        "max_absolute_error": 1023.6042182587275
+      },
+      "acceptor_fit": {
+        "slope": -0.02827634378548157,
+        "intercept": 142.65954230728684,
+        "r2": 0.006464936347968853,
+        "max_absolute_error": 1211.794806266077
+      }
+    },
+    {
+      "plate": "Cyclins-DR-20B",
+      "wells": 308,
+      "dmso_median_ratio": 0.017696681432425976,
+      "noht_median_ratio": 0.004244999960064888,
+      "ratio_formula_max_absolute_error": 7.414120716475736e-06,
+      "ratio_formula_rmse": 2.551243962510006e-06,
+      "channel3_ratio_formula_max_error": 1.7331546018795052e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7434.014511370852,
+        "intercept": -31.55739082506392,
+        "r2": 0.9999999999999682,
+        "max_absolute_error": 1.1617159941579303e-05
+      },
+      "donor_fit": {
+        "slope": -0.0015641061997627198,
+        "intercept": 186.54890483254692,
+        "r2": 0.36060120408462737,
+        "max_absolute_error": 91.58463628926125
+      },
+      "acceptor_fit": {
+        "slope": 0.051661448270172224,
+        "intercept": 54.74089059904809,
+        "r2": 0.16209439394554115,
+        "max_absolute_error": 107.56880145431437
+      }
+    },
+    {
+      "plate": "Cyclins-DR-21B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018438427709043026,
+      "noht_median_ratio": 0.004124999977648258,
+      "ratio_formula_max_absolute_error": 7.199255065870602e-06,
+      "ratio_formula_rmse": 2.3732091144289123e-06,
+      "channel3_ratio_formula_max_error": 1.9012775027249518e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 6986.447136007302,
+        "intercept": -28.819095202787565,
+        "r2": 0.9999999999999671,
+        "max_absolute_error": 1.1366742029395027e-05
+      },
+      "donor_fit": {
+        "slope": -0.0023286884730448704,
+        "intercept": 206.2376010315736,
+        "r2": 0.3921402988719289,
+        "max_absolute_error": 79.18187120244168
+      },
+      "acceptor_fit": {
+        "slope": 0.10121466740599612,
+        "intercept": 13.630841871819321,
+        "r2": 0.4233252666401027,
+        "max_absolute_error": 89.91318178217256
+      }
+    },
+    {
+      "plate": "Cyclins-DR-22B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018797174096107483,
+      "noht_median_ratio": 0.004100000020116568,
+      "ratio_formula_max_absolute_error": 7.099701122115221e-06,
+      "ratio_formula_rmse": 2.1439092093095717e-06,
+      "channel3_ratio_formula_max_error": 1.1580574266645272e-05,
+      "qc_raw_minus_1000_ratio_max": 1.5497207641601562e-06,
+      "ratio_fit": {
+        "slope": 6804.029060272296,
+        "intercept": -27.896521188729448,
+        "r2": 0.9999999999999721,
+        "max_absolute_error": 1.0142117645273174e-05
+      },
+      "donor_fit": {
+        "slope": -0.0020312802031867538,
+        "intercept": 193.34313885177542,
+        "r2": 0.46446775454232314,
+        "max_absolute_error": 82.13639962969972
+      },
+      "acceptor_fit": {
+        "slope": 0.04842291881788879,
+        "intercept": 56.2707481468878,
+        "r2": 0.12043682925945265,
+        "max_absolute_error": 179.46997793276842
+      }
+    },
+    {
+      "plate": "Cyclins-DR-23B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018529385328292847,
+      "noht_median_ratio": 0.003930000006221235,
+      "ratio_formula_max_absolute_error": 1.182025044954571e-05,
+      "ratio_formula_rmse": 2.376232198270904e-06,
+      "channel3_ratio_formula_max_error": 2.5489590370852966e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 6849.603191234806,
+        "intercept": -26.918938904495036,
+        "r2": 0.9999999999999807,
+        "max_absolute_error": 1.2316831771386205e-05
+      },
+      "donor_fit": {
+        "slope": -0.0020425314795785754,
+        "intercept": 206.31007347730852,
+        "r2": 0.3119826835318822,
+        "max_absolute_error": 195.69470003415375
+      },
+      "acceptor_fit": {
+        "slope": 0.049460689587252686,
+        "intercept": 52.76084338094163,
+        "r2": 0.10747489280895639,
+        "max_absolute_error": 345.62767509557864
+      }
+    },
+    {
+      "plate": "Cyclins-DR-24B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018304782919585705,
+      "noht_median_ratio": 0.0040699997916817665,
+      "ratio_formula_max_absolute_error": 7.17457660925902e-06,
+      "ratio_formula_rmse": 2.2559067576422023e-06,
+      "channel3_ratio_formula_max_error": 1.0169024264428117e-05,
+      "qc_raw_minus_1000_ratio_max": 9.5367431640625e-07,
+      "ratio_fit": {
+        "slope": 7025.045526664477,
+        "intercept": -28.591932923576643,
+        "r2": 0.9999999999999653,
+        "max_absolute_error": 1.0364709623900126e-05
+      },
+      "donor_fit": {
+        "slope": -0.0013964705376075682,
+        "intercept": 171.78367196786064,
+        "r2": 0.24263577576257545,
+        "max_absolute_error": 91.89212618531033
+      },
+      "acceptor_fit": {
+        "slope": 0.07054795084073721,
+        "intercept": 27.034279249177303,
+        "r2": 0.3580065373796657,
+        "max_absolute_error": 119.45971226673574
+      }
+    },
+    {
+      "plate": "Cyclins-DR14B",
+      "wells": 308,
+      "dmso_median_ratio": 0.018708836287260056,
+      "noht_median_ratio": 0.004170000087469816,
+      "ratio_formula_max_absolute_error": 7.4599297192889935e-06,
+      "ratio_formula_rmse": 2.279584389614931e-06,
+      "channel3_ratio_formula_max_error": 1.506136260331914e-05,
+      "qc_raw_minus_1000_ratio_max": 9.387731552124023e-07,
+      "ratio_fit": {
+        "slope": 6878.129490206561,
+        "intercept": -28.681800371240296,
+        "r2": 0.9999999999999651,
+        "max_absolute_error": 1.2633530928951586e-05
+      },
+      "donor_fit": {
+        "slope": -0.0026651899501393393,
+        "intercept": 231.85947470446706,
+        "r2": 0.3129875869775606,
+        "max_absolute_error": 79.57283850305043
+      },
+      "acceptor_fit": {
+        "slope": 0.12069138083452745,
+        "intercept": -13.652582582700036,
+        "r2": 0.7307107212959232,
+        "max_absolute_error": 61.978776959772844
+      }
+    }
+  ],
+  "additional_experiment": {
+    "experiment": "EXP26007301",
+    "source": "EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep1_24 hours_RevMed_28 compounds_20261009_COMP_QC (2).xlsx",
+    "measured_wells": 2464,
+    "plates": [
+      {
+        "plate": "Cyclins-28-01A",
+        "wells": 308,
+        "dmso_median_scaled_ratio": 10.759999752044678,
+        "noht_median_scaled_ratio": 3.774999976158142,
+        "ratio_formula_max_absolute_error": 1.346024856729855e-05,
+        "ratio_fit": {
+          "slope": 14316.392663381464,
+          "intercept": -54.044381421099494,
+          "r2": 0.9999999999999875,
+          "max_absolute_error": 2.1579642975666502e-05
+        },
+        "donor_fit": {
+          "slope": -0.000988310694518177,
+          "intercept": 255.37596808023005,
+          "r2": 0.04611444236330475,
+          "max_absolute_error": 155.0834174451615
+        }
+      },
+      {
+        "plate": "Cyclins-28-01B",
+        "wells": 308,
+        "dmso_median_scaled_ratio": 10.800000667572021,
+        "noht_median_scaled_ratio": 3.725000023841858,
+        "ratio_formula_max_absolute_error": 1.38689257482838e-05,
+        "ratio_fit": {
+          "slope": 14134.27416285828,
+          "intercept": -52.65017066079172,
+          "r2": 0.9999999999999805,
+          "max_absolute_error": 1.7161892259309752e-05
+        },
+        "donor_fit": {
+          "slope": -0.001051225099571066,
+          "intercept": 259.1272550794196,
+          "r2": 0.1521300263022205,
+          "max_absolute_error": 131.88720677001993
+        }
+      },
+      {
+        "plate": "Cyclins-28-01C",
+        "wells": 308,
+        "dmso_median_scaled_ratio": 16.125,
+        "noht_median_scaled_ratio": 3.9850001335144043,
+        "ratio_formula_max_absolute_error": 6.6432520497983205e-06,
+        "ratio_fit": {
+          "slope": 8237.232283483316,
+          "intercept": -32.82537097738947,
+          "r2": 0.9999999999999692,
+          "max_absolute_error": 1.1014819250476648e-05
+        },
+        "donor_fit": {
+          "slope": -0.0005056914345439448,
+          "intercept": 167.81720033162242,
+          "r2": 0.046078481392998194,
+          "max_absolute_error": 107.66604311790347
+        }
+      },
+      {
+        "plate": "Cyclins-28-01D",
+        "wells": 308,
+        "dmso_median_scaled_ratio": 11.999999523162842,
+        "noht_median_scaled_ratio": 3.7350000143051147,
+        "ratio_formula_max_absolute_error": 5.420092008989741e-06,
+        "ratio_fit": {
+          "slope": 12099.214203469093,
+          "intercept": -45.19056493334688,
+          "r2": 0.9999999999999754,
+          "max_absolute_error": 9.17401001743201e-06
+        },
+        "donor_fit": {
+          "slope": -0.0004674912815228379,
+          "intercept": 173.78908899228227,
+          "r2": 0.08823408657498055,
+          "max_absolute_error": 102.58796324568925
+        }
+      },
+      {
+        "plate": "Cyclins-28-02A",
+        "wells": 308,
+        "dmso_median_scaled_ratio": 12.690000057220459,
+        "noht_median_scaled_ratio": 3.7049999237060547,
+        "ratio_formula_max_absolute_error": 7.605222720030724e-06,
+        "ratio_fit": {
+          "slope": 11129.660386876358,
+          "intercept": -41.235391109590495,
+          "r2": 0.9999999999999842,
+          "max_absolute_error": 1.702577412743267e-05
+        },
+        "donor_fit": {
+          "slope": 0.00036787864611275214,
+          "intercept": 75.26071597495083,
+          "r2": 0.00801574887991785,
+          "max_absolute_error": 124.45877534071394
+        }
+      },
+      {
+        "plate": "Cyclins-28-02B",
+        "wells": 308,
+        "dmso_median_scaled_ratio": 13.065000057220459,
+        "noht_median_scaled_ratio": 3.8949999809265137,
+        "ratio_formula_max_absolute_error": 7.3806488103400625e-06,
+        "ratio_fit": {
+          "slope": 10905.125128491145,
+          "intercept": -42.47546037116183,
+          "r2": 0.9999999999999795,
+          "max_absolute_error": 1.4988502272217374e-05
+        },
+        "donor_fit": {
+          "slope": -0.0013447594370646914,
+          "intercept": 294.9974380696714,
+          "r2": 0.1634290474848884,
+          "max_absolute_error": 106.55692032598026
+        }
+      },
+      {
+        "plate": "Cyclins-28-02C",
+        "wells": 308,
+        "dmso_median_scaled_ratio": 17.394999504089355,
+        "noht_median_scaled_ratio": 3.7949999570846558,
+        "ratio_formula_max_absolute_error": 6.6103019946694985e-06,
+        "ratio_fit": {
+          "slope": 7352.941388118031,
+          "intercept": -27.904411567332616,
+          "r2": 0.9999999999999643,
+          "max_absolute_error": 1.3010024986215285e-05
+        },
+        "donor_fit": {
+          "slope": -0.00038161565160104485,
+          "intercept": 146.18323126962613,
+          "r2": 0.024233659018473963,
+          "max_absolute_error": 99.45190454935535
+        }
+      },
+      {
+        "plate": "Cyclins-28-02D",
+        "wells": 308,
+        "dmso_median_scaled_ratio": 12.554999828338623,
+        "noht_median_scaled_ratio": 3.799999952316284,
+        "ratio_formula_max_absolute_error": 3.779990507268849e-06,
+        "ratio_fit": {
+          "slope": 11422.044522898586,
+          "intercept": -43.4037669245376,
+          "r2": 0.999999999999966,
+          "max_absolute_error": 8.788938998804952e-06
+        },
+        "donor_fit": {
+          "slope": -0.0002747449470094528,
+          "intercept": 139.51541307516197,
+          "r2": 0.02677046044515974,
+          "max_absolute_error": 97.45890387356633
+        }
+      }
+    ],
+    "plate_count": 8,
+    "max_reconstruction_error": 1.38689257482838e-05,
+    "max_qc_raw_minus_1000_ratio": 9.5367431640625e-07,
+    "max_normalized_minus_corrected": 0.0,
+    "max_ratio_minus_acceptor_donor": 4.998337921374024e-06,
+    "donor_only_r2_range": [
+      0.00801574887991785,
+      0.1634290474848884
+    ]
+  }
+}
