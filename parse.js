@@ -125,7 +125,7 @@ globalThis.AtlasInput = (() => {
       return {wells,parameters:[],raw_plate_records:rawPlateRows(rows,name),notes:d1?['EXP26003438 corrected responses use the QC Layer Normalized export column, exactly as provided. Control groups in columns 22/23 are inferred from position; identities require confirmation.']:[]};
     }
     if(columns.has('Activity (cmax)')&&columns.has('qAC50 [M]')) {
-      const parameters=[];rows.forEach((r,i)=>{if(i<2||!r||!val(r,'Sample ID'))return;const trans=String(val(r,'Cyclins - Transfections'))||(d1?'Cyclin D1/CypA':''),ec=num(val(r,'qAC50 [M]',null));if(!trans)throw new Error(`${name}, row ${i+1}: transfection missing.`);
+      const parameters=[];rows.forEach((r,i)=>{if(i<2||!r||!val(r,'Sample ID'))return;const trans=String(val(r,'Cyclins - Transfections')||val(r,'Transfections- Cyclins'))||(d1?'Cyclin D1/CypA':''),ec=num(val(r,'qAC50 [M]',null));if(!trans)throw new Error(`${name}, row ${i+1}: transfection missing.`);
         parameters.push({assignment_pending:d1,compound:String(val(r,'Sample ID')),target:trans.replace(/ Plate [^]*$/,''),transfection:trans,source_custom_settings:String(val(r,'Custom Settings')),source_wells:num(val(r,'Wells',null)),cmax:num(val(r,'Activity (cmax)',null)),ec50:ec===null?null:ec*1e6,qualifier:String(val(r,'qAC50 Mode')),source_r2:num(val(r,'R²',null)),source_s0:num(val(r,'S0',null)),source_sinf:num(val(r,'Sinf',null)),source_valid:String(val(r,'Valid')),source_mode:String(val(r,'Data Mode')),source_qc:String(val(r,'Potential Issues')),exclude_from_reporting:yes(val(r,'Exclude From Reporting')),source:name,source_row:i+1});});
       return {wells:[],parameters,notes:[]};
     }
