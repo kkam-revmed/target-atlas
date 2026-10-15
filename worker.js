@@ -1,4 +1,4 @@
-importScripts('./plate-mapping.js?v=d1-local-1','./plate-qc.js?v=d1-local-1','./engine.js?v=d1-local-1');
+importScripts('./plate-mapping.js?v=selectivity-rep2-1','./plate-qc.js?v=selectivity-rep2-1','./engine.js?v=selectivity-rep2-1');
 self.onmessage = event => {
   const {id,inputs}=event.data;
   try {

@@ -1,7 +1,7 @@
 /* User-confirmed physical plate assignments for EXP26007301. */
 (function(root){
  const targets={A:'Cyclin D3',B:'Cyclin E1',C:'Cyclin K',D:'CDK4'};
- const note='EXP26007301: target assignments follow the confirmed physical plate key A = Cyclin D3, B = Cyclin E1, C = Cyclin K, D = CDK4 for plates 01 and 02. Export labels on 02A/02B were reversed. Parameter reports follow their matched original well groups; original labels are retained for traceability.';
+ const note='EXP26007301: target assignments follow the confirmed physical plate key A = Cyclin D3, B = Cyclin E1, C = Cyclin K, D = CDK4 for plates 01 and 02. Parameter reports follow their matched original well groups; original labels are retained for traceability. Replicate 1 had reversed 02A/02B labels; replicate 2 labels match the physical plate key.';
  function assignment(id){const m=/^Cyclins-28-0([12])([ABCD])$/.exec(id||'');return m?{target:targets[m[2]],transfection:targets[m[2]]+' Plate '+m[1]}:null;}
  function apply(inputs){
   const records=inputs.flatMap(f=>f.raw_plate_records||[]),lookup=new Map();

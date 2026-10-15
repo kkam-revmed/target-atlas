@@ -12,3 +12,5 @@
 .local-review-banner{padding:10px 16px;background:#fff3d8;color:#654b20;font-size:12px;border-radius:8px;margin-bottom:16px}.study-select{margin-bottom:18px}.study-select label{display:grid;gap:8px;font-weight:600}.study-select select{max-width:600px;width:100%}#studyContext{font-size:13px;line-height:1.7;color:#60718a}#benchlingId{overflow-wrap:anywhere;font-size:12px}.source-counts{display:flex;gap:24px;flex-wrap:wrap;margin:18px 0}.source-counts strong{font-size:24px;display:block;color:#172b45}.reference-toggle{margin-bottom:8px}
 
 .focused-view .experiment-profile{display:none}.formula{font-family:ui-monospace,monospace;background:#eef3fb;padding:14px;border-radius:8px;line-height:1.7}
+
+.study-select{display:flex;flex-wrap:wrap;gap:18px}.study-select label{flex:1 1 280px;min-width:0}#biologicalReplicates>.panel{margin-bottom:20px}#biologicalReplicates>.curve-grid{margin-bottom:20px}#biologicalReplicates p,#normalizationAudit p{font-size:13px;line-height:1.7}#biologicalReplicates .curve-card th,#biologicalReplicates .curve-card td{white-space:normal;min-width:105px;font-size:11px;padding:9px}
