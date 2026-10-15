@@ -87,7 +87,7 @@ $('cmaxPreset').addEventListener('change',()=>{if($('cmaxPreset').value==='custo
 $('ec50Range').addEventListener('change',()=>{state.ec50Range=$('ec50Range').value;if(state.data)render();});
 for(const id of ['heatOrder','heatMode'])$(id).addEventListener('change',renderHeatmap);
  $('compound').addEventListener('change',()=>{state.compound=$('compound').value;$('compoundSearch').value=state.compound;renderCurves();});
- $('compoundSearch').addEventListener('change',()=>{const value=$('compoundSearch').value.trim();const match=state.data?.compounds.find(c=>c.toLowerCase()===value.toLowerCase());if(!match)return;state.compound=match;$('compound').value=match;$('compoundSearch').value=match;renderCurves();});
+ $('compoundSearch').addEventListener('input',()=>{const value=$('compoundSearch').value.trim();const match=state.data?.compounds.find(c=>c.toLowerCase()===value.toLowerCase());if(!match)return;state.compound=match;$('compound').value=match;$('compoundSearch').value=match;renderCurves();});
 for(const id of ['sharedScale','showWells','residuals'])$(id).addEventListener('change',renderCurves);
 $('mapCompound').addEventListener('change',()=>{state.mapCompound=$('mapCompound').value;renderMap();});
 $('mapToCurves').addEventListener('click',()=>chooseCompound(state.mapCompound));
