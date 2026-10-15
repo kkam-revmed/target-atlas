@@ -22,7 +22,7 @@ globalThis.AtlasQCView = (() => {
 
   function heatmap(plate,channel) {
     const wells=plate.wells || [],lookup=new Map(wells.map(w=>[`${w.row}:${w.column}`,w]));
-    const values=wells.filter(w=>!w.excluded&&w.well_type!=='Undefined').map(w=>w.raw?.[channel]).filter(finite).sort((a,b)=>a-b);
+    const values=wells.filter(w=>!w.excluded).map(w=>w.raw?.[channel]).filter(finite).sort((a,b)=>a-b);
     const lo=quantile(values,.05),hi=quantile(values,.95);
     const color=v=> {if(!finite(v))return '';const f=hi===lo?.5:Math.max(0,Math.min(1,(v-lo)/(hi-lo)));return `rgb(${Math.round(245-193*f)},${Math.round(249-137*f)},${Math.round(253-66*f)})`;};
     let out=`<div class="qc-legend"><span><i class="qc-scale"></i> Raw ${esc(channel)}: ${rawFmt(lo)} to ${rawFmt(hi)} (5th–95th percentile scale)</span><span><i class="qc-key dmso"></i> Column 22 DMSO</span><span><i class="qc-key inhibitory"></i> Column 23 inhibitory</span><span><i class="qc-key missing"></i> Missing / unassigned</span><span><i class="qc-key masked"></i> Masked / ignored</span></div><div class="table-scroll"><table class="qc-plate-grid" aria-label="384-well raw measurement map"><thead><tr><th scope="col">Row</th>`;
@@ -44,11 +44,11 @@ globalThis.AtlasQCView = (() => {
   function controls(plate,channel,threshold) {
     const groups=[['dmso','DMSO control — column 22'],['inhibitory','Inhibitory control — column 23']];
     let out='<div class="table-scroll"><table><thead><tr><th>Control</th><th>Source label</th><th class="num">Used / exported</th><th class="num">Raw mean</th><th class="num">Raw SD</th><th class="num">Raw CV</th><th>Review</th></tr></thead><tbody>';
-    for(const [key,label] of groups) {
-      const c=plate.controls?.[key],s=c?.stats?.[channel];
+    for(const [key,defaultLabel] of groups) {
+      const c=plate.controls?.[key],label=c?.title||defaultLabel,s=c?.stats?.[channel];
       out+=`<tr><th scope="row">${esc(label)}</th><td>${esc(c?.label || 'Not recorded')}</td><td class="num">${fmt(s?.n,0)} / ${fmt(c?.n_total,0)}${c?.n_excluded ? `<small class="qc-sub">${c.n_excluded} excluded</small>` : ''}</td><td class="num">${rawFmt(s?.mean)}</td><td class="num">${rawFmt(s?.sd)}</td><td class="num">${cvLabel(s)}</td><td>${finite(s?.cv_percent)?`<span class="pill ${s.cv_percent>=threshold?'qc-review':'neutral'}">${s.cv_percent>=threshold?'At/above review threshold':'Within review threshold'}</span>`:'Not assessable'}</td></tr>`;
     }
-    return out+'</tbody></table></div><p class="section-note">Column 23 is the inhibitory control, described as without HaloTag in the experiment setup. Its original export label is retained above. CV = sample SD / positive mean × 100, calculated separately for each raw channel and excluding masked/ignored or missing wells. SD requires at least two wells; CV is unavailable for a nonpositive mean. These are review thresholds, not validated assay acceptance limits.</p>';
+    return out+`</tbody></table></div><p class="section-note">${esc(plate.control_note||'Column 23 is the inhibitory control, described as without HaloTag in the experiment setup. Its original export label is retained above.')} CV = sample SD / positive mean × 100, calculated separately for each raw channel and excluding masked/ignored or missing wells. SD requires at least two wells; CV is unavailable for a nonpositive mean. These are review thresholds, not validated assay acceptance limits.</p>`;
   }
 
   function pairsTable(plate,channel,threshold,flaggedOnly) {

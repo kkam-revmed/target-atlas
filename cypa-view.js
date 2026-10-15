@@ -1,0 +1,39 @@
+'use strict';
+const AtlasCypAView=(()=>{
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt=(v,n=2)=>Number.isFinite(Number(v))?Number(v).toLocaleString('en-US',{maximumFractionDigits:n}):'—';
+  const sig=v=>Number.isFinite(Number(v))?Number(v).toPrecision(3):'—';
+  const specs=[
+    {replicate:'bio1',condition:'A',label:'Bio 1 · No inhibitor',color:'#2465CB',dash:''},
+    {replicate:'bio1',condition:'B',label:'Bio 1 · +25 µM CypA inhibitor',color:'#2465CB',dash:'6 4'},
+    {replicate:'bio2',condition:'A',label:'Bio 2 · No inhibitor',color:'#24897A',dash:''},
+    {replicate:'bio2',condition:'B',label:'Bio 2 · +25 µM CypA inhibitor',color:'#24897A',dash:'6 4'}
+  ];
+  let current=null;
+  function render({hostId='cypaDependency',data,compound}={}){
+    const host=document.getElementById(hostId); if(!host)return;
+    current={host,data,compound:compound||data.compounds[0]};
+    const d=data, names=d.compounds.map(c=>c.compound), opts=names.map(c=>`<option value="${esc(c)}"${c===current.compound?' selected':''}>${esc(c)}${c===d.reference?' · positive reference':''}</option>`).join('');
+    host.innerHTML=`<section class="panel cypa-intro"><div class="eyebrow">MATCHED CONDITION COMPARISON</div><h2>Does the response depend on CypA?</h2><p>Each compound is shown in four separate curves: no inhibitor and +25 µM CypA inhibitor in each biological replicate. A/B plates contain the same compounds at matched concentrations (user-confirmed). Points show technical duplicate wells; lines are independent 4PL fits. Biological replicates stay separate.</p><div class="cypa-proof"><strong>Two biological replicates</strong><span>20260902 · instrument measured Sep 2</span><span>20260904 · instrument measured Sep 3</span><strong>${d.library_compound_count} library compounds + positive reference</strong><span>${d.summary.curves_with_20_wells} of ${d.summary.curves} curves have all 20 wells</span></div><p class="section-note">Normalized curves use the plate controls: 100 × (raw ratio − median no-HaloTag ratio) / (median DMSO ratio − median no-HaloTag ratio). Replicate 1 B values were checked against the corrected export (6,596 matched wells; maximum difference 0.00003 units). The other conditions are reconstructed from the raw ratios and plate controls.</p></section><div class="toolbar cypa-toolbar"><label>Compound<select id="cypaCompound">${opts}</select></label></div><section class="panel"><div class="panel-heading"><div><h2 id="cypaCompoundTitle"></h2><p>Normalized response by concentration · log₁₀ dose axis · mean ± SD of technical duplicate wells</p></div><button id="cypaExport" class="secondary">Export curve SVG</button></div><div id="cypaPlot" class="plot cypa-plot"></div><div class="cypa-legend">${specs.map(s=>`<span><i style="--series:${s.color};--dash:${s.dash||'none'}"></i>${s.label}</span>`).join('')}</div></section><section class="panel"><h2>Curve parameters by biological replicate</h2><p class="section-note">Observed Cmax is the highest measured dose mean. EC50 and fit statistics are independent 4PL estimates, shown only as fit summaries; inspect curve range and flags before interpreting.</p><div id="cypaParams" class="table-scroll"></div></section><section class="panel"><h2>Matched inhibitor effect</h2><p id="cypaDelta" class="section-note"></p></section>`;
+    host.querySelector('#cypaCompound').addEventListener('change',e=>{current.compound=e.target.value;draw();});
+    host.querySelector('#cypaExport').addEventListener('click',()=>exportCurve()); draw();
+  }
+  function curve(rep,cond){return current.data.curves.find(q=>q.compound===current.compound&&q.replicate===rep&&q.condition_code===cond);}
+  function draw(){if(!current)return;const {host,data,compound}=current;host.querySelector('#cypaCompoundTitle').textContent=compound+(compound===data.reference?' · positive reference':'');const curves=specs.map(s=>({...s,q:curve(s.replicate,s.condition)}));
+    const w=Math.max(650,host.querySelector('#cypaPlot').clientWidth||900),h=410,L=75,R=24,T=22,B=62,all=curves.flatMap(s=>(s.q?.doses||[]).flatMap(p=>[p.mean-p.sd,p.mean+p.sd]));let ymin=Math.min(0,...all),ymax=Math.max(120,...all);ymin=Math.floor(ymin/20)*20;ymax=Math.ceil(ymax/20)*20;if(ymax<=ymin)ymax=ymin+20;
+    const doses=curves.flatMap(s=>(s.q?.doses||[]).map(p=>p.x)).filter(x=>x>0),xmin=Math.min(...doses),xmax=Math.max(...doses),lx=Math.log10(xmin),hx=Math.log10(xmax),X=x=>L+(Math.log10(x)-lx)/(hx-lx)*(w-L-R),Y=y=>T+(ymax-y)/(ymax-ymin)*(h-T-B);let out='';
+    for(let y=Math.ceil(ymin/20)*20;y<=ymax;y+=20){out+=`<line x1="${L}" y1="${Y(y)}" x2="${w-R}" y2="${Y(y)}" stroke="#e5eaf1"/><text x="${L-10}" y="${Y(y)+4}" text-anchor="end">${fmt(y,0)}</text>`;}
+    for(let k=0;k<=6;k++){const v=10**(lx+(hx-lx)*k/6);out+=`<line x1="${X(v)}" y1="${T}" x2="${X(v)}" y2="${h-B}" stroke="#edf0f5"/><text x="${X(v)}" y="${h-B+20}" text-anchor="middle">${sig(v)}</text>`;}
+    out+=`<text x="${(L+w-R)/2}" y="${h-12}" text-anchor="middle">Concentration (µM)</text><text transform="translate(18 ${(T+h-B)/2}) rotate(-90)" text-anchor="middle">Normalized response (%)</text>`;
+    for(const s of curves){const q=s.q;if(!q)continue;const fit=q.fit?.line;if(fit?.length){out+=`<path d="${fit.map((p,i)=>`${i?'L':'M'}${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="2" ${s.dash?`stroke-dasharray="${s.dash}"`:''} opacity=".72"/>`;}
+      for(const p of q.doses||[]){if(p.x<=0)continue;const xx=X(p.x),lo=Y(p.mean-p.sd),hi=Y(p.mean+p.sd),yy=Y(p.mean);out+=`<line x1="${xx}" y1="${hi}" x2="${xx}" y2="${lo}" stroke="${s.color}" stroke-width="1.3"/><line x1="${xx-4}" y1="${hi}" x2="${xx+4}" y2="${hi}" stroke="${s.color}"/><line x1="${xx-4}" y1="${lo}" x2="${xx+4}" y2="${lo}" stroke="${s.color}"/><circle cx="${xx}" cy="${yy}" r="4.1" fill="#fff" stroke="${s.color}" stroke-width="2"/>`;
+        for(const well of p.wells||[])out+=`<circle cx="${xx}" cy="${Y(well.normalized)}" r="2" fill="${s.color}" opacity=".65"/>`;
+      }
+    }
+    host.querySelector('#cypaPlot').innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="Four matched Cyclin D1 CypA dose-response curves"><style>text{font:11px Arial,sans-serif;fill:#60718a}</style>${out}</svg>`;
+    const rows=curves.map(s=>{const q=s.q,f=q?.fit;return `<tr><td><span class="series-key" style="--series:${s.color};--dash:${s.dash||'none'}"></span>${s.label}</td><td>${fmt(q?.cmax,1)}</td><td>${f?sig(f.ec50)+' µM':'—'}</td><td>${fmt(f?.hill,2)}</td><td>${fmt(f?.r2,3)}</td><td>${fmt(f?.s0,1)}</td><td>${fmt(f?.sinf,1)}</td><td>${fmt(f?.rmse,1)}</td><td>${esc(q?.fit_flags?.join('; ')||'—')}</td></tr>`;}).join('');host.querySelector('#cypaParams').innerHTML=`<table><thead><tr><th>Series</th><th>Observed Cmax</th><th>4PL EC50</th><th>Hill</th><th>R²</th><th>S0</th><th>Sinf</th><th>RMSE</th><th>Fit flags</th></tr></thead><tbody>${rows}</tbody></table>`;
+    const deltas=['bio1','bio2'].map(r=>{const a=curve(r,'A')?.cmax,b=curve(r,'B')?.cmax;return `${r==='bio1'?'Biological replicate 1':'Biological replicate 2'}: ${fmt(b,1)} − ${fmt(a,1)} = <strong>${b!=null&&a!=null?fmt(b-a,1):'—'}</strong> response units (inhibitor minus no inhibitor).`;});host.querySelector('#cypaDelta').innerHTML=deltas.join('<br>')+'<br><br>A lower Cmax with inhibitor in both biological replicates is consistent with CypA-dependent signal in this assay. This descriptive comparison alone does not establish mechanism or statistical significance.';
+  }
+  function exportCurve(){const s=current.host.querySelector('#cypaPlot svg');if(!s)return;const blob=new Blob([s.outerHTML],{type:'image/svg+xml'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${current.compound}_CypA_dependency.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+  return {render};
+})();
