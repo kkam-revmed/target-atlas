@@ -1,4 +1,4 @@
-importScripts('./orientation-mapping.js?v=orientation-1','./plate-mapping.js?v=selectivity-rep2-1','./plate-qc.js?v=selectivity-rep2-1','./engine.js?v=orientation-1');
+importScripts('./orientation-mapping.js?v=orientation-ratio-config-2','./plate-mapping.js?v=selectivity-rep2-1','./plate-qc.js?v=selectivity-rep2-1','./engine.js?v=orientation-ratio-config-2');
 self.onmessage = event => {
   const {id,inputs}=event.data;
   try {
