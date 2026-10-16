@@ -25,7 +25,7 @@ globalThis.AtlasQCView = (() => {
     const values=wells.filter(w=>!w.excluded).map(w=>w.raw?.[channel]).filter(finite).sort((a,b)=>a-b);
     const lo=quantile(values,.05),hi=quantile(values,.95);
     const color=v=> {if(!finite(v))return '';const f=hi===lo?.5:Math.max(0,Math.min(1,(v-lo)/(hi-lo)));return `rgb(${Math.round(245-193*f)},${Math.round(249-137*f)},${Math.round(253-66*f)})`;};
-    let out=`<div class="qc-legend"><span><i class="qc-scale"></i> Raw ${esc(channel)}: ${rawFmt(lo)} to ${rawFmt(hi)} (5th–95th percentile scale)</span><span><i class="qc-key dmso"></i> Column 22 DMSO</span><span><i class="qc-key inhibitory"></i> Column 23 inhibitory</span><span><i class="qc-key missing"></i> Missing / unassigned</span><span><i class="qc-key masked"></i> Masked / ignored</span></div><div class="table-scroll"><table class="qc-plate-grid" aria-label="384-well raw measurement map"><thead><tr><th scope="col">Row</th>`;
+    let out=`<div class="qc-legend"><span><i class="qc-scale"></i> Raw ${esc(channel)}: ${rawFmt(lo)} to ${rawFmt(hi)} (5th–95th percentile scale)</span><span><i class="qc-key dmso"></i> ${esc(plate.controls?.dmso?.title||'Column 22 DMSO')}</span><span><i class="qc-key inhibitory"></i> Column 23 inhibitory</span><span><i class="qc-key missing"></i> Missing / unassigned</span><span><i class="qc-key masked"></i> Masked / ignored</span></div><div class="table-scroll"><table class="qc-plate-grid" aria-label="384-well raw measurement map"><thead><tr><th scope="col">Row</th>`;
     for(let col=1;col<=24;col++)out+=`<th scope="col">${col}</th>`;
     out+='</tr></thead><tbody>';
     for(const row of 'ABCDEFGHIJKLMNOP') {
