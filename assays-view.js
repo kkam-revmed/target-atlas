@@ -8,6 +8,15 @@ const AtlasAssaysView=(()=>{
   const comp=(r,t)=>r.competition.find(q=>q.time_hours===t);
   let pending;
   function load(){if(!pending)pending=fetch('./supporting-assays.json?v=mastersheet-1').then(r=>{if(!r.ok)throw new Error('Mastersheet assay results could not be loaded.');return r.json();}).catch(e=>{pending=null;throw e;});return pending;}
+  function renderPotencySummary({host,data,compound,source}){
+    if(typeof host==='string')host=document.getElementById(host);if(!host)return;
+    const m=data.records.find(q=>q.compound===compound)?.master;
+    if(!m&&!source){host.innerHTML='';return;}
+    const reported=p=>p?.value_um>0?esc(p.qualifier||'')+Number(p.value_um).toPrecision(4):'—';
+    const rows=m?[['Mastersheet · no CypA inhibitor',reported(m.no_inhibitor.qac50),`GMean qAC50 · ${m.sheet} I${m.row}`],['Mastersheet · with CypA inhibitor',reported(m.with_inhibitor.qac50),`GMean qAC50 · ${m.sheet} L${m.row}`]]:[];
+    if(source)rows.push(['GDS · no CypA inhibitor',esc(source.qualifier||'=')+' '+Number(source.ec50).toPrecision(4),`qAC50 · Results row ${source.source_row}; biological replicate not identified`]);
+    host.innerHTML=`<section class="panel assay-card reported-potency-summary"><div class="eyebrow">${esc(compound)} · SOURCE VALUES</div><h2>Reported source potency</h2><div class="table-scroll"><table><thead><tr><th>Source and condition</th><th>qAC50 (µM)</th><th>Measurement and provenance</th></tr></thead><tbody>${rows.map(([label,value,note])=>`<tr><th>${esc(label)}</th><td><strong>${value}</strong></td><td>${esc(note)}</td></tr>`).join('')}</tbody></table></div><p class="section-note">These reported values are available for the compound. Mastersheet values are geometric-mean summaries; the GDS export does not identify a biological replicate. They remain separate from each run’s independent 4PL EC50 below and are not substituted into run-specific activity filters.</p></section>`;
+  }
   function renderCompound({host,data,compound}){
     if(typeof host==='string')host=document.getElementById(host);if(!host)return;
     const r=data.records.find(q=>q.compound===compound);
@@ -31,5 +40,5 @@ const AtlasAssaysView=(()=>{
     function update(){const query=host.querySelector('#assaySearch').value.trim().toLowerCase(),scope=host.querySelector('#assayScope').value;shown=data.records.filter(r=>(!query||r.compound.toLowerCase().includes(query))&&(scope==='all'||scope==='trfret'&&r.trfret.length||scope==='atlas'&&r.in_atlas||scope==='other'&&!r.in_atlas));host.querySelector('#assayCount').textContent=shown.length+' full compound IDs shown · qAC50 values in µM · — means unavailable';host.querySelector('#assayTable').innerHTML='<table><thead><tr><th>Compound</th><th>TR-FRET source label</th><th>NanoBRET source label</th>'+[2,6,24,48].map(t=>`<th>Kd1 qAC50<br>${t} h</th>`).join('')+specs.map(([c,n])=>`<th>${c==='Phosphorylated'?'Phos':'Unphos'} Rep ${n}<br>qAC50 / Sinf</th>`).join('')+'</tr></thead><tbody>'+shown.map(r=>`<tr><td><button type="button" class="assay-select compound-link" data-assay-compound="${esc(r.compound)}">${esc(r.compound)}</button>${r.in_atlas?'':'<small class="assay-extra">Additional batch ID</small>'}</td><td>${esc(r.master?.trfret_label||'—')}</td><td>${esc(r.master?.nanobret_label||'—')}</td>${[2,6,24,48].map(t=>`<td>${potency(comp(r,t)?.qac50)}</td>`).join('')}${specs.map(([c,n])=>{const q=tr(r,c,n);return `<td>${potency(q?.qac50)} / ${fmt(q?.sinf)}</td>`;}).join('')}</tr>`).join('')+'</tbody></table>';host.querySelectorAll('[data-assay-compound]').forEach(b=>b.addEventListener('click',()=>{select(b.dataset.assayCompound);host.querySelector('#assaySelected').scrollIntoView({behavior:'smooth',block:'start'});}));const exact=data.records.find(r=>r.compound.toLowerCase()===query);if(exact)select(exact.compound);}
     host.querySelector('#assaySearch').addEventListener('input',update);host.querySelector('#assayScope').addEventListener('change',update);host.querySelector('#assayExport').addEventListener('click',()=>download(data,shown));update();select(selected);
   }
-  return {load,render,renderCompound,csvRows};
+  return {load,render,renderCompound,renderPotencySummary,csvRows};
 })();
