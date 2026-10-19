@@ -2,3 +2,5 @@
 .compound-batch-field select{width:100%;min-height:36px}
 .compound-batch-field select:disabled{color:#60718a;background:#f6f8fb}
 @media(max-width:700px){.global-compound-search .compound-batch-field{flex-basis:100%;min-width:0}}
+
+.compound-batch-label{display:block;color:#60718a;font-size:11px;margin-top:3px}.toolbar .compound-batch-field{min-width:125px;max-width:185px}

@@ -19,7 +19,7 @@
     ['nanobret_raw','Raw NanoBRET channels & QC layer','Source raw channels and QC-layer signal, with plate, well, source row and layout provenance.']
   ].map(([id,label,description])=>({id,label,description}));
   const specs = [
-    ['compound','Compound with batch'],['base_compound','Compound'],['batch','Batch'],['source_compound','Original source compound label'],['plate_number','Physical plate number','number'],['category','Data category'],['assay','Assay'],['metric','Measurement'],['value','Value','number'],['qualifier','Qualifier'],['unit','Unit'],['target','Target / configuration'],
+    ['base_compound','Compound'],['batch','Batch'],['compound','Full compound batch ID'],['source_compound','Original source compound label'],['plate_number','Physical plate number','number'],['category','Data category'],['assay','Assay'],['metric','Measurement'],['value','Value','number'],['qualifier','Qualifier'],['unit','Unit'],['target','Target / configuration'],
     ['time_hours','Time (hours)','number'],['biological_replicate','Biological replicate','number'],['source_replicate','Source replicate (type unspecified)','number'],['condition','Condition'],['configuration','Configuration'],['experiment','Experiment'],['run_date','Run date'],['measured_at','Instrument measurement timestamp'],['response_basis','Response basis'],['concentration_um','Concentration (µM)','number'],['sd','SD','number'],['n','Well count','number'],['source_file','Source file'],['source_sheet','Source sheet'],['source_row','Source row','number'],['source_range','Source cells / range'],['provenance','Source notes'],['qc_flags','QC flags'],['raw_value','Source potency text'],['plate','Plate'],['well','Well'],['well_type','Well type'],['excluded','Excluded','boolean'],['masking_reason','Masking reason'],['layout_source_file','Layout source file'],['layout_source_row','Layout source row','number'],['source_target','Original source target'],['source_transfection','Original source transfection'],['source_custom_settings','Source fit settings'],['source_mode','Source classification'],['source_valid','Source fit valid'],['exclude_from_reporting','Source reporting exclusion','boolean']
   ];
   const standard = new Set(['base_compound','batch','source_compound','plate','plate_number','assay','metric','value','qualifier','unit','target','time_hours','biological_replicate','source_replicate','condition','experiment','response_basis','source_file','source_sheet','source_row','source_range','provenance']);
@@ -30,17 +30,11 @@
   const instrumentCaches=new Map();
   const available=v=>v!==null&&v!==undefined&&!(typeof v==='number'&&!Number.isFinite(v));
   const text=v=>v===null||v===undefined||v===''?null:String(v);
-  // Fixed aliases for the currently supplied snapshot, following the user's
-  // instruction that a compound uses one current batch within an experiment.
-  // These are explicit source-scope aliases, never a rule for future suffixes.
-  const currentSourceAliases={
-    'supporting-assays.json':new Set(['RMC-0712752-002','RMC-0714025-002','RMC-0729887-002','RMC-0730651-002','RMC-0732120-002','RMC-0733575-002','RMC-0734073-002','RMC-0737512-002','RMC-0738533-002']),
-    'crosslinking.json':new Set(['RMC-0730651-002','RMC-0732120-002','RMC-0737512-002','RMC-0738533-002'])
-  };
-  const currentBatchNote='User-confirmed current-batch convention: source suffix variants of this compound in this supplied experiment share the existing 001 batch. The original source compound label and every source measurement are retained separately; no values are pooled.';
-  function identity(compound,scope){
-    const original=text(compound),id=currentSourceAliases[scope]?.has(original)?original.replace(/-002$/,'-001'):original,m=/^(RMC-\d+)-(\d{3,})$/i.exec(id||'');
-    return {compound:id,base_compound:m?m[1]:id,batch:m?m[2]:null,source_compound:original};
+  // Numeric RMC suffixes are Compound Management batch identifiers. Identity
+  // always retains the full ID; experiment-specific corrections occur upstream.
+  function identity(compound){
+    const id=text(compound),m=/^(RMC-\d+)-(\d{3,})$/i.exec(id||'');
+    return {compound:id,base_compound:m?m[1]:id,batch:m?m[2]:null,source_compound:id};
   }
   function row(context,category,metric,value,extra={}){
     return {...blank,...context,category,metric,value:available(value)?value:null,...extra};
@@ -55,7 +49,7 @@
   }
   function curveData(data,file,config,instruments){
     const out=[];
-    const ctx={assay:'NanoBRET',experiment:data.experiment??data.experiment_id??config.experiment??null,biological_replicate:data.biological_replicate??config.biological_replicate??null,run_date:data.run_date??config.run_date??null,time_hours:data.time_hours??config.time_hours??null,condition:data.condition_label??config.condition??null,response_basis:data.response_label??config.response_basis??'Corrected response',provenance:`Catalog data: ${file}. ${data.response_basis||''} ${data.source_date_note||''} ${file==='sample.json'?'Replicate 1 experiment/date follow the Atlas run configuration. Shipped filenames are anonymized or generic; original filenames are unavailable in this package.':''}`.trim()};
+    const ctx={assay:'NanoBRET',experiment:data.experiment??data.experiment_id??config.experiment??null,biological_replicate:data.biological_replicate??config.biological_replicate??null,run_date:data.run_date??config.run_date??null,time_hours:data.time_hours??config.time_hours??null,condition:data.condition_label??config.condition??null,response_basis:data.response_label??config.response_basis??'Corrected response',provenance:`Catalog data: ${file}. ${data.response_basis||''} ${data.source_date_note||''} ${file==='sample.json'?'Replicate 1 experiment/date follow the Atlas run configuration. Shipped row-level filenames may be anonymized or generic; see Data sources for the supplied original files and experiment provenance.':''}`.trim()};
     const rawSeen=new Set();
     for(const c of data.curves||[]){
       const cx={...ctx,...identity(c.compound),source_compound:text(c.source_compound??c.compound),plate:text(c.physical_plate??c.plate_id),plate_number:c.plate_number??null,target:text(c.target),configuration:text(c.configuration),source_file:join(c.sources),source_target:text(c.source_target),source_transfection:text(c.source_transfection??c.transfection),qc_flags:join(c.fit_flags),provenance:[ctx.provenance,text(c.curve_note),text(c.identity_note)].filter(Boolean).join(' ')};
@@ -99,7 +93,7 @@
   function supporting(data,file){
     const out=[];
     for(const r of data.records||[]){
-      const cx={...identity(r.compound,file),source_file:text(data.source),provenance:`Catalog data: ${file}. Source means/geometric means remain separate from run-specific measurements. ${currentSourceAliases[file]?.has(r.compound)?currentBatchNote:''}`.trim(),target:'Cyclin D1/CypA'};
+      const cx={...identity(r.compound),source_file:text(data.source),provenance:`Catalog data: ${file}. Full Compound Management batch IDs and source means/geometric means remain separate from run-specific measurements.`,target:'Cyclin D1/CypA'};
       for(const q of r.competition||[]){
         const qx={...cx,assay:'Kd1 · CypA competition NanoBRET',target:'CypA',time_hours:q.time_hours??null,condition:'RMC0727964 tracer · HEK293T_CYPA_KO',source_sheet:text(q.sheet),source_range:text(q.source_range),source_row:rangeRow(q.source_range),provenance:`${cx.provenance} ${data.assay_context?.competition_metric||''}`};
         out.push(row(qx,'kd1','GMean qAC50',q.qac50?.value_um,{unit:'µM',qualifier:text(q.qac50?.qualifier),raw_value:text(q.qac50?.raw),qc_flags:text(q.qac50?.note)}));
@@ -130,7 +124,7 @@
   function crosslinking(data,file){
     const out=[],meta=data.metadata||{};
     for(const r of data.records||[]){
-      const cx={...identity(r.compound,file),assay:'Crosslinking',target:text(r.context),time_hours:meta.incubation_hours??null,concentration_um:meta.concentration_um??null,source_file:text(data.source),source_sheet:text(r.sheet),source_row:r.source_row??null,qc_flags:join(r.flags),provenance:`Catalog data: ${file}. Detailed context sheets imported once. ${meta.protocol_source||''}. Target concentration ${meta.target_concentration_um??'unspecified'} µM; +CypA concentration ${meta.cypa_concentration_um??'unspecified'} µM. Source n=${meta.n_reported??'unspecified'}; biological versus technical replicate type unspecified. ${currentSourceAliases[file]?.has(r.compound)?currentBatchNote:''}`.trim()};
+      const cx={...identity(r.compound),assay:'Crosslinking',target:text(r.context),time_hours:meta.incubation_hours??null,concentration_um:meta.concentration_um??null,source_file:text(data.source),source_sheet:text(r.sheet),source_row:r.source_row??null,qc_flags:join(r.flags),provenance:`Catalog data: ${file}. Detailed context sheets imported once. Full Compound Management batch IDs remain distinct. ${meta.protocol_source||''}. Target concentration ${meta.target_concentration_um??'unspecified'} µM; +CypA concentration ${meta.cypa_concentration_um??'unspecified'} µM. Source n=${meta.n_reported??'unspecified'}; biological versus technical replicate type unspecified.`.trim()};
       for(const [key,q] of Object.entries(r.conditions||{})){
         const qx={...cx,condition:key==='no_cypa'?'No CypA':key==='with_cypa'?'+CypA':key,source_range:text(q.source_range)};
         for(let i=0;i<(q.adduct_percent||[]).length;i++)out.push(row(qx,'crosslinking',i===0?'Unmodified (0 adducts)':`${i} adduct${i===1?'':'s'}`,q.adduct_percent[i],{unit:'%'}));
@@ -197,7 +191,7 @@
   const notes=[
     'This catalog uses only the existing data files supplied for Target Atlas. Adding another source requires a user-directed data update; no external experiment data is searched for or imported.',
     'Within EXP26007301, the user confirmed the RMC-0741051 source suffix 002 identifies the second physical plate of batch 001. Canonical batch identity, original source label and plate are retained separately; no plate values are pooled.',
-    'Following the user’s one-current-batch-per-compound convention, fixed aliases for the currently supplied mastersheet (nine compounds) and crosslinking source (four compounds) map coexisting 001/002 source labels to current batch 001. Original source labels and all source rows remain separate. Compounds supplied only with 002 retain that current label. This is not a rule for future batches.'
+    'RMC suffixes such as -001, -002 and -003 identify distinct Compound Management batches. The base compound and batch are shown separately, and full batch IDs remain the matching and export keys. Supporting assays and crosslinking results retain their exact source batch IDs.'
   ];
   root.AtlasDataCatalog={load,categories,columns,notes,identify:identity};
   if(typeof module!=='undefined'&&module.exports)module.exports=root.AtlasDataCatalog;

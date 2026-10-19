@@ -5,8 +5,7 @@ It needs no Python server, accounts, database, or external JavaScript library.
 Keep every file in this folder together when publishing it.
 
 Original source identifiers and filenames are retained for provenance.
-Current user-confirmed aliases are shown under one batch within an experiment;
-physical plates and original source labels remain separate, without pooling.
+Compound Management suffixes identify compound batches: -001 = batch 1, -002 = batch 2, -003 = batch 3. Distinct suffixes remain distinct identities and measurements are never pooled across batches. Physical plates and biological/technical replicates are separate fields. The sole user-confirmed source-label exception is EXP26007301 RMC-0741051: source labels -001/-002 identify its plate-1/plate-2 readings of the same batch -001. Original source identifiers remain unchanged for traceability.
 Uploaded Excel/CSV values are read and analyzed inside the visitor's browser.
 The analysis engine runs in a Web Worker. No uploaded data is sent to the host.
 The Data & export view provides a source-linked catalog across the included

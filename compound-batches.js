@@ -32,6 +32,7 @@
     const compound=exact||selected||(group.members.length===1?group.members[0]:null);
     return {kind:compound?'ready':'choose-batch',groups:matches,group,compound};
   }
-  const api={parse,index,search,resolve};
+  function label(value){const item=parse(value);return item.base+(item.batch?' · Batch '+item.batch:'');}
+  const api={parse,index,search,resolve,label};
   if(typeof module==='object'&&module.exports)module.exports=api;else root.AtlasCompoundBatches=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

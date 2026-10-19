@@ -5,7 +5,7 @@ window.AtlasDataExport = (() => {
   const xml = value => esc(String(value ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, ''));
   const list = rows => [...new Set(rows.filter(v => v !== null && v !== undefined && String(v) !== '').map(String))].sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
   const sourceKeys = ['source_file','source_sheet','source_row','source_range','provenance'];
-  const requiredKeys = [...sourceKeys,'compound','base_compound','batch','assay','metric','value','qualifier','unit','source_compound','plate','plate_number'];
+  const requiredKeys = [...sourceKeys,'base_compound','batch','assay','metric','value','qualifier','unit','source_compound','plate','plate_number'];
   const fallbackColumns = ['compound','base_compound','batch','category','assay','metric','value','qualifier','unit','target','time_hours','biological_replicate','source_replicate','condition','experiment',...sourceKeys,'qc_flags'].map(key=>({key,label:key.replace(/_/g,' '),default: !['source_replicate','source_row','source_range'].includes(key)}));
   let sequence = 0;
   const encoder = new TextEncoder();
