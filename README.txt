@@ -4,9 +4,46 @@ This version can be hosted on GitHub Pages or any static HTTPS web host.
 It needs no Python server, accounts, database, or external JavaScript library.
 Keep every file in this folder together when publishing it.
 
-The dataset uses original full RMC identifiers. Source filenames are retained for provenance.
+Original source identifiers and filenames are retained for provenance.
+Current user-confirmed aliases are shown under one batch within an experiment;
+physical plates and original source labels remain separate, without pooling.
 Uploaded Excel/CSV values are read and analyzed inside the visitor's browser.
 The analysis engine runs in a Web Worker. No uploaded data is sent to the host.
+The Data & export view provides a source-linked catalog across the included
+experiments, GDS parameters, observed NanoBRET responses, dose means, individual
+wells and raw signals, independent refits, Kd1 time points, TR-FRET, mastersheet
+summaries, primary screens and crosslinking. Select datasets and measurements,
+filter compounds/batches, time points, targets, conditions and replicates, and
+choose the table columns. CSV and Excel downloads contain every matching measurement
+(not just the paginated preview), plus export settings. PDF reports have an
+explicit first-200/all-matching-rows selector and use the browser print dialog.
+Wide PDF selections use readable measurement cards. Source fields, units and
+qualifiers stay attached to results; missing source metadata remains unavailable.
+Unassigned GDS parameters and unspecified TR-FRET replicate types remain separate
+from known biological runs. Original instrument values and rounded GDS values
+retain distinct response bases. The catalog includes the published datasets;
+the existing parameter CSV controls can export newly uploaded local analyses.
+Export displayed table CSV follows exactly the current parameter-table filters.
+Selections in Data & export change only the table and downloads. They do not add,
+replace or publish data. New source files require the owner's explicit selection.
+
+Data sources lists the exact original filenames, workbook sheets, source roles
+and the data they supply for selectivity, orientation, Cyclin D1/CypA, Kd1,
+TR-FRET and crosslinking. Source metadata contains no absolute private paths.
+Original Excel/CSV/PPTX files stay in the owner's separate local source library;
+the website does not publish that archive. Current, audit-only and older sources
+are labelled separately. No unavailable historical original is fabricated.
+
+Global compound search accepts a base ID such as RMC-0741051 and provides a
+separate batch selector. A single available batch selects automatically;
+multiple batches require a choice. Full batch IDs are also accepted. Batches
+are never averaged or combined into one curve.
+
+For the selectivity screen, RMC-0741051 source labels -001 and -002 are the same
+batch -001 on physical plate groups 1 and 2, as confirmed by the user. Choose the
+reference plate above the analysis. Both original plate measurements remain in
+Raw plate QC and the all-data catalog; no source measurement or fit is changed.
+
 Graphs export as SVG, parameter tables as CSV, and curve reports can be printed
 or saved as PDF through the browser's print dialog.
 

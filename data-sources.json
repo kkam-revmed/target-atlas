@@ -1,0 +1,2985 @@
+{
+  "schema_version": 1,
+  "library_label": "Target Atlas source library",
+  "availability": "Original files are retained in the owner’s local source library. Relative library folders below are local references, not public download links.",
+  "groups": [
+    {
+      "id": "selectivity",
+      "label": "Selectivity · D3 / E1 / K / CDK4",
+      "study": "EXP26007301",
+      "description": "Two biological runs at 24 hours. RMC-0741051 reference readings remain separate by physical plate."
+    },
+    {
+      "id": "orientation",
+      "label": "NanoLuc / HaloTag configurations",
+      "study": "EXP26007104",
+      "description": "Current ratio-based GDS exports and original instrument readings; earlier exports are shown only when requested."
+    },
+    {
+      "id": "d1",
+      "label": "Cyclin D1 / CypA follow-up",
+      "study": "EXP26003438",
+      "description": "Corrected wells, separate source parameters, two biological runs and matched inhibitor conditions. Mastersheet summaries are separate source means."
+    },
+    {
+      "id": "kd1",
+      "label": "Kd1 · CypA competition NanoBRET",
+      "study": "Supporting assays",
+      "description": "Source GMean qAC50 (µM); Kd1 names the assay, not a reported dissociation constant.",
+      "assay_details": [
+        {
+          "label": "2 h",
+          "sheet": "NanoBRET-TRFRET Data ",
+          "source_cells": "P3:Q309",
+          "records": 307,
+          "notes": "Source ranges cover independently ID-labelled records; gaps may occur. Each result retains its exact row/cells in Data & export."
+        },
+        {
+          "label": "6 h",
+          "sheet": "NanoBRET-TRFRET Data ",
+          "source_cells": "S3:T309",
+          "records": 307,
+          "notes": "Source ranges cover independently ID-labelled records; gaps may occur. Each result retains its exact row/cells in Data & export."
+        },
+        {
+          "label": "24 h",
+          "sheet": "NanoBRET-TRFRET Data ",
+          "source_cells": "V3:W309",
+          "records": 307,
+          "notes": "Source ranges cover independently ID-labelled records; gaps may occur. Each result retains its exact row/cells in Data & export."
+        },
+        {
+          "label": "48 h",
+          "sheet": "NanoBRET-TRFRET Data ",
+          "source_cells": "Y3:Z309",
+          "records": 307,
+          "notes": "Source ranges cover independently ID-labelled records; gaps may occur. Each result retains its exact row/cells in Data & export."
+        }
+      ]
+    },
+    {
+      "id": "tr_fret",
+      "label": "TR-FRET",
+      "study": "Supporting assays",
+      "description": "Source qAC50 [M] converted to µM; source Sinf units unspecified. TR-FRET replicates are labelled Rep 1/Rep 2; biological versus technical is not specified.",
+      "assay_details": [
+        {
+          "label": "Phosphorylated · source Rep 1",
+          "sheet": "TR-FRET Data",
+          "source_cells": "A3:C132",
+          "records": 130,
+          "notes": "Source ranges cover independently ID-labelled records; gaps may occur. Each result retains its exact row/cells in Data & export."
+        },
+        {
+          "label": "Phosphorylated · source Rep 2",
+          "sheet": "TR-FRET Data",
+          "source_cells": "D3:F138",
+          "records": 136,
+          "notes": "Source ranges cover independently ID-labelled records; gaps may occur. Each result retains its exact row/cells in Data & export."
+        },
+        {
+          "label": "Unphosphorylated · source Rep 1",
+          "sheet": "TR-FRET Data",
+          "source_cells": "G3:I123",
+          "records": 121,
+          "notes": "Source ranges cover independently ID-labelled records; gaps may occur. Each result retains its exact row/cells in Data & export."
+        },
+        {
+          "label": "Unphosphorylated · source Rep 2",
+          "sheet": "TR-FRET Data",
+          "source_cells": "J3:L126",
+          "records": 124,
+          "notes": "Source ranges cover independently ID-labelled records; gaps may occur. Each result retains its exact row/cells in Data & export."
+        }
+      ]
+    },
+    {
+      "id": "crosslinking",
+      "label": "Crosslinking",
+      "study": "Cyclin crosslinking",
+      "description": "Detailed context sheets are imported once. The Summary Sheet repeats results; the protocol deck provides assay context and the stated hit rule.",
+      "assay_details": [
+        {
+          "label": "CyclinD1 (CDK4)",
+          "sheet": "CyclinD1 (CDK4)",
+          "source_cells": "B:O",
+          "notes": "Exact rows and source cells are retained per result in Data & export."
+        },
+        {
+          "label": "CyclinD1 Rb",
+          "sheet": "CyclinD1 Rb",
+          "source_cells": "B:O",
+          "notes": "Exact rows and source cells are retained per result in Data & export."
+        },
+        {
+          "label": "CDK4 (CyclinD1)",
+          "sheet": "CDK4 (CyclinD1)",
+          "source_cells": "B:O",
+          "notes": "Exact rows and source cells are retained per result in Data & export."
+        },
+        {
+          "label": "Protocol and hit rule",
+          "sheet": "Slide deck",
+          "source_cells": "Protocol: slides 4, 7, 13 · hit rule: slides 8, 10",
+          "notes": "15Oct2026_crosslinkingandpeptidemappingfornanobretprimary.pptx, slides 4, 7 and 13"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "source-1",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep1_24 hours_RevMed_28 compounds_20261009_COMP_QC (1).xlsx",
+      "role": "GDS parameter report",
+      "status": "current",
+      "library_path": "01-selectivity/replicate-1/Downloads/EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep1_24 hours_RevMed_28 compounds_20261009_COMP_QC (1).xlsx",
+      "atlas_datasets": [
+        "sample.json"
+      ],
+      "notes": "Published sample.json uses anonymized parameter-source labels; analyze.py identifies this original supplied report. Copied-original Results header verified against its stated export role.",
+      "sha256": "c0e378ba3945e5615c87294494a8e75f33568bc68410c7dc235d9ceaa685fc28",
+      "size": 1748110,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-2",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep1_24 hours_RevMed_28 compounds_20261009_COMP_QC (2).xlsx",
+      "role": "GDS multichannel corrected well export",
+      "status": "current",
+      "library_path": "01-selectivity/replicate-1/Downloads/EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep1_24 hours_RevMed_28 compounds_20261009_COMP_QC (2).xlsx",
+      "atlas_datasets": [
+        "sample.json",
+        "normalization-verification.json",
+        "cyclin-panel-normalization-recheck.csv"
+      ],
+      "notes": "Published sample.json uses anonymized/generic well-source labels; source scripts explicitly identify this supplied workbook. Copied-original Results header verified against its stated export role.",
+      "sha256": "0e23ed0ad31967f7025a3cd5365fd40e3b25c7fd2bb9b0647eee94f3a6e08f87",
+      "size": 449527,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-3",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep2_24 hours_RevMed_28 compounds_20261015_COMP_QC (1).xlsx",
+      "role": "GDS multichannel corrected well export",
+      "status": "current",
+      "library_path": "01-selectivity/replicate-2/Downloads/EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep2_24 hours_RevMed_28 compounds_20261015_COMP_QC (1).xlsx",
+      "atlas_datasets": [
+        "selectivity-rep2.json",
+        "selectivity-rep2-normalization.json"
+      ],
+      "notes": "Copied-original Results header verified against its stated export role.",
+      "sha256": "43483424fae5db6ceb1d529d7432db5c81ceac323c2a26777d202f267dfeec05",
+      "size": 463378,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-4",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep2_24 hours_RevMed_28 compounds_20261015_COMP_QC.xlsx",
+      "role": "Equivalent corrected-only GDS well export (audit reference)",
+      "status": "audit",
+      "library_path": "01-selectivity/replicate-2/Downloads/EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep2_24 hours_RevMed_28 compounds_20261015_COMP_QC.xlsx",
+      "atlas_datasets": [
+        "selectivity-rep2-normalization.json"
+      ],
+      "notes": "Equivalent corrected values; not counted as a second replicate or a second set of baseline measurements. Different contents from the identically named Egnyte parameter report.",
+      "sha256": "9cae8514cad3a836f677470b85cf8a76c8e5bf6c5b7dc0230f5cc1073037d0d5",
+      "size": 239237,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-5",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep2_24 hours_RevMed_28 compounds_20261015_COMP_QC.xlsx",
+      "role": "GDS parameter report",
+      "status": "current",
+      "library_path": "01-selectivity/replicate-2/Egnyte-parameter-report/EXP26007301_Cyclin D3 Cyclin E1 Cyclin K CDK4 CypA_rep2_24 hours_RevMed_28 compounds_20261015_COMP_QC.xlsx",
+      "atlas_datasets": [
+        "selectivity-rep2.json"
+      ],
+      "notes": "Same filename as Downloads corrected-only workbook, but a distinct source file with fit parameters. Kept in its own source directory. Copied-original Results header verified against its stated export role.",
+      "sha256": "1727da44814374978149bd25f6581c79230ab802d83caf15eb8a3a8bbc5ae2cf",
+      "size": 1938257,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-6",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "Cyclins-28-01A.csv",
+      "role": "Original instrument raw channels; normalization audit source",
+      "status": "audit",
+      "library_path": "01-selectivity/replicate-2/original-instrument-CSVs/Cyclins-28-01A.csv",
+      "atlas_datasets": [
+        "selectivity-rep2-normalization.json",
+        "selectivity-rep2-normalization.csv"
+      ],
+      "notes": "",
+      "sha256": "ce332aae8574dac9fadac8d20fa2bd30f7c3a22b2c4d5fa7cdee1bc2acf04f56",
+      "size": 10776,
+      "sheets": []
+    },
+    {
+      "id": "source-7",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "Cyclins-28-01B.csv",
+      "role": "Original instrument raw channels; normalization audit source",
+      "status": "audit",
+      "library_path": "01-selectivity/replicate-2/original-instrument-CSVs/Cyclins-28-01B.csv",
+      "atlas_datasets": [
+        "selectivity-rep2-normalization.json",
+        "selectivity-rep2-normalization.csv"
+      ],
+      "notes": "",
+      "sha256": "b96809cedf31c8fda83cd66d4f0e30c019da6d54c126f215ad2df763de413b3d",
+      "size": 10624,
+      "sheets": []
+    },
+    {
+      "id": "source-8",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "Cyclins-28-01C.csv",
+      "role": "Original instrument raw channels; normalization audit source",
+      "status": "audit",
+      "library_path": "01-selectivity/replicate-2/original-instrument-CSVs/Cyclins-28-01C.csv",
+      "atlas_datasets": [
+        "selectivity-rep2-normalization.json",
+        "selectivity-rep2-normalization.csv"
+      ],
+      "notes": "",
+      "sha256": "af88000af7bfa9ed29733790e9cff462d540fcac61641afdf10c489d8dfdccad",
+      "size": 10805,
+      "sheets": []
+    },
+    {
+      "id": "source-9",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "Cyclins-28-01D.csv",
+      "role": "Original instrument raw channels; normalization audit source",
+      "status": "audit",
+      "library_path": "01-selectivity/replicate-2/original-instrument-CSVs/Cyclins-28-01D.csv",
+      "atlas_datasets": [
+        "selectivity-rep2-normalization.json",
+        "selectivity-rep2-normalization.csv"
+      ],
+      "notes": "",
+      "sha256": "1c8a14f14e0bc2627990fef06adf941b00bddbcaf78593e6176ec240deeb672c",
+      "size": 10808,
+      "sheets": []
+    },
+    {
+      "id": "source-10",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "Cyclins-28-02A.csv",
+      "role": "Original instrument raw channels; normalization audit source",
+      "status": "audit",
+      "library_path": "01-selectivity/replicate-2/original-instrument-CSVs/Cyclins-28-02A.csv",
+      "atlas_datasets": [
+        "selectivity-rep2-normalization.json",
+        "selectivity-rep2-normalization.csv"
+      ],
+      "notes": "",
+      "sha256": "db41999ffcfa6c1b992ed479d07e93e02aee3245d4d4ffa7d265b5eb7762f962",
+      "size": 10719,
+      "sheets": []
+    },
+    {
+      "id": "source-11",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "Cyclins-28-02B.csv",
+      "role": "Original instrument raw channels; normalization audit source",
+      "status": "audit",
+      "library_path": "01-selectivity/replicate-2/original-instrument-CSVs/Cyclins-28-02B.csv",
+      "atlas_datasets": [
+        "selectivity-rep2-normalization.json",
+        "selectivity-rep2-normalization.csv"
+      ],
+      "notes": "",
+      "sha256": "aa602f18e73b2c33ad859a4cd633151dfbdf4d802fb40eaf648a034133f5f529",
+      "size": 10581,
+      "sheets": []
+    },
+    {
+      "id": "source-12",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "Cyclins-28-02C.csv",
+      "role": "Original instrument raw channels; normalization audit source",
+      "status": "audit",
+      "library_path": "01-selectivity/replicate-2/original-instrument-CSVs/Cyclins-28-02C.csv",
+      "atlas_datasets": [
+        "selectivity-rep2-normalization.json",
+        "selectivity-rep2-normalization.csv"
+      ],
+      "notes": "",
+      "sha256": "2ff843b110213bcdd9fe624f97ea1a443bbca24d6bf3ec2e4358c6c5978641ef",
+      "size": 10809,
+      "sheets": []
+    },
+    {
+      "id": "source-13",
+      "groups": [
+        "selectivity"
+      ],
+      "study": "EXP26007301",
+      "filename": "Cyclins-28-02D.csv",
+      "role": "Original instrument raw channels; normalization audit source",
+      "status": "audit",
+      "library_path": "01-selectivity/replicate-2/original-instrument-CSVs/Cyclins-28-02D.csv",
+      "atlas_datasets": [
+        "selectivity-rep2-normalization.json",
+        "selectivity-rep2-normalization.csv"
+      ],
+      "notes": "",
+      "sha256": "051eb53f7be9c6141527672efe255432c654af236095c003fa124781271d39b7",
+      "size": 10810,
+      "sheets": []
+    },
+    {
+      "id": "source-14",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_CyclinD1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep1_24h_20240925_COMP_QC (2).xlsx",
+      "role": "GDS parameter report",
+      "status": "current",
+      "library_path": "02-orientation/replicate-1/current-GDS-exports/EXP26007104_CyclinD1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep1_24h_20240925_COMP_QC (2).xlsx",
+      "atlas_datasets": [
+        "orientation-rep1-gds.json",
+        "orientation-rep1-ratio.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "Latest ratio-based source export, with no sample/control masks. Original filename retained even when its date token differs from matched instrument measurement date. Copied-original Results header verified against its stated export role.",
+      "sha256": "d8cf05a92be28a36d1b4759b5b50f6c7bb45fb6b5f155ee5b89f26307a158d57",
+      "size": 984008,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-15",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_CyclinD1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep1_24h_20240925_COMP_QC (3).xlsx",
+      "role": "GDS corrected well export",
+      "status": "current",
+      "library_path": "02-orientation/replicate-1/current-GDS-exports/EXP26007104_CyclinD1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep1_24h_20240925_COMP_QC (3).xlsx",
+      "atlas_datasets": [
+        "orientation-rep1-gds.json",
+        "orientation-rep1-ratio.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "Latest ratio-based source export, with no sample/control masks. Original filename retained even when its date token differs from matched instrument measurement date. Copied-original Results header verified against its stated export role.",
+      "sha256": "b3dc1343620ad6c1029a81c651d48d9f101b5317e2aedb0b0bf6c1a3d49f4741",
+      "size": 242543,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-16",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_Cyclin D1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep2_24h_20260930 (1).xlsx",
+      "role": "GDS corrected well export",
+      "status": "current",
+      "library_path": "02-orientation/replicate-2/current-GDS-exports/EXP26007104_Cyclin D1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep2_24h_20260930 (1).xlsx",
+      "atlas_datasets": [
+        "orientation-rep2-gds.json",
+        "orientation-rep2-ratio.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "Latest ratio-based source export, with no sample/control masks. Original filename retained even when its date token differs from matched instrument measurement date. Copied-original Results header verified against its stated export role.",
+      "sha256": "d0db9210baff60308996a77a413d09f9e76aaf4e09e1a73f3aad5f761360cdb1",
+      "size": 242040,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-17",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_Cyclin D1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep2_24h_20260930.xlsx",
+      "role": "GDS parameter report",
+      "status": "current",
+      "library_path": "02-orientation/replicate-2/current-GDS-exports/EXP26007104_Cyclin D1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep2_24h_20260930.xlsx",
+      "atlas_datasets": [
+        "orientation-rep2-gds.json",
+        "orientation-rep2-ratio.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "Latest ratio-based source export, with no sample/control masks. Original filename retained even when its date token differs from matched instrument measurement date. Copied-original Results header verified against its stated export role.",
+      "sha256": "a375f564a486e2de104e540711536128eab13bcfc86cbe8b435fab44dfda2dd6",
+      "size": 961452,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-18",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "Cyclin-14-01A.csv",
+      "role": "Original instrument raw acceptor, donor and ratio channels",
+      "status": "current",
+      "library_path": "02-orientation/replicate-1/original-instrument-CSVs/Cyclin-14-01A.csv",
+      "atlas_datasets": [
+        "orientation-rep1-gds.json",
+        "orientation-rep1-ratio.json",
+        "orientation-instrument.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "",
+      "sha256": "76744b6ecc9a6c4648ef64dcd7646e045b2b7760a83a391d3bff04d7e06a3f08",
+      "size": 10750,
+      "sheets": []
+    },
+    {
+      "id": "source-19",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "Cyclin-14-01B.csv",
+      "role": "Original instrument raw acceptor, donor and ratio channels",
+      "status": "current",
+      "library_path": "02-orientation/replicate-1/original-instrument-CSVs/Cyclin-14-01B.csv",
+      "atlas_datasets": [
+        "orientation-rep1-gds.json",
+        "orientation-rep1-ratio.json",
+        "orientation-instrument.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "",
+      "sha256": "d607003fd16c64692bf4d25adbf8ba0895b4b6e1fe8323d10027c27b5c97ed20",
+      "size": 13138,
+      "sheets": []
+    },
+    {
+      "id": "source-20",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "Cyclin-14-01C.csv",
+      "role": "Original instrument raw acceptor, donor and ratio channels",
+      "status": "current",
+      "library_path": "02-orientation/replicate-1/original-instrument-CSVs/Cyclin-14-01C.csv",
+      "atlas_datasets": [
+        "orientation-rep1-gds.json",
+        "orientation-rep1-ratio.json",
+        "orientation-instrument.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "",
+      "sha256": "e4f7eb28f6f7886c8d36cdc02e408ba61466e8a57e34fe9bcc9ee279632a3630",
+      "size": 10385,
+      "sheets": []
+    },
+    {
+      "id": "source-21",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "Cyclin-14-01D.csv",
+      "role": "Original instrument raw acceptor, donor and ratio channels",
+      "status": "current",
+      "library_path": "02-orientation/replicate-1/original-instrument-CSVs/Cyclin-14-01D.csv",
+      "atlas_datasets": [
+        "orientation-rep1-gds.json",
+        "orientation-rep1-ratio.json",
+        "orientation-instrument.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "",
+      "sha256": "67bdac3b8ed4c1e7cb167127d42ba686cfa69fecdcfbad8fb3641606d33e710b",
+      "size": 10443,
+      "sheets": []
+    },
+    {
+      "id": "source-22",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "Cyclin-14-01A.csv",
+      "role": "Original instrument raw acceptor, donor and ratio channels",
+      "status": "current",
+      "library_path": "02-orientation/replicate-2/original-instrument-CSVs/Cyclin-14-01A.csv",
+      "atlas_datasets": [
+        "orientation-rep2-gds.json",
+        "orientation-rep2-ratio.json",
+        "orientation-instrument.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "",
+      "sha256": "cbabbf7f1b74ce498df96aad5278adc34bef30877e2dbdc3b2077d83f5664c68",
+      "size": 10451,
+      "sheets": []
+    },
+    {
+      "id": "source-23",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "Cyclin-14-01B.csv",
+      "role": "Original instrument raw acceptor, donor and ratio channels",
+      "status": "current",
+      "library_path": "02-orientation/replicate-2/original-instrument-CSVs/Cyclin-14-01B.csv",
+      "atlas_datasets": [
+        "orientation-rep2-gds.json",
+        "orientation-rep2-ratio.json",
+        "orientation-instrument.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "",
+      "sha256": "a63f26b730517cd0dfdca1f52a3dcf31fa2e0f1c91d9c119bfd59cc7b9280cfc",
+      "size": 10468,
+      "sheets": []
+    },
+    {
+      "id": "source-24",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "Cyclin-14-01C.csv",
+      "role": "Original instrument raw acceptor, donor and ratio channels",
+      "status": "current",
+      "library_path": "02-orientation/replicate-2/original-instrument-CSVs/Cyclin-14-01C.csv",
+      "atlas_datasets": [
+        "orientation-rep2-gds.json",
+        "orientation-rep2-ratio.json",
+        "orientation-instrument.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "",
+      "sha256": "2f3cdac4bf59e6d9d76101543b127aee9505175a29ff36e11319648db8639771",
+      "size": 10635,
+      "sheets": []
+    },
+    {
+      "id": "source-25",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "Cyclin-14-01D.csv",
+      "role": "Original instrument raw acceptor, donor and ratio channels",
+      "status": "current",
+      "library_path": "02-orientation/replicate-2/original-instrument-CSVs/Cyclin-14-01D.csv",
+      "atlas_datasets": [
+        "orientation-rep2-gds.json",
+        "orientation-rep2-ratio.json",
+        "orientation-instrument.json",
+        "orientation-normalization.json"
+      ],
+      "notes": "",
+      "sha256": "b85ce7d1d361047c9755d820b77dc88a02763c2ab735c91207035b7861ee464c",
+      "size": 10325,
+      "sheets": []
+    },
+    {
+      "id": "source-26",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_Cyclin D1CYPA NanoBRET_14 compounds_pilot_configuration_Dose Response_rep2_20260930_COMP_QC.xlsx",
+      "role": "Superseded supplied GDS export; audit/history reference only",
+      "status": "superseded",
+      "library_path": "02-orientation/superseded-reference-exports/Desktop-experiment-folder/EXP26007104_Cyclin D1CYPA NanoBRET_14 compounds_pilot_configuration_Dose Response_rep2_20260930_COMP_QC.xlsx",
+      "atlas_datasets": [],
+      "notes": "Superseded by the current ratio-based exports. Results-sheet values were matched against this preserved earlier source extraction; not used as active baseline.",
+      "sha256": "0b4b898ca9e4ae41267789536fc676a2c71fec528cae5622839b456087b038ca",
+      "size": 130780,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-27",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_Cyclin D1CYPA NanoBRET_14 compounds_pilot_configuration_Dose Response_rep2_20260930_COMP_QC (5).xlsx",
+      "role": "Superseded supplied GDS export; audit/history reference only",
+      "status": "superseded",
+      "library_path": "02-orientation/superseded-reference-exports/Desktop-experiment-folder/EXP26007104_Cyclin D1CYPA NanoBRET_14 compounds_pilot_configuration_Dose Response_rep2_20260930_COMP_QC (5).xlsx",
+      "atlas_datasets": [],
+      "notes": "Superseded by the current ratio-based exports. Results-sheet values were matched against this preserved earlier source extraction; not used as active baseline.",
+      "sha256": "369d0cbcf1c25077457aea90c8aee9c1ef354cdec33767eff99a68b40d367789",
+      "size": 370610,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-28",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104__Cyclin D1CYPA NanoBRET_14 compounds_Dose Response_24 hours_I rep_20260925 (1).xlsx",
+      "role": "Superseded supplied GDS export; audit/history reference only",
+      "status": "superseded",
+      "library_path": "02-orientation/superseded-reference-exports/Desktop-experiment-folder/EXP26007104__Cyclin D1CYPA NanoBRET_14 compounds_Dose Response_24 hours_I rep_20260925 (1).xlsx",
+      "atlas_datasets": [],
+      "notes": "Superseded by the current ratio-based exports. Results-sheet values were matched against this preserved earlier source extraction; not used as active baseline.",
+      "sha256": "55ba98da75a9b54cd9f7fd5615f800586c55b6f3ee941961ac5c311778c36265",
+      "size": 363421,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-29",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104__Cyclin D1CYPA NanoBRET_14 compounds_Dose Response_24 hours_I rep_20260925 (2).xlsx",
+      "role": "Superseded supplied GDS export; audit/history reference only",
+      "status": "superseded",
+      "library_path": "02-orientation/superseded-reference-exports/Desktop-experiment-folder/EXP26007104__Cyclin D1CYPA NanoBRET_14 compounds_Dose Response_24 hours_I rep_20260925 (2).xlsx",
+      "atlas_datasets": [],
+      "notes": "Superseded by the current ratio-based exports. Results-sheet values were matched against this preserved earlier source extraction; not used as active baseline.",
+      "sha256": "de1246ed23ab81beea09760db6c641d467aba5c5545a21c2e87cf40ed65635b6",
+      "size": 137713,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-30",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104__Cyclin D1CYPA NanoBRET_14 compounds_Dose Response_24 hours_I rep_20260925_COMP_QC (1).xlsx",
+      "role": "Superseded supplied GDS export version; original unavailable",
+      "status": "missing",
+      "library_path": null,
+      "atlas_datasets": [],
+      "notes": "Earlier extracted source snapshot is retained for audit. A matching original workbook was not located; this is not a current measurement source.",
+      "sha256": null,
+      "size": null,
+      "sheets": []
+    },
+    {
+      "id": "source-31",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104__Cyclin D1CYPA NanoBRET_14 compounds_Dose Response_24 hours_I rep_20260925_COMP_QC.xlsx",
+      "role": "Superseded supplied GDS export version; original unavailable",
+      "status": "missing",
+      "library_path": null,
+      "atlas_datasets": [],
+      "notes": "Earlier extracted source snapshot is retained for audit. A matching original workbook was not located; this is not a current measurement source.",
+      "sha256": null,
+      "size": null,
+      "sheets": []
+    },
+    {
+      "id": "source-32",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_CyclinD1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep1_24h_20240925_COMP_QC (1).xlsx",
+      "role": "Superseded supplied GDS export version; original unavailable",
+      "status": "missing",
+      "library_path": null,
+      "atlas_datasets": [],
+      "notes": "Earlier extracted source snapshot is retained for audit. A matching original workbook was not located; this is not a current measurement source.",
+      "sha256": null,
+      "size": null,
+      "sheets": []
+    },
+    {
+      "id": "source-33",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_CyclinD1 CYPA NanoBRET_14 compounds_RevMed_Dose Response_rep1_24h_20240925_COMP_QC.xlsx",
+      "role": "Superseded supplied GDS export version; original unavailable",
+      "status": "missing",
+      "library_path": null,
+      "atlas_datasets": [],
+      "notes": "Earlier extracted source snapshot is retained for audit. A matching original workbook was not located; this is not a current measurement source.",
+      "sha256": null,
+      "size": null,
+      "sheets": []
+    },
+    {
+      "id": "source-34",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_Cyclin D1CYPA NanoBRET_14 compounds_pilot_configuration_Dose Response_rep2_20260930_COMP_QC (2).xlsx",
+      "role": "Superseded supplied GDS export version; original unavailable",
+      "status": "missing",
+      "library_path": null,
+      "atlas_datasets": [],
+      "notes": "Earlier extracted source snapshot is retained for audit. A matching original workbook was not located; this is not a current measurement source.",
+      "sha256": null,
+      "size": null,
+      "sheets": []
+    },
+    {
+      "id": "source-35",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_Cyclin D1CYPA NanoBRET_14 compounds_pilot_configuration_Dose Response_rep2_20260930_COMP_QC (3).xlsx",
+      "role": "Superseded supplied GDS export version; original unavailable",
+      "status": "missing",
+      "library_path": null,
+      "atlas_datasets": [],
+      "notes": "Earlier extracted source snapshot is retained for audit. A matching original workbook was not located; this is not a current measurement source.",
+      "sha256": null,
+      "size": null,
+      "sheets": []
+    },
+    {
+      "id": "source-36",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_Cyclin D1CYPA NanoBRET_14 compounds_pilot_configuration_Dose Response_rep2_20260930_COMP_QC (4).xlsx",
+      "role": "Superseded supplied GDS export version; original unavailable",
+      "status": "missing",
+      "library_path": null,
+      "atlas_datasets": [],
+      "notes": "Earlier extracted source snapshot is retained for audit. A matching original workbook was not located; this is not a current measurement source.",
+      "sha256": null,
+      "size": null,
+      "sheets": []
+    },
+    {
+      "id": "source-37",
+      "groups": [
+        "orientation"
+      ],
+      "study": "EXP26007104",
+      "filename": "EXP26007104_Cyclin D1CYPA NanoBRET_14 compounds_pilot_configuration_Dose Response_rep2_20260930_COMP_QC (5).xlsx",
+      "role": "Superseded supplied GDS export version; original unavailable",
+      "status": "missing",
+      "library_path": null,
+      "atlas_datasets": [],
+      "notes": "Earlier extracted source snapshot is retained for audit. A matching original workbook was not located; this is not a current measurement source.",
+      "sha256": null,
+      "size": null,
+      "sheets": []
+    },
+    {
+      "id": "source-38",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "EXP26003438_CyclinD1 CYPA NanoBRET_TCI Library + CypA inhibitor_RevMed_Dose Response_20260902_COMP_QC.xlsx",
+      "role": "Original GDS normalized well export, source masks and plate layout",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/gds-workbooks/EXP26003438_CyclinD1 CYPA NanoBRET_TCI Library + CypA inhibitor_RevMed_Dose Response_20260902_COMP_QC.xlsx",
+      "atlas_datasets": [
+        "cyclind1.json",
+        "cyclind1-bio1-A.json",
+        "cyclind1-bio2-A.json",
+        "cyclind1-bio2-B.json",
+        "cypa-dependency.json",
+        "normalization-audit.json",
+        "normalization-verification.json"
+      ],
+      "notes": "Atlas parser alias: EXP26003438_CyclinD1_well_export.xlsx. Original Results sheet exactly matches all 9,218 cached parser rows, including two header rows. Wells are 2 September B plates; layout supports user-confirmed corresponding A/B plate mappings. Workbook unchanged.",
+      "sha256": "c8478111b2ad44c9bc818b42605a4f5a094986cf1f3e8c69e6eb62a28d167d90",
+      "size": 970068,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-39",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "EXP26003438_CyclinD1 CYPA NanoBRET_TCI Library_RevMed_Dose Response_20260903.xlsx",
+      "role": "Original GDS reported parameter export",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/gds-workbooks/EXP26003438_CyclinD1 CYPA NanoBRET_TCI Library_RevMed_Dose Response_20260903.xlsx",
+      "atlas_datasets": [
+        "cyclind1-source-parameters.json",
+        "cypa-dependency.json"
+      ],
+      "notes": "Atlas parser alias: EXP26003438_CyclinD1_parameter_export.xlsx. Original Results sheet exactly matches all 309 cached parser rows, including two header rows. Contains 307 compound parameter reports; no biological-replicate or plate identifier is inferred from filename. Workbook unchanged.",
+      "sha256": "8aa7c246da633b8c86c2ca11080f8771d80ecce36240d76eccf553042f2f7a8c",
+      "size": 1894880,
+      "sheets": [
+        "Header",
+        "Results"
+      ]
+    },
+    {
+      "id": "source-40",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-01A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-01A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-01A; measured_at 2026-09-02 08:56:59 -07:00. Source file copied without editing.",
+      "sha256": "9ff46603a11adc2aec334831ec1df5fd9352315f13fb886a7df2f0f5ae342a08",
+      "size": 13135,
+      "sheets": []
+    },
+    {
+      "id": "source-41",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-01B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-01B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-01B; measured_at 2026-09-02 09:03:15 -07:00. Source file copied without editing.",
+      "sha256": "05db83ebc4bfb1b20532187cf2e99a296eac544c10f5dc3038593c421896b11f",
+      "size": 13109,
+      "sheets": []
+    },
+    {
+      "id": "source-42",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-02A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-02A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-02A; measured_at 2026-09-02 08:44:27 -07:00. Source file copied without editing.",
+      "sha256": "889b73ea5a59b64984370d0c8ae13cb6a974d95276ea3db51147a8e3f11881e6",
+      "size": 14362,
+      "sheets": []
+    },
+    {
+      "id": "source-43",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-02B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-02B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-02B; measured_at 2026-09-02 08:50:43 -07:00. Source file copied without editing.",
+      "sha256": "f117a80bf5f208630b453de631a55ac86b7ac1684e39078fa0fb36e51fc40790",
+      "size": 13131,
+      "sheets": []
+    },
+    {
+      "id": "source-44",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-03A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-03A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-03A; measured_at 2026-09-02 10:18:27 -07:00. Source file copied without editing.",
+      "sha256": "4c60ed1c0fe46dc76c42149c89dca0e3da39d82a284b2b63619a6a437df821c7",
+      "size": 13078,
+      "sheets": []
+    },
+    {
+      "id": "source-45",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-03B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-03B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-03B; measured_at 2026-09-02 10:12:11 -07:00. Source file copied without editing.",
+      "sha256": "ddd3697cb0465c0bdabaf2afe4691a91806255f4a653135c2440a161367748fa",
+      "size": 13070,
+      "sheets": []
+    },
+    {
+      "id": "source-46",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-04A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-04A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-04A; measured_at 2026-09-02 09:59:39 -07:00. Source file copied without editing.",
+      "sha256": "840d330fd42def11da89a80ee312700a64d806416b964a9580f3ad4f308e242d",
+      "size": 13059,
+      "sheets": []
+    },
+    {
+      "id": "source-47",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-04B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-04B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-04B; measured_at 2026-09-02 10:05:55 -07:00. Source file copied without editing.",
+      "sha256": "ef58c5620f8454d3e6af880d9c82c479bd2d1bc0b4c0b243eb51c92d0ccb6cd3",
+      "size": 13043,
+      "sheets": []
+    },
+    {
+      "id": "source-48",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-05A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-05A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-05A; measured_at 2026-09-02 08:13:08 -07:00. Source file copied without editing.",
+      "sha256": "8424e640a0e062f6ce84216e4a6b7fc5f4cd480c7a0f566b36343ceb2a1eec0f",
+      "size": 13137,
+      "sheets": []
+    },
+    {
+      "id": "source-49",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-05B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-05B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-05B; measured_at 2026-09-02 08:06:52 -07:00. Source file copied without editing.",
+      "sha256": "c3a8549a53183e8c0bcd52f3926d42b55d616639817232c4e3abe81d308b78ab",
+      "size": 13183,
+      "sheets": []
+    },
+    {
+      "id": "source-50",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-06A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-06A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-06A; measured_at 2026-09-02 08:00:36 -07:00. Source file copied without editing.",
+      "sha256": "b77253d3fc88fd1d9f2120c75d9e9e0c2930d2bbdbd63f26e506fd610f2b7984",
+      "size": 14356,
+      "sheets": []
+    },
+    {
+      "id": "source-51",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-06B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-06B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-06B; measured_at 2026-09-02 07:54:20 -07:00. Source file copied without editing.",
+      "sha256": "e20f41360be5070404a13a0d8f1d199e53fc4af007c754f6ee5922f501c2817f",
+      "size": 13195,
+      "sheets": []
+    },
+    {
+      "id": "source-52",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-07A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-07A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-07A; measured_at 2026-09-02 09:09:31 -07:00. Source file copied without editing.",
+      "sha256": "839c6d36eabc404d28e6803adb672e5774d643065aa372f70007e874279f8540",
+      "size": 13061,
+      "sheets": []
+    },
+    {
+      "id": "source-53",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-07B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-07B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-07B; measured_at 2026-09-02 09:15:47 -07:00. Source file copied without editing.",
+      "sha256": "8b91d80abe683f6d7de07f132d5a37afdd7ff2c1ef6f64ff452cac58a80e954e",
+      "size": 13139,
+      "sheets": []
+    },
+    {
+      "id": "source-54",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-08A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-08A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-08A; measured_at 2026-09-02 09:22:04 -07:00. Source file copied without editing.",
+      "sha256": "e1fef1dc4685728e59e9bbdb025bb22292011ce92b00b4132aa539eb05dcbdab",
+      "size": 13096,
+      "sheets": []
+    },
+    {
+      "id": "source-55",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-08B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-08B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-08B; measured_at 2026-09-02 09:28:20 -07:00. Source file copied without editing.",
+      "sha256": "2d2113966e89d920bdbddc4b65f6f0aab69e8f6a9262e861e73ef533065c8e9c",
+      "size": 13043,
+      "sheets": []
+    },
+    {
+      "id": "source-56",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-09A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-09A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-09A; measured_at 2026-09-02 09:53:23 -07:00. Source file copied without editing.",
+      "sha256": "fb7c30cc5664c7a9d9ed061a47b17638889ba8d25e120effc3f7e69388580012",
+      "size": 13033,
+      "sheets": []
+    },
+    {
+      "id": "source-57",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-09B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-09B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-09B; measured_at 2026-09-02 09:47:07 -07:00. Source file copied without editing.",
+      "sha256": "4e6f358ce93c66f38993e6775016b24e88844b4459036639388e8d51179a3f84",
+      "size": 13113,
+      "sheets": []
+    },
+    {
+      "id": "source-58",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-10A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-10A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-10A; measured_at 2026-09-02 09:40:52 -07:00. Source file copied without editing.",
+      "sha256": "ca8821051a803b41cc9337f36d990ff3cd4965b60ccddeda3f483edefb6e8897",
+      "size": 13028,
+      "sheets": []
+    },
+    {
+      "id": "source-59",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-10B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-10B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-10B; measured_at 2026-09-02 09:34:36 -07:00. Source file copied without editing.",
+      "sha256": "a26a124da434aa833b0e5c2eef592b291abe1a17cbda1c20a1a2ef76ba14670a",
+      "size": 13030,
+      "sheets": []
+    },
+    {
+      "id": "source-60",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-11A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-11A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-11A; measured_at 2026-09-02 10:24:43 -07:00. Source file copied without editing.",
+      "sha256": "27f60c5b3788d8bad6e387c6d821ab0595004d3c51773d5a4c83bbeb03ac4227",
+      "size": 13066,
+      "sheets": []
+    },
+    {
+      "id": "source-61",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-11B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-11B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-11B; measured_at 2026-09-02 10:30:59 -07:00. Source file copied without editing.",
+      "sha256": "9ce6d821f27850622a5cb5fc96227d68e27cc7eaba6b3c53a687df742a7cbb70",
+      "size": 13046,
+      "sheets": []
+    },
+    {
+      "id": "source-62",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-12A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-12A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-12A; measured_at 2026-09-02 10:37:15 -07:00. Source file copied without editing.",
+      "sha256": "22179251e67a96b21044218033b4db17aa2d6407f16a33b3963ad332dede92c0",
+      "size": 12998,
+      "sheets": []
+    },
+    {
+      "id": "source-63",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-12B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-12B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-12B; measured_at 2026-09-02 10:43:31 -07:00. Source file copied without editing.",
+      "sha256": "9205727225cebe8678574ceaf591381f5e8c3f9bee6aef30fe4f297c54570340",
+      "size": 13004,
+      "sheets": []
+    },
+    {
+      "id": "source-64",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-13A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-13A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-13A; measured_at 2026-09-02 10:56:03 -07:00. Source file copied without editing.",
+      "sha256": "adfbd7c432fdd964496c282cbcd511867654312a1ec90d9e78a25601edc66a36",
+      "size": 13030,
+      "sheets": []
+    },
+    {
+      "id": "source-65",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-13B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-13B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-13B; measured_at 2026-09-02 10:49:47 -07:00. Source file copied without editing.",
+      "sha256": "c2e8f51ca74bfbe47daf3966262b7918c86a90ca5119d2a54dfd2a9c7904a6f7",
+      "size": 13101,
+      "sheets": []
+    },
+    {
+      "id": "source-66",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-14A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-14A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-14A; measured_at 2026-09-02 11:08:36 -07:00. Source file copied without editing.",
+      "sha256": "fba768ff6086e6dd423433de9766b9c6bf1c8204e9622e3a5823c645aa3dd6ec",
+      "size": 12902,
+      "sheets": []
+    },
+    {
+      "id": "source-67",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-14B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-14B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-14B; measured_at 2026-09-02 11:02:19 -07:00. Source file copied without editing.",
+      "sha256": "92c382772d3e9caeb7fc38dd5f38abe59db690b45a2cc1aaff4315e008ee1172",
+      "size": 12956,
+      "sheets": []
+    },
+    {
+      "id": "source-68",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-15A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-15A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-15A; measured_at 2026-09-02 11:58:44 -07:00. Source file copied without editing.",
+      "sha256": "d3f3aaea0fa5bb281e5f8ffe4c2b347b777d6371f33f567e379f0398d9105439",
+      "size": 12968,
+      "sheets": []
+    },
+    {
+      "id": "source-69",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-15B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-15B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-15B; measured_at 2026-09-02 11:52:28 -07:00. Source file copied without editing.",
+      "sha256": "0bca3509d0552df8c53ea8e53f950514620dad4c80722827aaaf40f989259888",
+      "size": 12991,
+      "sheets": []
+    },
+    {
+      "id": "source-70",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-16A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-16A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-16A; measured_at 2026-09-02 11:33:40 -07:00. Source file copied without editing.",
+      "sha256": "ca5881c2adfdd3c4716c70a17fa66971bceb864a37457d3324d9da1685b6afa0",
+      "size": 13002,
+      "sheets": []
+    },
+    {
+      "id": "source-71",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-16B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-16B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-16B; measured_at 2026-09-02 11:27:24 -07:00. Source file copied without editing.",
+      "sha256": "63989f0002494c15054baf5fafd7c2faf6cda96808e18b4dd59bc465b84fa62c",
+      "size": 13063,
+      "sheets": []
+    },
+    {
+      "id": "source-72",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-17A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-17A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-17A; measured_at 2026-09-02 11:14:52 -07:00. Source file copied without editing.",
+      "sha256": "533715e9a7b0bb484d0ff9a84edc2f6f231c305e6546e9116fc6511d434a802b",
+      "size": 14341,
+      "sheets": []
+    },
+    {
+      "id": "source-73",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-17B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-17B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-17B; measured_at 2026-09-02 11:21:08 -07:00. Source file copied without editing.",
+      "sha256": "b82dd988c164aca702a0e109cf55a2ecbad56d1ef9156950fd2a97e629541cfe",
+      "size": 13081,
+      "sheets": []
+    },
+    {
+      "id": "source-74",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-18A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-18A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-18A; measured_at 2026-09-02 08:38:11 -07:00. Source file copied without editing.",
+      "sha256": "99795ae077d9b41e77f210b0688cea2c5de514d906aec0898dff14fe8b6d3920",
+      "size": 13099,
+      "sheets": []
+    },
+    {
+      "id": "source-75",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-18B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-18B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-18B; measured_at 2026-09-02 08:31:55 -07:00. Source file copied without editing.",
+      "sha256": "5f3f0a81bec09e3ed82688a24f8e0fd8eb17c56390fff622e310956ee6376c85",
+      "size": 13056,
+      "sheets": []
+    },
+    {
+      "id": "source-76",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-19A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-19A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-19A; measured_at 2026-09-02 08:25:39 -07:00. Source file copied without editing.",
+      "sha256": "4c8a5911a5f18e6437080de7fab0a818f26b81f3403c221f5df20b6a832e348e",
+      "size": 14358,
+      "sheets": []
+    },
+    {
+      "id": "source-77",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-19B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-19B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-19B; measured_at 2026-09-02 08:19:24 -07:00. Source file copied without editing.",
+      "sha256": "d18d268adbf4228917fce0e0563b6838df7fe2c40aaa13d56a1827e6cec7d5cd",
+      "size": 12986,
+      "sheets": []
+    },
+    {
+      "id": "source-78",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-20A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-20A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-20A; measured_at 2026-09-02 11:39:56 -07:00. Source file copied without editing.",
+      "sha256": "472ed8b72c99b0e39e7496361267018776fc9a0656a6245a65adbf2ed7311e37",
+      "size": 13103,
+      "sheets": []
+    },
+    {
+      "id": "source-79",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-20B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-20B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-20B; measured_at 2026-09-02 11:46:12 -07:00. Source file copied without editing.",
+      "sha256": "1a2dd2cc9b1aae9a87324ad3a3f24d02abd1e94381cdd9225413bd4ffbd754b2",
+      "size": 13015,
+      "sheets": []
+    },
+    {
+      "id": "source-80",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-21A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-21A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-21A; measured_at 2026-09-02 12:48:53 -07:00. Source file copied without editing.",
+      "sha256": "65935a22b321478ddb4e8d806d121dcb18fddfa32ac4e4c170cd31acd0d1bd73",
+      "size": 12840,
+      "sheets": []
+    },
+    {
+      "id": "source-81",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-21B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-21B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-21B; measured_at 2026-09-02 12:42:37 -07:00. Source file copied without editing.",
+      "sha256": "1051f5d51d6cea74482ecc8dcc706a82f4546b7aac99d1d3b685d68bd41b4a15",
+      "size": 12899,
+      "sheets": []
+    },
+    {
+      "id": "source-82",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-22A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-22A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-22A; measured_at 2026-09-02 12:30:04 -07:00. Source file copied without editing.",
+      "sha256": "962e2b2b8b802de3e74427112b19ead9879e0b3f53a835d49400daff2225abb2",
+      "size": 14226,
+      "sheets": []
+    },
+    {
+      "id": "source-83",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-22B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-22B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-22B; measured_at 2026-09-02 12:36:21 -07:00. Source file copied without editing.",
+      "sha256": "c36c6b4daa451dd46359987f37f33f29835504a28f786ce2df95ef73da9c99c6",
+      "size": 12916,
+      "sheets": []
+    },
+    {
+      "id": "source-84",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-23A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-23A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-23A; measured_at 2026-09-02 12:23:48 -07:00. Source file copied without editing.",
+      "sha256": "c68ef206caff0abc8f6b06d09a85130b2caf3737e6302b2d6405df1b54ebb43c",
+      "size": 13082,
+      "sheets": []
+    },
+    {
+      "id": "source-85",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-23B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-23B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-23B; measured_at 2026-09-02 12:17:32 -07:00. Source file copied without editing.",
+      "sha256": "5e2465a9c38f0ffe17bf8524d724eb357ba1fd6eb26c3405f481bf4ec08347f0",
+      "size": 13032,
+      "sheets": []
+    },
+    {
+      "id": "source-86",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-24A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-24A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio1-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-24A; measured_at 2026-09-02 12:11:16 -07:00. Source file copied without editing.",
+      "sha256": "68bd335e483b096ab1a649f7cc5459b9752f70af3f4ce6d6297513f8ef204153",
+      "size": 13078,
+      "sheets": []
+    },
+    {
+      "id": "source-87",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-24B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260902/Cyclins-DR-24B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-24B; measured_at 2026-09-02 12:05:00 -07:00. Source file copied without editing.",
+      "sha256": "40a80f1f001cc428a5069089757e710820aeda903f2eca3f915d0f99f037fefb",
+      "size": 13020,
+      "sheets": []
+    },
+    {
+      "id": "source-88",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-01A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-01A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-01A; measured_at 2026-09-03 12:15:50 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "88ef648a3da6f3e97841203c3b6094ba19f53d19106ca5adabed34c581348415",
+      "size": 12980,
+      "sheets": []
+    },
+    {
+      "id": "source-89",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-01B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-01B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-01B; measured_at 2026-09-03 12:09:34 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "55e4c61b8046c9bab8ea2ded9b36124017f3876498d40de28d8db9cc1de67c52",
+      "size": 12879,
+      "sheets": []
+    },
+    {
+      "id": "source-90",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-02A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-02A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-02A; measured_at 2026-09-03 12:28:22 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "b947568df6e7ffaede5c8bfb460c1eb0a79ed631d50744466189fb9b58e29220",
+      "size": 12912,
+      "sheets": []
+    },
+    {
+      "id": "source-91",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-02B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-02B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-02B; measured_at 2026-09-03 12:22:06 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "317fa077db8a40adec07e99b5c4c047d788a018ee91b5eb305ffffc728464a09",
+      "size": 12859,
+      "sheets": []
+    },
+    {
+      "id": "source-92",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-03A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-03A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-03A; measured_at 2026-09-03 12:40:54 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "b9f79d2a5d480b2f39dbc78428a07da60f43691c71f3294da26f619ac123e6e2",
+      "size": 12897,
+      "sheets": []
+    },
+    {
+      "id": "source-93",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-03B-1.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-03B-1.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-03B; measured_at 2026-09-03 12:34:38 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "b243b98a2cf6e28304b7b9c04796fda54a9efa1eb0d503e8a4b840872e546de1",
+      "size": 14057,
+      "sheets": []
+    },
+    {
+      "id": "source-94",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-04A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-04A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-04A; measured_at 2026-09-03 12:53:26 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "ba8588251a565b3710fa7c9d199dfe1985b5b59aa85744b88e6d1a62b60af048",
+      "size": 12839,
+      "sheets": []
+    },
+    {
+      "id": "source-95",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-04B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-04B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-04B; measured_at 2026-09-03 12:47:10 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "4742d9b0be823f2f1847341fb6ede546eee544e93da513cd548a529356b06a99",
+      "size": 12831,
+      "sheets": []
+    },
+    {
+      "id": "source-96",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-05A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-05A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-05A; measured_at 2026-09-03 11:44:31 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "ae77927c06766352fb5ce39ed5685d77a9e379c97674a2e0934b977dc2d8510f",
+      "size": 13034,
+      "sheets": []
+    },
+    {
+      "id": "source-97",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-05B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-05B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-05B; measured_at 2026-09-03 11:50:47 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "c72665e1bdda904f94ba81e2e2f94fc2f74df4b3b5484aae1b0e8acd905c9b9e",
+      "size": 12976,
+      "sheets": []
+    },
+    {
+      "id": "source-98",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-06A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-06A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-06A; measured_at 2026-09-03 12:03:19 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "c97fb06f633014a6fdf16af5e633b5bd191d1ab853d9edfb9366ddf5105bb769",
+      "size": 12985,
+      "sheets": []
+    },
+    {
+      "id": "source-99",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-06B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-06B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-06B; measured_at 2026-09-03 11:57:03 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "10ce3bf1f1b3341bdd6e987495d0a184cad8efd53ae1cb99ba3a6cd253270650",
+      "size": 12943,
+      "sheets": []
+    },
+    {
+      "id": "source-100",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-07A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-07A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-07A; measured_at 2026-09-03 11:25:44 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "5de4c4e22c8550c93977b49ad5049206c6d17731cd11504ded45426e52a78918",
+      "size": 13067,
+      "sheets": []
+    },
+    {
+      "id": "source-101",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-07B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-07B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-07B; measured_at 2026-09-03 11:19:28 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "65fc4cc331329563deb24014cf45acb80b1c752d48f258dcd9bdb97a16d4e6a4",
+      "size": 13065,
+      "sheets": []
+    },
+    {
+      "id": "source-102",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-08A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-08A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-08A; measured_at 2026-09-03 11:13:13 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "c6fc9953c10fcb09e8f3da9d57f993aa8d588aff01bd8d2bbf19c55a5c947222",
+      "size": 12858,
+      "sheets": []
+    },
+    {
+      "id": "source-103",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-08B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-08B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-08B; measured_at 2026-09-03 11:06:57 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "d9eb5016759e2c6f39980152f23bf0aed19df46420acf8efc85ada1b23b1b591",
+      "size": 12950,
+      "sheets": []
+    },
+    {
+      "id": "source-104",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-09A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-09A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-09A; measured_at 2026-09-03 11:32:00 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "aecc65e562b1b96c812ae8368a542c8b2c4595261d48105d3db911fa5bce1f08",
+      "size": 13018,
+      "sheets": []
+    },
+    {
+      "id": "source-105",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-09B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-09B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-09B; measured_at 2026-09-03 11:38:16 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "7602645c233f9b11c6bedaeea93806fb2c63e9efdf95150b3fb645149813ba0f",
+      "size": 10345,
+      "sheets": []
+    },
+    {
+      "id": "source-106",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-10A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-10A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-10A; measured_at 2026-09-03 11:00:41 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "953e5fd34b3f4e712298bd38ff7a15f983504afa511d30493050049a9a40d918",
+      "size": 13014,
+      "sheets": []
+    },
+    {
+      "id": "source-107",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-10B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-10B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-10B; measured_at 2026-09-03 10:54:25 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "caf69822698f70a249682cdccdec59d19308a2724858ced14c6a4627b2a1a1b4",
+      "size": 13048,
+      "sheets": []
+    },
+    {
+      "id": "source-108",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-11A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-11A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-11A; measured_at 2026-09-03 10:41:53 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "11075691e98ef0faf465c42947e275a12a79174409a561fd24ca53efd741afcc",
+      "size": 12969,
+      "sheets": []
+    },
+    {
+      "id": "source-109",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-11B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-11B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-11B; measured_at 2026-09-03 10:48:09 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "926c18a63f30633b2ba768acff6fb93761a75541f9b27d72f2ae72d5e65dc592",
+      "size": 12881,
+      "sheets": []
+    },
+    {
+      "id": "source-110",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-12A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-12A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-12A; measured_at 2026-09-03 10:29:22 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "bc0762a0888e951b83c62e456c75c5c77329e81c6e2f52157db4c6c6db853afa",
+      "size": 13069,
+      "sheets": []
+    },
+    {
+      "id": "source-111",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-12B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-12B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-12B; measured_at 2026-09-03 10:35:37 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "23807f6026e762cca97a89a74dc054bb607179751631a561346c97984fa61084",
+      "size": 13010,
+      "sheets": []
+    },
+    {
+      "id": "source-112",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-13A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-13A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-13A; measured_at 2026-09-03 09:58:02 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "017117530eeccac2c41642e5a3f435a5423a19b86cefc95b6cb3f5f6485a09fa",
+      "size": 12968,
+      "sheets": []
+    },
+    {
+      "id": "source-113",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-13B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-13B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-13B; measured_at 2026-09-03 09:51:46 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "d4e623e7fc0c6224dfd34799728dc2de131a5696f1704d5186e6b00f3adea3e2",
+      "size": 12877,
+      "sheets": []
+    },
+    {
+      "id": "source-114",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-14A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-14A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-14A; measured_at 2026-09-03 09:45:31 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "28c96d280aec3562ffa993479be739c0fd2688d62d7367902155e54f77a14841",
+      "size": 13051,
+      "sheets": []
+    },
+    {
+      "id": "source-115",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-14B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-14B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-14B; measured_at 2026-09-03 09:39:14 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "da825d211e2365c6835a9cf9d1dc9edfd9d719fa27b6c9b38a17356a19f1ab07",
+      "size": 12997,
+      "sheets": []
+    },
+    {
+      "id": "source-116",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-15A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-15A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-15A; measured_at 2026-09-03 10:04:18 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "d80d259f2b74004b9dfb417a780f2732e25495ae00fa3c64dae62a2079691973",
+      "size": 13001,
+      "sheets": []
+    },
+    {
+      "id": "source-117",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-15B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-15B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-15B; measured_at 2026-09-03 10:10:34 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "b0bc90e32dfdcf1e5920e8833e5bbd08534c7c39f0b1e21df7a02c4a74597ee1",
+      "size": 13991,
+      "sheets": []
+    },
+    {
+      "id": "source-118",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-16A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-16A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-16A; measured_at 2026-09-03 10:16:50 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "81bff81215b95fae04ae88bac429bee93355c803a230a1a53ce80ae7e40fdcf6",
+      "size": 12913,
+      "sheets": []
+    },
+    {
+      "id": "source-119",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-16B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-16B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-16B; measured_at 2026-09-03 10:23:06 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "31744510af644a6a906a0cc19b319c5a67b2369356ce734b456c8312b4676456",
+      "size": 12852,
+      "sheets": []
+    },
+    {
+      "id": "source-120",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-17A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-17A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-17A; measured_at 2026-09-03 09:07:55 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "016eae0694bcbdee240efdce9d99e3efd5cdd7cf386920ec37a32cf08359cfdf",
+      "size": 12947,
+      "sheets": []
+    },
+    {
+      "id": "source-121",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-17B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-17B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-17B; measured_at 2026-09-03 09:01:39 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "586fa3f49ee42db8694901117eeed57dd7cdd0002751f86f0ba26eff846eb016",
+      "size": 13019,
+      "sheets": []
+    },
+    {
+      "id": "source-122",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-18A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-18A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-18A; measured_at 2026-09-03 08:55:23 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "e8bc85fdabffb5d786b28c452f505980d2a73be69055205a111c35a2a2a30067",
+      "size": 13087,
+      "sheets": []
+    },
+    {
+      "id": "source-123",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-18B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-18B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-18B; measured_at 2026-09-03 08:49:06 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source duplicate column-header anomaly is preserved; Atlas uses physical positions and flags it. Source file copied without editing.",
+      "sha256": "586e54a8aa36134d36d30ed51a889d55ea651e21dad4c77e1abb57abe417a2cb",
+      "size": 14201,
+      "sheets": []
+    },
+    {
+      "id": "source-124",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-19A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-19A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-19A; measured_at 2026-09-03 09:32:58 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "9491f98aa07d8cc5e4ca69a3bd996981fd8ef79e8f7a54a0005f81f2f2253d49",
+      "size": 12949,
+      "sheets": []
+    },
+    {
+      "id": "source-125",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-19B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-19B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-19B; measured_at 2026-09-03 09:26:42 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "417c0f05f26bc40ad20e0734f35e6b0f81aa7cf45d6bce0bd49561179304a9e0",
+      "size": 12904,
+      "sheets": []
+    },
+    {
+      "id": "source-126",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-20A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-20A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-20A; measured_at 2026-09-03 09:20:27 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "85c95466ad1db7d62d66ce7eb32ab2020122c982b7003f7a38f6bfa6214d2b28",
+      "size": 13049,
+      "sheets": []
+    },
+    {
+      "id": "source-127",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-20B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-20B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-20B; measured_at 2026-09-03 09:14:11 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "9c8c92cc2cac6c16d67e99a1f29fedb3c7bd8d94baf58b00581819f07dff020c",
+      "size": 14279,
+      "sheets": []
+    },
+    {
+      "id": "source-128",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-21A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-21A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-21A; measured_at 2026-09-03 08:42:50 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "9cc03b32f96640577e04c64431bb3848e823335b0cfef747d9f9be29603580ff",
+      "size": 12915,
+      "sheets": []
+    },
+    {
+      "id": "source-129",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-21B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-21B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-21B; measured_at 2026-09-03 08:36:34 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "537fce3905a5bfb9f25c30ec13797f15fb10d0887720a4c05542670f1c0e11eb",
+      "size": 12983,
+      "sheets": []
+    },
+    {
+      "id": "source-130",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-22A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-22A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-22A; measured_at 2026-09-03 08:30:18 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "bbccda08c0ccff0abdd1f848824875a3a1c64932c2ab29fcd9c69afaba7bd4e0",
+      "size": 12798,
+      "sheets": []
+    },
+    {
+      "id": "source-131",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-22B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-22B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-22B; measured_at 2026-09-03 08:24:02 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "b08c7e0e205352117b5ea5c91e1ad485348776bcfd4dda71e53d2a323f2f2fc5",
+      "size": 14173,
+      "sheets": []
+    },
+    {
+      "id": "source-132",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-23A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-23A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-23A; measured_at 2026-09-03 08:17:46 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "238c88da57b2ce31f9638fa32ffe68fda1d44804e08909763bdf9aec6f1f664b",
+      "size": 12889,
+      "sheets": []
+    },
+    {
+      "id": "source-133",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-23B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-23B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-23B; measured_at 2026-09-03 08:11:30 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "63e685bdb6d7db7cce1bc82c97aac0cbe48d124b51b47c61ff32b5f8f1851635",
+      "size": 13054,
+      "sheets": []
+    },
+    {
+      "id": "source-134",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-24A.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-24A.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-A.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-24A; measured_at 2026-09-03 08:05:14 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "1e10ee798d477c69b4a0c4c4b05c3c226c71c2e848c77feb78cb0cf72e72b8dc",
+      "size": 13036,
+      "sheets": []
+    },
+    {
+      "id": "source-135",
+      "groups": [
+        "d1"
+      ],
+      "study": "EXP26003438 · Cyclin D1/CypA screen",
+      "filename": "Cyclins-DR-24B.csv",
+      "role": "Original plate-reader instrument CSV",
+      "status": "current",
+      "library_path": "03-cyclin-d1-cypa/instrument-csv/20260904/Cyclins-DR-24B.csv",
+      "atlas_datasets": [
+        "cyclind1-instrument.json",
+        "normalization-verification.json",
+        "cypa-dependency.json",
+        "cyclind1-bio2-B.json"
+      ],
+      "notes": "Original instrument acceptor 645, donor 460 and exported ratio sections. Physical plate Cyclins-DR-24B; measured_at 2026-09-03 07:58:58 -07:00. Source folder 20260904 contains instrument measurements dated 3 September; original folder and filename retained. Source file copied without editing.",
+      "sha256": "6c4a790955c103fad0ee2dd3938da46208ea6a37b34a366f4457d9b1f14b1850",
+      "size": 13102,
+      "sheets": []
+    },
+    {
+      "id": "source-136",
+      "groups": [
+        "d1",
+        "kd1",
+        "tr_fret"
+      ],
+      "study": "Cyclin D1 supporting assays",
+      "filename": "CyclinD1 Hit List Mastersheet.xlsx",
+      "role": "Original supplied hit-list mastersheet, Kd1 time points, detailed TR-FRET and source summaries",
+      "status": "current",
+      "library_path": "04-supporting-assays/CyclinD1 Hit List Mastersheet.xlsx",
+      "atlas_datasets": [
+        "supporting-assays.json"
+      ],
+      "notes": "Exact workbook selected by import_mastersheet.py and verify_supporting_assays.py. Includes original Kd1 2/6/24/48 h assays, detailed phosphorylated/unphosphorylated TR-FRET, primary-screen and 24 h NanoBRET summaries. Other similarly named downloads were not used by this parser and are not added here. Workbook unchanged.",
+      "sha256": "5baf5b6f9c6844fb918d9b4370d578b1b932d0f69367ed940a4256367d7a8a5b",
+      "size": 16980530,
+      "sheets": [
+        "NanoBRET-TRFRET Data ",
+        "List of Hits",
+        "TR-FRET Data"
+      ]
+    },
+    {
+      "id": "source-137",
+      "groups": [
+        "crosslinking"
+      ],
+      "study": "Cyclin crosslinking",
+      "filename": "20261015 Cyclin xlink mastersheet n1 ZA 3.xlsx",
+      "role": "Original supplied crosslinking measurement workbook",
+      "status": "current",
+      "library_path": "05-crosslinking/20261015 Cyclin xlink mastersheet n1 ZA 3.xlsx",
+      "atlas_datasets": [
+        "crosslinking.json"
+      ],
+      "notes": "Exact workbook read by crosslinking/build.py. Detailed contexts CyclinD1 (CDK4), CyclinD1 Rb and CDK4 (CyclinD1) imported once; Summary Sheet repeats results. Source formulas, formatting and full workbook content preserved unchanged.",
+      "sha256": "78ca3301a69f3f5a0ab4de3673d705ce0ed74c6733d09640e97bf04e6fafe4d9",
+      "size": 257305,
+      "sheets": [
+        "CyclinD1 (CDK4)",
+        "CyclinD1 Rb",
+        "CDK4 (CyclinD1)",
+        "Summary Sheet"
+      ]
+    },
+    {
+      "id": "source-138",
+      "groups": [
+        "crosslinking"
+      ],
+      "study": "Cyclin crosslinking",
+      "filename": "15Oct2026_crosslinkingandpeptidemappingfornanobretprimary.pptx",
+      "role": "Original supplied protocol and hit-rule slide deck",
+      "status": "current",
+      "library_path": "05-crosslinking/15Oct2026_crosslinkingandpeptidemappingfornanobretprimary.pptx",
+      "atlas_datasets": [
+        "crosslinking.json"
+      ],
+      "notes": "Previously supplied deck cited in crosslinking metadata: slides 4, 7, 13 support protocol context; slides 8, 10 support strict total crosslinking > 20% and +CypA/No CypA total-fold > 2 criteria. Preserved unchanged; not a raw measurement sheet.",
+      "sha256": "c21870df99054c2558b1f963f48f781c30294e0a59c1da6d8c938147a0f12449",
+      "size": 10265848,
+      "sheets": []
+    }
+  ]
+}
