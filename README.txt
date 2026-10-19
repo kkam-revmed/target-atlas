@@ -115,3 +115,15 @@ Release overview-crosslink-1: Overview ranks highest Cmax and lowest/highest exa
 Crosslinking context comparison: roster of three contexts, exact full-ID membership overlaps and unique lists, searchable side-by-side response table, selectable No CypA/+CypA/change scatter, numerical difference sorting, CSV and SVG exports. The same 150 full IDs occur in all three contexts. Differences are descriptive and do not establish selectivity or activity; construct, dose, incubation and replicate metadata remain unverified. Adduct category coverage is 0–5 for CyclinD1 Rb and 0–3 for the other contexts.
 
 Crosslinking hit correction from the supplied 15 Oct presentation (slides 8/10): require +CypA total >20% AND +CypA/No CypA total fold >2. Counts reproduce D1(CDK4)10, D1Rb11, CDK4(D1)1; D1–Rb shared7, D1only3, Rbonly4. The default comparison shows shared hits, with tested-ID coverage separate. Slides4/7/13 provide construct identity,10µMcompound,1µMtarget,10µMCypA,6hours,n=1. This supersedes earlier missing-protocol/threshold statements. No source measurement values changed.
+
+SCIENTIST START AND SECTION SHARING
+Start with a question provides routes to compound curves, experiment selection,
+assay evidence, original-source guidance, and data exports. Navigation is grouped
+by task. Copy section link keeps the current section and applicable included
+experiment/run/condition/response/reference-plate/activity settings. Individual
+compound selections and table-specific filters are not included; share an Excel
+export with its Export details sheet for an exact data selection. Locally
+uploaded analyses cannot be shared through a section link.
+Reset filters in Data & export clears result filters while retaining selected
+datasets, measurements and columns. Numeric table previews use six significant
+digits; CSV and Excel retain the full stored numeric precision.
