@@ -159,9 +159,14 @@ window.AtlasDataExport = (() => {
       }
       const compoundMatch=r=>{const query=get('[data-filter="compound"]').value.trim().toUpperCase();return !query||String(r.compound||'').toUpperCase().includes(query)||String(r.base_compound||'').toUpperCase().includes(query)||String(r.source_compound||'').toUpperCase().includes(query);};
       function batches(){const select=get('[data-filter="batch"]'),previous=select.value;select.innerHTML='<option value="">All batches</option>'+choices(list(data.filter(compoundMatch).map(r=>r.batch)));if([...select.options].some(o=>o.value===previous))select.value=previous;}
-      function metrics(reset=false){
+      function metrics(reset=false,previousMetrics=null){
         const available=list(data.filter(r=>state.categories.has(String(r.category))).map(r=>r.metric));
         if(reset)state.metrics=new Set(available);
+        else if(previousMetrics){
+          // Changing datasets must not reselect measurements the scientist removed.
+          // Select only newly available measurements; keep existing choices intact.
+          state.metrics=new Set(available.filter(metric=>state.metrics.has(metric)||!previousMetrics.has(metric)));
+        }
         get('[data-metrics]').innerHTML=available.map(metric=>`<label><input type="checkbox" data-metric="${esc(metric)}" ${state.metrics.has(metric)?'checked':''}>${esc(metric)}</label>`).join('')||'<p>No measurements in the selected datasets.</p>';
         get('[data-metric-summary]').textContent=`(${available.filter(m=>state.metrics.has(m)).length} of ${available.length})`;
       }
@@ -182,7 +187,7 @@ window.AtlasDataExport = (() => {
       }
       root.addEventListener('change',event=>{
         const el=event.target;state.page=0;
-        if(el.matches('[data-category]')){el.checked?state.categories.add(el.dataset.category):state.categories.delete(el.dataset.category);if(el.checked)contextColumns();metrics(true);}
+        if(el.matches('[data-category]')){const previousMetrics=new Set(all('[data-metric]').map(box=>box.dataset.metric));el.checked?state.categories.add(el.dataset.category):state.categories.delete(el.dataset.category);if(el.checked)contextColumns();metrics(false,previousMetrics);}
         if(el.matches('[data-metric]')){el.checked?state.metrics.add(el.dataset.metric):state.metrics.delete(el.dataset.metric);const boxes=all('[data-metric]');get('[data-metric-summary]').textContent=`(${boxes.filter(b=>b.checked).length} of ${boxes.length})`;}
         if(el.matches('[data-category],[data-metric],[data-column]'))all('[data-preset]').forEach(button=>button.setAttribute('aria-pressed','false'));
         if(el.matches('[data-column]'))el.checked?state.columns.add(el.dataset.column):state.columns.delete(el.dataset.column);
