@@ -1,8 +1,8 @@
 # Target Atlas feedback on GitHub
 
-The implementation is prepared on `feature/in-app-feedback`. It has not been pushed,
-merged, deployed, or activated. GitHub Issues is the inbox; GitHub Actions is the worker
-host. GitHub Pages continues to serve the Atlas and does not run a backend server.
+GitHub Issues is the inbox; GitHub Actions is the optional worker host. GitHub Pages
+serves the Atlas and does not run a backend server. Publishing the feedback form does
+not activate the Codex worker: the credential and activation variable below are required.
 
 ## What scientists do
 
@@ -72,10 +72,10 @@ decision. Do not silently resolve these from a public issue. Continue independen
 checks and include owner questions in the report. There is no automatic scientific-data
 correction and no automatic publication of generated code.
 
-## Activation remaining
+## Publishing and worker activation
 
-The owner's current no-push/no-merge/no-deploy limits still apply. After approval to
-release this reviewed branch:
+The owner has authorized publishing the feedback feature. Release and worker activation
+are separate steps:
 
 1. Put the issue template and workflow on `main`, and publish the frontend through the
    existing Pages release process. A workflow only on a feature branch does not receive
