@@ -1,0 +1,127 @@
+name: Target Atlas feedback
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atlas-feedback-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run_worker: ${{ steps.intake.outputs.run_worker }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - id: intake
+        run: node scripts/feedback-intake.cjs
+
+  investigate:
+    needs: intake
+    if: needs.intake.outputs.run_worker == 'true' && vars.ATLAS_FEEDBACK_AUTOMATION == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check worker credential is configured
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "Configure the OPENAI_API_KEY Actions secret to enable the Codex worker." >&2
+            exit 1
+          fi
+      - name: Prepare browser tools and feedback input
+        run: |
+          npm install --prefix "$RUNNER_TEMP/atlas-tools" --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/atlas-tools/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/atlas-tools/node_modules" >> "$GITHUB_ENV"
+          echo "CHROMIUM_PATH=$(node -e 'console.log(require(process.argv[1]).chromium.executablePath())' "$RUNNER_TEMP/atlas-tools/node_modules/playwright")" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/atlas-feedback"
+          cp "$GITHUB_EVENT_PATH" "$RUNNER_TEMP/atlas-feedback/issue.json"
+          echo "ATLAS_FEEDBACK_INPUT=$RUNNER_TEMP/atlas-feedback/issue.json" >> "$GITHUB_ENV"
+          python3 -m http.server 4173 --bind 127.0.0.1 > "$RUNNER_TEMP/atlas-feedback/server.log" 2>&1 &
+          curl --fail --silent --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 15 http://127.0.0.1:4173/ > /dev/null
+      - name: Investigate and prepare a change
+        uses: openai/codex-action@1d82a3dba7c7988ec71ecae1ed5b8e8db96495c5 # v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          permission-profile: ':workspace'
+          safety-strategy: drop-sudo
+          prompt-file: .github/feedback/task.md
+          output-file: ${{ runner.temp }}/atlas-feedback/report.md
+      - name: Package untrusted candidate for independent validation
+        env:
+          BASE_SHA: ${{ github.sha }}
+        run: |
+          git add -N -- .
+          git diff --binary "$BASE_SHA" > "$RUNNER_TEMP/atlas-feedback/proposed.patch"
+          test -f "$RUNNER_TEMP/atlas-feedback/report.md"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: unvalidated-feedback-${{ github.event.issue.number }}
+          path: |
+            ${{ runner.temp }}/atlas-feedback/proposed.patch
+            ${{ runner.temp }}/atlas-feedback/report.md
+          retention-days: 14
+          if-no-files-found: error
+
+  validate:
+    needs: investigate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: unvalidated-feedback-${{ github.event.issue.number }}
+          path: ${{ runner.temp }}/atlas-feedback
+      - name: Preserve trusted checks and apply the candidate
+        env:
+          BASE_SHA: ${{ github.sha }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/atlas-checks"
+          cp scripts/feedback-guard.cjs tests/environment-verification.cjs tests/feedback.cjs tests/export-measurement-selection.cjs "$RUNNER_TEMP/atlas-checks/"
+          if [ -s "$RUNNER_TEMP/atlas-feedback/proposed.patch" ]; then
+            git apply --check "$RUNNER_TEMP/atlas-feedback/proposed.patch"
+            git apply --index "$RUNNER_TEMP/atlas-feedback/proposed.patch"
+          fi
+          node "$RUNNER_TEMP/atlas-checks/feedback-guard.cjs" "$GITHUB_WORKSPACE" "$BASE_SHA" > "$RUNNER_TEMP/atlas-feedback/data-integrity.log"
+      - name: Install browser tools
+        run: |
+          npm install --prefix "$RUNNER_TEMP/atlas-tools" --no-audit --no-fund playwright@1.56.1
+          "$RUNNER_TEMP/atlas-tools/node_modules/.bin/playwright" install --with-deps chromium
+          echo "NODE_PATH=$RUNNER_TEMP/atlas-tools/node_modules" >> "$GITHUB_ENV"
+          echo "CHROMIUM_PATH=$(node -e 'console.log(require(process.argv[1]).chromium.executablePath())' "$RUNNER_TEMP/atlas-tools/node_modules/playwright")" >> "$GITHUB_ENV"
+      - name: Run trusted browser and export checks
+        env:
+          ATLAS_ROOT: ${{ github.workspace }}
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > "$RUNNER_TEMP/atlas-feedback/validation-server.log" 2>&1 &
+          curl --fail --silent --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 15 http://127.0.0.1:4173/ > /dev/null
+          node "$RUNNER_TEMP/atlas-checks/environment-verification.cjs" > "$RUNNER_TEMP/atlas-feedback/verification.log" 2>&1
+          node "$RUNNER_TEMP/atlas-checks/feedback.cjs" > "$RUNNER_TEMP/atlas-feedback/feedback-tests.log" 2>&1
+          node "$RUNNER_TEMP/atlas-checks/export-measurement-selection.cjs" > "$RUNNER_TEMP/atlas-feedback/export-tests.log" 2>&1
+          node "$RUNNER_TEMP/atlas-checks/feedback-guard.cjs" "$GITHUB_WORKSPACE" "$GITHUB_SHA" >> "$RUNNER_TEMP/atlas-feedback/data-integrity.log"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: reviewed-feedback-${{ github.event.issue.number }}
+          path: ${{ runner.temp }}/atlas-feedback/
+          retention-days: 14
+          if-no-files-found: error
+      - name: Record result
+        run: |
+          echo '## Feedback change ready for review' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The reviewed-feedback artifact contains the proposed patch, report and verification logs. No branch was pushed, merged or deployed. Review the report and patch before applying it.' >> "$GITHUB_STEP_SUMMARY"

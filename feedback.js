@@ -10,7 +10,8 @@
     <form id="atlasFeedbackForm">
       <div class="feedback-heading"><h2 id="atlasFeedbackTitle">Send feedback</h2><button type="button" data-feedback-close aria-label="Close feedback">×</button></div>
       <p>Report a problem, suggest an improvement, or flag an assay question.</p>
-      <p class="feedback-notice" data-feedback-unavailable hidden>Feedback submission is not connected yet. Nothing you enter here will be sent.</p>
+      <p class="feedback-notice">You’ll review and submit a <strong>public GitHub issue</strong>. A GitHub account is required. Please leave out confidential information.</p>
+      <p data-feedback-unavailable hidden>The feedback destination is unavailable. Nothing has been submitted.</p>
       <label>Feedback type<select name="kind"><option value="bug">Something isn't working</option><option value="improvement">Improvement suggestion</option><option value="assay-question">Assay or data question</option></select></label>
       <label>Summary<input name="title" required maxlength="160" autocomplete="off" placeholder="A short description"></label>
       <label>Details<textarea name="description" required maxlength="8000" rows="5" placeholder="What were you trying to do? What happened, and what did you expect?"></textarea></label>
@@ -19,24 +20,24 @@
       <details class="feedback-context"><summary>Review the details included</summary><pre data-feedback-context></pre></details>
       <p class="feedback-help">View details include the selected section, experiment and compound when applicable. They do not include measurements, files, or account information.</p>
       <p data-feedback-status role="status" aria-live="polite"></p>
-      <div class="feedback-actions"><button type="button" class="secondary" data-feedback-close>Close</button><button type="button" class="secondary" data-feedback-another hidden>Send another</button><button type="submit" class="primary" data-feedback-submit>Send feedback</button></div>
+      <div data-feedback-copy-area hidden><label>Feedback text<textarea data-feedback-text readonly rows="6"></textarea></label><button type="button" class="secondary" data-feedback-copy>Copy feedback text</button></div>
+      <p><a data-feedback-draft target="_blank" rel="noopener noreferrer" hidden>Open GitHub draft</a></p>
+      <div class="feedback-actions"><button type="button" class="secondary" data-feedback-close>Close</button><button type="submit" class="primary" data-feedback-submit>Continue on GitHub</button></div>
+      <p class="feedback-help"><a data-feedback-inbox target="_blank" rel="noopener noreferrer">View submitted feedback</a></p>
     </form>`;
   document.body.appendChild(dialog);
   const form = dialog.querySelector('form');
   const field = name => form.elements.namedItem(name);
   const status = dialog.querySelector('[data-feedback-status]');
   const submit = dialog.querySelector('[data-feedback-submit]');
-  const another = dialog.querySelector('[data-feedback-another]');
-  let context = {}, pending = null, busy = false, delivered = false;
+  const draft = dialog.querySelector('[data-feedback-draft]');
+  const copyArea = dialog.querySelector('[data-feedback-copy-area]');
+  const copyText = dialog.querySelector('[data-feedback-text]');
+  let context = {};
 
-  function endpoint() {
-    const configured = window.AtlasFeedbackConfig?.endpoint;
-    if (typeof configured !== 'string' || !configured.trim()) return null;
-    try {
-      const url = new URL(configured, location.href);
-      // Reuse the site's authentication. Never send feedback to an arbitrary host.
-      return url.origin === location.origin && /^https?:$/.test(url.protocol) && !url.username && !url.password && !url.hash && !url.search ? url.href : null;
-    } catch (_) { return null; }
+  function repository() {
+    const configured = window.AtlasFeedbackConfig?.repository;
+    return typeof configured === 'string' && /^[A-Za-z0-9_-]+\/[A-Za-z0-9_.-]+$/.test(configured) ? configured : null;
   }
 
   function readContext() {
@@ -72,53 +73,52 @@
   }
 
   function controls() {
-    for (const name of ['kind', 'title', 'description', 'includeContext']) field(name).disabled = busy || delivered;
-    submit.disabled = busy || delivered || !endpoint();
-    submit.textContent = busy ? 'Sending…' : 'Send feedback';
-    another.hidden = !delivered;
-    dialog.querySelector('[data-feedback-unavailable]').hidden = Boolean(endpoint());
+    const repo = repository();
+    submit.disabled = !repo;
+    dialog.querySelector('[data-feedback-unavailable]').hidden = Boolean(repo);
+    const inbox = dialog.querySelector('[data-feedback-inbox]');
+    inbox.hidden = !repo;
+    if (repo) inbox.href = `https://github.com/${repo}/issues?q=${encodeURIComponent('is:issue "[Atlas feedback]" in:title')}`;
     dialog.querySelector('[data-feedback-context]').textContent = field('includeContext').checked ? JSON.stringify(context, null, 2) : 'No view details will be included.';
   }
 
+  function invalidateDraft() {
+    draft.hidden = true; draft.removeAttribute('href'); copyArea.hidden = true; copyText.value = ''; status.textContent = '';
+  }
   trigger.addEventListener('click', () => {
-    // Freeze the context for a retry of an uncertain delivery.
-    if (!pending && !busy && !delivered) context = readContext();
-    controls();
+    context = readContext(); invalidateDraft(); controls();
     dialog.showModal();
     field('title').focus();
   });
   dialog.querySelectorAll('[data-feedback-close]').forEach(button => button.addEventListener('click', () => dialog.close()));
   dialog.addEventListener('close', () => trigger.focus({ preventScroll: true }));
-  field('includeContext').addEventListener('change', controls);
-  another.addEventListener('click', () => {
-    form.reset(); pending = null; delivered = false; status.textContent = ''; context = readContext(); controls(); field('title').focus();
+  for (const name of ['kind', 'title', 'description', 'includeContext']) field(name).addEventListener('input', () => { invalidateDraft(); controls(); });
+  dialog.querySelector('[data-feedback-copy]').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(copyText.value); status.textContent = 'Feedback text copied. Open the GitHub draft, paste it into the issue body, then choose Create issue.'; }
+    catch (_) { copyText.focus(); copyText.select(); status.textContent = 'Select and copy the feedback text, then paste it into the GitHub issue body.'; }
   });
 
-  form.addEventListener('submit', async event => {
+  form.addEventListener('submit', event => {
     event.preventDefault();
-    const url = endpoint();
-    if (busy || delivered || !url || !form.reportValidity()) return;
+    const repo = repository();
+    if (!repo || !form.reportValidity()) return;
     const title = field('title').value.trim(), description = field('description').value.trim();
     if (!title || !description) { status.textContent = 'Enter a summary and details before sending.'; return; }
-    const contents = { schemaVersion: 1, kind: field('kind').value, title, description, context: field('includeContext').checked ? context : null };
-    const fingerprint = JSON.stringify(contents);
-    if (!pending || pending.fingerprint !== fingerprint) pending = { fingerprint, requestId: crypto.randomUUID(), contents };
-    const request = pending;
-    busy = true; status.textContent = 'Sending your feedback…'; controls();
-    const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 20000);
-    try {
-      const response = await fetch(url, { method: 'POST', mode: 'same-origin', credentials: 'same-origin', redirect: 'error', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': request.requestId }, body: JSON.stringify({ ...request.contents, requestId: request.requestId }), signal: controller.signal });
-      if (response.status === 401 || response.status === 403) throw new Error('Please sign in to Target Atlas again before sending. Your message is still here.');
-      if (response.status === 429) throw new Error('Feedback is busy right now. Please try again shortly. Your message is still here.');
-      if (!response.ok) throw new Error('Delivery could not be confirmed. Your message is still here; you can retry.');
-      const receipt = await response.json();
-      if (typeof receipt.id !== 'string' || !/^[a-zA-Z0-9_-]{1,100}$/.test(receipt.id) || receipt.requestId !== request.requestId || receipt.status !== 'queued') throw new Error('Delivery could not be confirmed. Your message is still here; you can retry.');
-      delivered = true;
-      status.textContent = `Feedback received. Reference: ${receipt.id}.`;
-    } catch (error) {
-      status.textContent = error instanceof TypeError || error.name === 'AbortError' || error instanceof SyntaxError ? 'Delivery could not be confirmed. Your message is still here; you can retry.' : error.message;
-    } finally {
-      clearTimeout(timeout); busy = false; controls();
+    const body = ['<!-- target-atlas-feedback:v1 -->', '### Feedback type', field('kind').value, '### Details', description, '### View context', field('includeContext').checked ? '```json\n' + JSON.stringify(context, null, 2) + '\n```' : 'Not included.'].join('\n\n');
+    const url = new URL(`https://github.com/${repo}/issues/new`);
+    url.searchParams.set('template', 'atlas-feedback.md');
+    url.searchParams.set('title', '[Atlas feedback] ' + title);
+    url.searchParams.set('body', body);
+    // Long selections can exceed proxy/URL limits. Keep every character and offer
+    // a copy/paste handoff instead of silently truncating diagnostic context.
+    if (url.href.length > 6000) {
+      url.searchParams.delete('body'); copyText.value = body; copyArea.hidden = false;
+      status.textContent = 'This feedback is too long to prefill. Copy the text below, open the GitHub draft, paste it into the issue body, then choose Create issue.';
+    } else {
+      copyArea.hidden = true;
+      status.textContent = 'Finish submitting on GitHub by choosing Create issue. Atlas has only prepared a draft. If a new tab does not open, use the link below.';
     }
+    draft.href = url.href; draft.hidden = false;
+    if (copyArea.hidden) draft.click();
   });
 })();

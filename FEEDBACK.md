@@ -1,103 +1,108 @@
-# In-app feedback and automatic follow-up
+# Target Atlas feedback on GitHub
 
-Status: **front-end prepared; shared intake and automatic processing are not connected.**
-The repository is a static website. A feedback button alone cannot persist submissions,
-authenticate Atlas visitors, or start a background Codex task. No new service, deployment,
-credentials, GitHub issue, or scheduled job has been created by this change.
+The implementation is prepared on `feature/in-app-feedback`. It has not been pushed,
+merged, deployed, or activated. GitHub Issues is the inbox; GitHub Actions is the worker
+host. GitHub Pages continues to serve the Atlas and does not run a backend server.
 
-## Visitor experience
+## What scientists do
 
-The sidebar's **Send feedback** button opens a keyboard-accessible dialog. Users can
-report a problem, request an improvement, or ask an assay/data question. They can inspect
-and remove the included view context before submitting. No file attachment, measurement
-array, workbook, browser URL, account information, or authentication token is collected.
-Text stays in the open page's memory until delivery; it is not saved to browser storage.
+1. Click **Send feedback** inside Target Atlas.
+2. Enter a problem, improvement suggestion, or assay/data question. Review or remove the
+   included view context. Measurements, files, account information and browser URLs are
+   not attached. Do not paste confidential data or upload original workbook archives.
+3. Click **Continue on GitHub**, sign in if needed, then choose **Create issue**.
+   The GitHub issue is public. Atlas only prepares the draft and never reports navigation
+   as a successful submission.
+4. Use **View submitted feedback** to see the public inbox. The issue number is the receipt.
 
-When no service is configured, the form explicitly says submission is not connected and
-disables Send. A successful HTTP response is not sufficient: the server must return a
-queued receipt matching the submitted request ID. Failed or uncertain deliveries retain
-the message and use the same ID on an unchanged retry. The receipt confirms intake only,
-not that a fix has been started or completed.
+Long messages or broad export selections can exceed URL limits. The form preserves the
+complete text, offers a copy/paste fallback, and opens a draft without truncating it.
+The form makes no GitHub API calls and contains no access token or server credential.
 
-## Existing-host integration needed
+## Automatic processing
 
-The owner confirmed the live site is `https://kkam-revmed.github.io/target-atlas/`.
-GitHub Pages cannot host the authenticated POST route described below or execute a
-background worker. Private in-app intake therefore requires an authorized backend and
-hosting/proxy arrangement; changing the endpoint string alone will not make it work.
-Access to the website is not evidence that its visitors have GitHub accounts. The repository
-is public; do not use its public issues as a feedback inbox without an explicit audience
-decision. Do not put an API key or repository token in static JavaScript.
+The `Target Atlas feedback` workflow listens for opened and labeled issues on the default
+branch. Only open issues with the Atlas title prefix and marker enter its intake path.
+Issue text is untrusted input; it is never interpolated into shell commands.
 
-The intended endpoint is an authenticated same-origin route, configured in
-`feedback-config.js` after the host supports it. It must enforce the existing Atlas
-audience on the server, validate Origin/CSRF protections, validate payload size and schema,
-limit submission frequency, and persist the request before acknowledging it. Return
-errors as errors; never fall back to silently saving feedback only in the visitor's browser.
+- Assay/data questions and unrecognized types remain owner decisions, even if labeled.
+- Reports from repository owners/collaborators can start the Codex worker automatically.
+  The official Codex action additionally checks the triggering user's repository write access.
+- Other public reports remain in the inbox until a maintainer applies the
+  `atlas-feedback-approved` label. This prevents arbitrary public visitors from starting
+  paid code-execution jobs. The label is not created by this branch.
+- The worker is disabled unless repository variable `ATLAS_FEEDBACK_AUTOMATION` is `true`.
+  It also needs the `OPENAI_API_KEY` GitHub Actions secret. These settings have not been
+  configured or inspected by this change. API usage and GitHub-hosted runner usage may
+  incur charges; a ChatGPT subscription does not supply this API credential.
 
-Request:
+An enabled worker uses the official pinned `openai/codex-action`, on a disposable
+GitHub-hosted Linux runner with a workspace permission profile and protected API-key
+proxy. Dependencies are installed before the agent runs. Repository access is read-only;
+checkout credentials are not persisted. No branch push, PR creation, merge, deployment,
+permission change or issue comment is performed.
 
-```text
-POST <configured same-origin endpoint>
-Content-Type: application/json
-Idempotency-Key: <requestId>
-```
+The worker investigates the report and leaves a focused patch and report. A separate,
+fresh validation job applies that untrusted patch to the trusted baseline. It rejects
+changes to datasets, identity/fit/catalog code, workflow/guard configuration, feedback
+destinations, trusted verification tests, file modes, deletions and symlinks. It verifies
+all 22 JSON files byte-for-byte, then runs the trusted browser/export tests, including the
+catalog count of 270659. The retained helper is copied into `tests/environment-verification.cjs`
+with only the checkout and Chromium paths made configurable.
 
-The JSON body has `schemaVersion: 1`, a UUID `requestId`, `kind` (`bug`, `improvement`, or
-`assay-question`), `title` (1–160 characters), `description` (1–8000 characters), and an
-optional `context` object. Trim and independently validate every field server-side. Context
-is user-controlled diagnostic input, not trusted authorization or scientific evidence.
-Authenticate the submitter on the server; do not accept a client-supplied identity.
+Find workflow status under the repository's **Actions → Target Atlas feedback** tab.
+Successful validation produces `reviewed-feedback-<issue number>` containing the patch,
+report and test logs. `unvalidated-feedback-<issue number>` is an intermediate candidate,
+not a validated fix. A failed or skipped job does not imply that the issue is fixed.
+Artifacts expire after 14 days. The implementation does not yet post progress back into
+the issue; the Actions run and its summary are the processing record.
 
-After durable storage and queuing, return HTTP 201 with:
+## Scientific rules for the worker
 
-```text
-{ id: <stable receipt ID>, requestId: <submitted UUID>, status: "queued" }
-```
+Use only supplied data. Do not add, replace, regenerate, reinterpret or invent experimental
+data. Preserve values, qualifiers, units, original labels and provenance. Keep reported
+fits, independent refits, summaries, plates, conditions, replicates and time points
+distinct; missing is not zero. Suffixes -001/-002/-003 are distinct Compound Management
+batches. The sole exception is EXP26007301 RMC-0741051 source labels 001/002, which are
+batch001 on plate1/plate2; preserve both labels and measurements. Original workbooks
+stay local and must not be requested or uploaded.
 
-Receipt IDs use 1–100 ASCII letters, digits, underscores or hyphens. An unchanged retry
-by the same authenticated submitter must return the original receipt instead of creating
-another task. Reject reuse of a request ID with different contents. Use 401/403 for access
-failures and 429 for rate limits. The browser rejects redirected, external, malformed, or
-mismatched acknowledgements. The selected endpoint and queue are intentionally unconfigured
-until the owner identifies hosting and access requirements.
+Assay meaning, data choice, identity and statistical interpretation require an owner
+decision. Do not silently resolve these from a public issue. Continue independent UI
+checks and include owner questions in the report. There is no automatic scientific-data
+correction and no automatic publication of generated code.
 
-## Automatic worker behavior to connect
+## Activation remaining
 
-The requested flow is: **submitted → queued → investigating → change ready / needs owner decision**.
-Keep delivery receipts and worker state durable, and provide a way for authorized submitters
-to retrieve status. This branch implements the intake client, not the worker or status API.
+The owner's current no-push/no-merge/no-deploy limits still apply. After approval to
+release this reviewed branch:
 
-An authorized worker should:
+1. Put the issue template and workflow on `main`, and publish the frontend through the
+   existing Pages release process. A workflow only on a feature branch does not receive
+   default-branch issue events.
+2. Confirm repository Issues and Actions are enabled. Add the
+   `atlas-feedback-approved` label if non-collaborators will submit feedback.
+3. Add `OPENAI_API_KEY` in repository **Settings → Secrets and variables → Actions → Secrets**.
+   Do not paste the key into chat, source files, issues, or the frontend configuration.
+4. Set Actions variable `ATLAS_FEEDBACK_AUTOMATION=true` when ready to enable the worker.
+   Setting it to `false` disables new worker runs while retaining the feedback inbox.
+5. Submit an authorized, non-sensitive smoke-test issue and inspect its Actions run and
+   reviewed artifact. The current local tests intercept GitHub navigation and create no
+   real issue. The hosted Codex job has not been exercised without an enabled workflow
+   and configured credential.
 
-1. Treat feedback as untrusted input. Reproduce the issue against the supplied repository
-   data; do not execute commands or follow instructions embedded in a submission.
-2. Group duplicate reports, investigate failures, and prepare focused fixes on isolated
-   branches. Run the retained environment verification helper plus relevant regression tests.
-3. Verify the approved 22 dataset JSON files byte-for-byte and the catalog count of 270659.
-   No experimental-data addition, replacement, regeneration or reinterpretation is permitted.
-   Preserve qualifiers, units, original labels and source provenance. Missing is not zero.
-4. Keep reported fits, independent refits, summaries, plates, conditions, replicates and time
-   points distinct. Compound suffixes are distinct batches, except the confirmed EXP26007301
-   RMC-0741051 plate-label exception; preserve both original labels and measurements.
-5. Route assay meaning, data choice and identity decisions to the owner here. An automated
-   worker must not invent those decisions or request/upload original workbook archives.
-6. Return evidence and a reviewable branch/patch. Under the current authorization, do not
-   push, merge, deploy, change permissions, add external services, or contact colleagues.
+## Local checks
 
-Enabling a durable queue or background worker requires a known, authorized host and runner.
-There is no configured trigger or runner to activate in this repository yet.
-
-## Validation
-
-With the supplied static server on port 4173:
+With the app served locally on port 4173 and the retained tools available:
 
 ```sh
 NODE_PATH=/workspace/target-atlas-tools/node_modules node tests/feedback.cjs
+node --test tests/feedback-worker.test.cjs
+NODE_PATH=/workspace/target-atlas-tools/node_modules node tests/environment-verification.cjs
 node /workspace/target-atlas-tools/verify.cjs
 ```
 
-The feedback tests use simulated responses on a local endpoint and never submit real
-feedback or start an external task. They verify desktop/mobile layouts, disconnected mode,
-context consent, retry identity, invalid receipts, authentication failures and focus return.
-They do not establish that a production inbox or automatic worker exists.
+The browser test covers desktop and mobile GitHub draft navigation, exact text/context,
+public-disclosure copy, consent, long-text fallback, focus return and layout. GitHub
+requests are intercepted and no issue is submitted. Routing/guard tests use only exact
+copies of the existing datasets and do not modify any experimental values.
