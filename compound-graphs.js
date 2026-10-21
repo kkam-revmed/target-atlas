@@ -25,7 +25,7 @@ const AtlasCompoundGraphs=(()=>{
   return ['Benchling ID: '+benchling,data.biological_replicate?'Replicate '+data.biological_replicate:null,data.run_date||data.date_label,data.condition_label,data.time_hours!=null?data.time_hours+' h':null,data.response_label||'Corrected response',data.reference_plate?'RMC-0741051 · Batch 001 · reference physical plate '+data.reference_plate:null].filter(Boolean).join(' · ');
  }
  function source(q){return [q.source_compound?'Original source ID: '+q.source_compound:null,q.physical_plate?'Plate: '+q.physical_plate:null,q.identity_note,q.curve_note,...(q.sources||[]),q.report?.source,q.report?.source_row!=null?'Source row: '+q.report.source_row:null].filter(Boolean).join(' · ');}
- function graph({data,benchling,selected,target,wells=false,fits=true,connect=false,series=null,contextLabel=null,notesOverride=null}){
+ function graph({data,benchling,selected,target,wells=false,fits=true,connect=false,series=null,contextLabel=null,notesOverride=null,showComponents=false}){
   const rows=series||selected.map(id=>data.curves.find(q=>q.compound===id&&q.target===target));
   const seriesLabel=(q,i)=>q?.series_label||label(selected[i]);
   const doses=rows.flatMap(q=>q?.doses||[]).filter(d=>finite(d.x)&&d.x>0&&finite(d.mean));
@@ -33,6 +33,7 @@ const AtlasCompoundGraphs=(()=>{
   const width=800,left=64,right=22,ctx=contextLabel||context(data,benchling),header=wrap(ctx),top=55+header.length*16,bottom=top+280;
   const log=doses.map(d=>Math.log10(d.x)),xmin=Math.min(...log),xmax=Math.max(...log),pad=xmin===xmax?.5:(xmax-xmin)*.03,xd=[xmin-pad,xmax+pad];
   const values=[0,...doses.flatMap(d=>[d.mean,...(finite(d.sd)?[d.mean-d.sd,d.mean+d.sd]:[]),...(wells?(d.wells||[]).filter(finite):[])])];
+  if(showComponents)values.push(...doses.flatMap(d=>(d.components||[]).map(c=>c.mean).filter(finite)));
   if(fits)for(const q of rows)if(q){const ds=q.doses.filter(d=>d.x>0&&finite(d.mean)),lo=Math.min(...ds.map(d=>d.x)),hi=Math.max(...ds.map(d=>d.x));values.push(...(q.fit?.line||[]).filter(([d,v])=>finite(d)&&finite(v)&&d>=lo&&d<=hi).map(p=>p[1]));}
   const low=Math.min(...values),high=Math.max(...values),yp=Math.max(10,(high-low)*.08),yd=[low<0?low-yp:0,high+yp];
   const x=v=>left+(Math.log10(v)-xd[0])/(xd[1]-xd[0])*(width-left-right),y=v=>bottom-(v-yd[0])/(yd[1]-yd[0])*(bottom-top);
@@ -55,6 +56,11 @@ const AtlasCompoundGraphs=(()=>{
     const px=x(d.x),py=y(d.mean);
     if(finite(d.sd))body+=line(px,y(d.mean-d.sd),px,y(d.mean+d.sd),c)+line(px-3,y(d.mean-d.sd),px+3,y(d.mean-d.sd),c)+line(px-3,y(d.mean+d.sd),px+3,y(d.mean+d.sd),c);
     if(wells)(d.wells||[]).filter(finite).forEach(v=>{body+=`<circle data-series="well" cx="${px}" cy="${y(v)}" r="2.5" fill="white" stroke="${c}"><title>${E(seriesLabel(q,i)+' · '+d.x+' µM · well '+v)}</title></circle>`;});
+    if(showComponents)for(const component of d.components||[]){
+     if(!finite(component.mean))continue;
+     const cy=y(component.mean),shape=component.replicate===2?`<rect x="${px-4}" y="${cy-4}" width="8" height="8" fill="white" stroke="${c}"/>`:`<circle cx="${px}" cy="${cy}" r="4" fill="white" stroke="${c}"/>`;
+     body+=`<g data-biological-replicate="${component.replicate}" data-component-dose="${d.x}" data-component-mean="${component.mean}"><title>${E(seriesLabel(q,i)+' · '+d.x+' µM · Replicate '+component.replicate+' mean '+component.mean+' · '+(component.physical_plate||''))}</title>${shape}</g>`;
+    }
     body+=`<g data-dose="${d.x}" data-mean="${d.mean}" data-sd="${d.sd??''}"><title>${E(seriesLabel(q,i)+' · '+d.x+' µM · mean '+d.mean+' · SD '+(d.sd??'not reported')+' · n '+(d.n??'not reported'))}</title>${marker(px,py,shape,c)}</g>`;
    }
    body+='</g>';
