@@ -31,3 +31,7 @@
 .brand-mark{background:linear-gradient(135deg,#1c6a5c,#0d4242);border-bottom:3px solid #6fffe8}
 .nav-item.selected{box-shadow:inset 3px 0 #1c6a5c}
 input[type=checkbox]{accent-color:#1c6a5c}
+
+.potency-fit-warning{display:block;font-size:11px;color:#765215;margin-top:5px;white-space:nowrap}.potency-refit-heading{margin-top:28px}.potency-explanation{margin:20px 0 0;font-size:13px;line-height:1.7}.potency-explanation summary{cursor:pointer;color:var(--blue);font-weight:600}
+
+.potency-scroll-hint{display:none}@media(max-width:850px){.potency-scroll-hint{display:block;font-size:12px;color:var(--muted)}}
