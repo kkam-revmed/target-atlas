@@ -2,7 +2,7 @@
 const AtlasCrosslink=(()=>{
  const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const F=(v,n=2)=>v==null||!Number.isFinite(Number(v))?'—':Number(v).toLocaleString('en-US',{maximumFractionDigits:n});
- const palette=['#c6cfda','#2465cb','#24897a','#ce822c','#9760ae','#d45772'];
+ const palette=['#dddddd','#1c6a5c','#5136e0','#c28100','#a24dff','#ff5400'];
  const identity=id=>{const m=/^(RMC-\d+)-(\d{3,})$/i.exec(id||'');return globalThis.AtlasCompoundBatches?.parse(id)||{id,base:m?m[1]:id,batch:m?m[2]:null};};
  const batchLabel=id=>{const q=identity(id);return globalThis.AtlasCompoundBatches?.label?.(id)||q.base+(q.batch?' · Batch '+q.batch:'');};
  const matchingRecords=(data,id)=>data.records.filter(r=>r.compound===id);
@@ -18,10 +18,10 @@ const AtlasCrosslink=(()=>{
   const X=v=>l+v/max*(w-l-r),Y=v=>h-b-v/max*(h-t-b);let s='';
   for(let i=0;i<=5;i++){const v=max*i/5;s+='<path d="M'+X(v)+','+t+'V'+(h-b)+'M'+l+','+Y(v)+'H'+(w-r)+'" stroke="#e5eaf1"/><text x="'+X(v)+'" y="'+(h-b+20)+'" text-anchor="middle">'+F(v,0)+'</text><text x="'+(l-9)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+F(v,0)+'</text>';}
   s+='<path d="M'+X(0)+','+Y(0)+'L'+X(max)+','+Y(max)+'" stroke="#8f9eb1" stroke-dasharray="5 4"/>';
-  for(const q of [...records].sort((a,b)=>Number(a.compound===selected)-Number(b.compound===selected))){const no=q.conditions.no_cypa.total_percent,yes=q.conditions.with_cypa.total_percent,active=q.compound===selected;s+='<circle cx="'+X(no)+'" cy="'+Y(yes)+'" r="'+(active?5:3.3)+'" fill="'+(active?'#ce822c':'#2465cb')+'" opacity="'+(active?'1':'.66')+'" stroke="white" tabindex="0" role="button" data-xlink-compound="'+E(q.compound)+'" aria-label="'+E(batchLabel(q.compound)+': '+F(no)+'% No CypA; '+F(yes)+'% +CypA')+'" '+tip(batchLabel(q.compound)+' · '+context+'\nNo CypA: '+F(no)+'% · +CypA: '+F(yes)+'%\nDifference: '+F(delta(q))+' percentage points')+'/>';}
+  for(const q of [...records].sort((a,b)=>Number(a.compound===selected)-Number(b.compound===selected))){const no=q.conditions.no_cypa.total_percent,yes=q.conditions.with_cypa.total_percent,active=q.compound===selected;s+='<circle cx="'+X(no)+'" cy="'+Y(yes)+'" r="'+(active?5:3.3)+'" fill="'+(active?'#c28100':'#1c6a5c')+'" opacity="'+(active?'1':'.66')+'" stroke="white" tabindex="0" role="button" data-xlink-compound="'+E(q.compound)+'" aria-label="'+E(batchLabel(q.compound)+': '+F(no)+'% No CypA; '+F(yes)+'% +CypA')+'" '+tip(batchLabel(q.compound)+' · '+context+'\nNo CypA: '+F(no)+'% · +CypA: '+F(yes)+'%\nDifference: '+F(delta(q))+' percentage points')+'/>';}
   s+='<text x="'+((l+w-r)/2)+'" y="'+(h-45)+'" text-anchor="middle">No CypA · total crosslinking (%)</text><text transform="translate(17 '+((t+h-b)/2)+') rotate(-90)" text-anchor="middle">+CypA · total crosslinking (%)</text><text x="'+l+'" y="15">'+E(context)+' · dashed diagonal: equal responses</text>';
   s+='<text x="'+l+'" y="'+(h-9)+'">Source: 20261015 Cyclin xlink mastersheet n1 ZA 3.xlsx · '+records.length+' compound batches</text>';
-  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Crosslinking No CypA versus +CypA"><style>text{font:11px Arial;fill:#60718a}</style>'+s+'</svg>';
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Crosslinking No CypA versus +CypA"><style>text{font:11px Arial;fill:#55716c}</style>'+s+'</svg>';
  }
  function adductPlot(q){
   const w=640,h=195,left=95,right=16,totals=Object.values(q.conditions).map(c=>c.adduct_percent.reduce((a,v)=>a+v,0)),max=Math.max(100,...totals),X=v=>left+v/max*(w-left-right);let s='<text x="16" y="13">'+E(batchLabel(q.compound)+' · '+q.context)+'</text>';
@@ -29,7 +29,7 @@ const AtlasCrosslink=(()=>{
   for(let i=0;i<=5;i++)s+='<text x="'+X(i*20)+'" y="118" text-anchor="middle">'+(i*20)+'</text>';
   q.conditions.no_cypa.adduct_percent.forEach((_,i)=>{const x=left+i*87;s+='<rect x="'+x+'" y="139" width="9" height="9" fill="'+palette[i]+'"/><text x="'+(x+14)+'" y="147">'+(i===0?'No adduct':i+' adduct'+(i>1?'s':''))+'</text>';});
   s+='<text x="16" y="172">Adduct distribution (%) · Source: 20261015 Cyclin xlink mastersheet n1 ZA 3.xlsx</text>';
-  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+E(q.context+' adduct distributions, percentages')+'"><style>text{font:11px Arial;fill:#60718a}</style>'+s+'</svg>';
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+E(q.context+' adduct distributions, percentages')+'"><style>text{font:11px Arial;fill:#55716c}</style>'+s+'</svg>';
  }
  function compact({host,data,compound}){
   if(typeof host==='string')host=document.getElementById(host);if(!host)return;

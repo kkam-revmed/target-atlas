@@ -1,25 +1,25 @@
 .atlas-feedback-entry{padding-top:18px;margin-top:18px;border-top:1px solid var(--border)}
-.atlas-feedback-entry button{width:100%;min-height:42px;border:1px solid #cbd5e3;border-radius:8px;background:#edf4ff;color:#205cb1;font-weight:600}
-#atlasFeedback{width:min(620px,calc(100% - 24px));max-height:calc(100dvh - 24px);margin:auto;padding:24px;border:1px solid #cbd5e3;border-radius:12px;color:#172b45;background:#fff;overflow:auto;box-shadow:0 12px 50px #172b4530}
-#atlasFeedback::backdrop{background:#172b4580}
+.atlas-feedback-entry button{width:100%;min-height:42px;border:1px solid #b3c4be;border-radius:8px;background:#e8f6f0;color:#1c6a5c;font-weight:600}
+#atlasFeedback{width:min(620px,calc(100% - 24px));max-height:calc(100dvh - 24px);margin:auto;padding:24px;border:1px solid #b3c4be;border-radius:12px;color:#0d4242;background:#fff;overflow:auto;box-shadow:0 12px 50px #0d424230}
+#atlasFeedback::backdrop{background:#0d424280}
 #atlasFeedback *{box-sizing:border-box}
 #atlasFeedback .feedback-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
 #atlasFeedback h2{font-size:22px;margin:0}
 #atlasFeedback p{font-size:13px;line-height:1.6}
 #atlasFeedback label{display:flex;flex-direction:column;gap:7px;margin:16px 0 8px;font-size:13px;font-weight:600}
-#atlasFeedback input:not([type=checkbox]),#atlasFeedback select,#atlasFeedback textarea{width:100%;min-width:0;min-height:42px;padding:10px;border:1px solid #b9c9dd;border-radius:7px;background:#fff;color:#172b45;font:inherit}
+#atlasFeedback input:not([type=checkbox]),#atlasFeedback select,#atlasFeedback textarea{width:100%;min-width:0;min-height:42px;padding:10px;border:1px solid #b9c9dd;border-radius:7px;background:#fff;color:#0d4242;font:inherit}
 #atlasFeedback textarea{resize:vertical}
 #atlasFeedback .feedback-check{flex-direction:row;align-items:center;font-weight:400}
-#atlasFeedback .feedback-check input{width:18px;height:18px;margin:0;accent-color:#2465cb}
-#atlasFeedback .feedback-help{font-size:12px;color:#60718a}
+#atlasFeedback .feedback-check input{width:18px;height:18px;margin:0;accent-color:#1c6a5c}
+#atlasFeedback .feedback-help{font-size:12px;color:#55716c}
 #atlasFeedback .feedback-notice{padding:10px 12px;background:#fff3d8;border-radius:7px;color:#654b20}
-#atlasFeedback .feedback-context summary{font-size:12px;cursor:pointer;padding:8px 0;color:#205cb1}
+#atlasFeedback .feedback-context summary{font-size:12px;cursor:pointer;padding:8px 0;color:#1c6a5c}
 #atlasFeedback pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto}
 #atlasFeedback .feedback-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:18px}
 #atlasFeedback button{min-height:42px;padding:10px 16px;border:0;border-radius:7px;font:inherit;cursor:pointer}
-#atlasFeedback button.primary{background:#2465cb;color:#fff}
-#atlasFeedback button.secondary,#atlasFeedback .feedback-heading button{background:#edf2f8;color:#3b506c}
+#atlasFeedback button.primary{background:#1c6a5c;color:#fff}
+#atlasFeedback button.secondary,#atlasFeedback .feedback-heading button{background:#f2f2f2;color:#0d4242}
 #atlasFeedback button:disabled{cursor:default;opacity:.55}
-#atlasFeedback :is(button,input,select,textarea,summary):focus-visible{outline:3px solid #2465cb;outline-offset:3px}
+#atlasFeedback :is(button,input,select,textarea,summary):focus-visible{outline:3px solid #1c6a5c;outline-offset:3px}
 #atlasFeedback [data-feedback-status]{overflow-wrap:anywhere;min-height:20px}
 @media(max-width:450px){#atlasFeedback{padding:17px}#atlasFeedback .feedback-actions button{flex:1}}

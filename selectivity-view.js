@@ -6,7 +6,7 @@ const AtlasSelectivityView=(()=>{
   const findCompound=(names,value)=>{const term=value.trim().toLowerCase(),matches=names.filter(id=>id.toLowerCase()===term||baseCompound(id).toLowerCase()===term||batchLabel(id).toLowerCase()===term);return matches.length===1?matches[0]:null;};
  const F=(v,n=2)=>v==null||!Number.isFinite(v)?'—':Number(v).toLocaleString('en-US',{maximumFractionDigits:n});
  const S=v=>v==null?'—':Number(v).toPrecision(3);
- const palette=['#2465cb','#24897a'];
+ const palette=['#1c6a5c','#5136e0'];
  const pairs=(a,b)=>a.curves.map(q=>({a:q,b:b.curves.find(r=>r.compound===q.compound&&r.target===q.target)})).filter(p=>p.b);
  let comparisonBasis='reported';
  const reportedEC50=q=>q.report?.ec50==null?'Unavailable':`${E(q.report.qualifier||'=')} ${S(q.report.ec50)} µM`;
@@ -29,7 +29,7 @@ const AtlasSelectivityView=(()=>{
    }
    if(q.fit?.line){const ps=q.fit.line.filter(p=>p[0]>0&&p[1]>=lo&&p[1]<=hi);body+=`<path d="${ps.map((p,j)=>`${j?'L':'M'}${x(p[0])},${y(p[1])}`).join(' ')}" stroke="${c}" fill="none" stroke-dasharray="6 4"/>`;}
   });
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h+78}" role="img" aria-label="Biological replicate dose response overlay"><style>text{font:11px Arial;fill:#60718a}</style><defs><clipPath id="bio-clip"><rect x="${l}" y="${t}" width="${w-l-r}" height="${h-t-b}"/></clipPath></defs>${body}<text x="${(l+w-r)/2}" y="${h-6}" text-anchor="middle">Concentration (µM, log scale)</text><text transform="translate(14 ${(t+h-b)/2}) rotate(-90)" text-anchor="middle">${E(label)}</text><text x="62" y="${h+17}">${E(batchLabel(qs[0].compound))} · ${E(qs[0].target)}</text><path d="M62,${h+35}h22" stroke="${palette[0]}" stroke-width="2"/><text x="92" y="${h+39}">Replicate 1 · ${E(date1)}</text><path d="M320,${h+35}h22" stroke="${palette[1]}" stroke-width="2"/><text x="350" y="${h+39}">Replicate 2 · ${E(date2)}</text><text x="62" y="${h+62}">Solid: means ± technical SD · dashed: independent 4PL · open circles: wells</text></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h+78}" role="img" aria-label="Biological replicate dose response overlay"><style>text{font:11px Arial;fill:#55716c}</style><defs><clipPath id="bio-clip"><rect x="${l}" y="${t}" width="${w-l-r}" height="${h-t-b}"/></clipPath></defs>${body}<text x="${(l+w-r)/2}" y="${h-6}" text-anchor="middle">Concentration (µM, log scale)</text><text transform="translate(14 ${(t+h-b)/2}) rotate(-90)" text-anchor="middle">${E(label)}</text><text x="62" y="${h+17}">${E(batchLabel(qs[0].compound))} · ${E(qs[0].target)}</text><path d="M62,${h+35}h22" stroke="${palette[0]}" stroke-width="2"/><text x="92" y="${h+39}">Replicate 1 · ${E(date1)}</text><path d="M320,${h+35}h22" stroke="${palette[1]}" stroke-width="2"/><text x="350" y="${h+39}">Replicate 2 · ${E(date2)}</text><text x="62" y="${h+62}">Solid: means ± technical SD · dashed: independent 4PL · open circles: wells</text></svg>`;
  }
  function render(options){
   let {host,a,b,compound,threshold,onCompound,ec50Range='all'}=options;

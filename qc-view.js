@@ -34,7 +34,7 @@ globalThis.AtlasQCView = (() => {
         const w=lookup.get(`${row}:${col}`),v=w?.raw?.[channel],missing=!finite(v);
         const clazz=[col===22?'dmso':col===23?'inhibitory':'',missing?'missing':'',w?.excluded?'masked':''].filter(Boolean).join(' ');
         const title=`${row}${col}: ${cellTitle(w,channel)}`;
-        out+=`<td class="${clazz}"><button type="button" class="qc-well" data-qc-well="${row}:${col}" title="${esc(title)}" aria-label="${esc(title)}" style="${missing?'':`background:${color(v)};color:${hi===lo||v<lo+(hi-lo)*.65?'#172b45':'#fff'}`}">${missing?'—':rawFmt(v,true)}${w?.excluded?'<small>×</small>':''}</button></td>`;
+        out+=`<td class="${clazz}"><button type="button" class="qc-well" data-qc-well="${row}:${col}" title="${esc(title)}" aria-label="${esc(title)}" style="${missing?'':`background:${color(v)};color:${hi===lo||v<lo+(hi-lo)*.65?'#0d4242':'#fff'}`}">${missing?'—':rawFmt(v,true)}${w?.excluded?'<small>×</small>':''}</button></td>`;
       }
       out+='</tr>';
     }

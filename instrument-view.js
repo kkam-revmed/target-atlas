@@ -28,7 +28,7 @@ globalThis.AtlasInstrumentView = (() => {
 
   function map(r,channel,compare) {
     const values=Object.values(r.channels?.[channel]||{}).filter(finite).sort((a,b)=>a-b),q=p=>values.length?values[Math.floor((values.length-1)*p)]:null,lo=q(.05),hi=q(.95);
-    const color=v=>{const p=hi===lo?.5:Math.max(0,Math.min(1,(v-lo)/(hi-lo)));return {background:`rgb(${Math.round(246-194*p)},${Math.round(249-137*p)},${Math.round(253-66*p)})`,color:p>.65?'#fff':'#172b45'};};
+    const color=v=>{const p=hi===lo?.5:Math.max(0,Math.min(1,(v-lo)/(hi-lo)));return {background:`rgb(${Math.round(246-194*p)},${Math.round(249-137*p)},${Math.round(253-66*p)})`,color:p>.65?'#fff':'#0d4242'};};
     let out=`<div class="instrument-legend"><span><i class="instrument-scale"></i>${esc(channelNames[channel])}: ${fmt(lo)} to ${fmt(hi)} (5th–95th percentile scale)</span><span><i class="instrument-key position"></i> Column 22 DMSO · column 23 no HaloTag</span><span><i class="instrument-key missing"></i> Missing value</span>${compare?'<span><i class="instrument-key mismatch"></i> Ratio source review</span>':''}</div><div class="table-scroll"><table class="instrument-grid" aria-label="384-well instrument matrix"><thead><tr><th scope="col">Row</th>`;
     for(let col=1;col<=24;col++)out+=`<th scope="col">${col}</th>`;
     out+='</tr></thead><tbody>';
