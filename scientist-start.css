@@ -7,18 +7,19 @@
 .nav-group{margin:15px 0 0}
 .nav-group h2{margin:0 10px 5px;font-size:10px;line-height:1.6;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:650}
 .nav-group .nav-item{padding:10px;line-height:1.4;margin:1px 0}
-.scientist-start{margin:0 0 18px;padding:16px 20px;background:#fafcfb;border-color:#ccdbee}
+.scientist-start{margin:0 0 18px;padding:16px 20px;background:#fafcfb;border-color:var(--border)}
 .scientist-start>summary{cursor:pointer;color:var(--ink);line-height:1.5}
 .scientist-start>summary>span{display:inline-block;vertical-align:middle;margin-left:5px}
 .scientist-start>summary strong{font-size:15px;font-weight:650}
 .scientist-start>summary small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .scientist-start summary:focus-visible,.scientist-start button:focus-visible{outline:3px solid #1c6a5c;outline-offset:4px}
-.scientist-start-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}
-.scientist-start .start-card{min-width:0;background:white;border:1px solid var(--border);border-radius:9px;padding:16px;display:flex;flex-direction:column;align-items:flex-start}
-.scientist-start .start-card h2{font-size:14px;line-height:1.4;margin:0}
-.scientist-start .start-card p{font-size:12px;line-height:1.6;color:var(--muted);margin:9px 0 15px;flex:1}
-.scientist-start .start-card>.secondary{white-space:normal;line-height:1.4;text-align:left;min-height:40px}
-.start-assay-links{display:flex;gap:5px 14px;flex-wrap:wrap;margin-top:8px}
+.scientist-start-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:20px}
+.scientist-start .start-card{min-width:0;background:white;border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;flex-direction:column;align-items:flex-start}
+.scientist-start .start-card h2{font-size:15px;line-height:1.4;margin:0}
+.scientist-start .start-card p{font-size:13px;line-height:1.65;color:var(--muted);margin:10px 0 18px;flex:1}
+.scientist-start .start-card>.secondary{width:100%;margin-top:auto;white-space:normal;line-height:1.4;text-align:center;min-height:44px;padding:11px 12px;border:1px solid #c5dfd5;background:#e8f6f0;color:var(--blue)}
+.scientist-start .start-card>.secondary:hover{background:#dcf4e9;border-color:var(--blue)}
+.start-assay-links{display:flex;gap:5px 14px;flex-wrap:wrap;margin:0 0 12px}
 .start-assay-links button{background:transparent;border:0;padding:4px 0;color:var(--blue);font-size:12px;text-decoration:underline;text-underline-offset:3px;line-height:1.5;min-height:32px;text-align:left}
 .scientist-start .start-context-note{margin:13px 0 0;font-size:11px;line-height:1.6;color:var(--muted)}
 @media(max-width:1250px){.scientist-start-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

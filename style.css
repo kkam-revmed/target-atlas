@@ -19,7 +19,7 @@
 
 .study-select{display:flex;flex-wrap:wrap;gap:18px}.study-select label{flex:1 1 280px;min-width:0}#biologicalReplicates>.panel{margin-bottom:20px}#biologicalReplicates>.curve-grid{margin-bottom:20px}#biologicalReplicates p,#normalizationAudit p{font-size:13px;line-height:1.7}#biologicalReplicates .curve-card th,#biologicalReplicates .curve-card td{white-space:normal;min-width:105px;font-size:11px;padding:9px}
 
-.study-select .compare-replicates-button{align-self:end;min-height:38px}.source-classification-panel{margin-bottom:20px}.classification-explanation{padding:12px 14px;background:#eef4ff;border-radius:7px;font-size:13px;line-height:1.7;color:#0d4242}.source-classification-panel caption{text-align:left;font-size:11px;color:#55716c;line-height:1.6;padding:0 0 10px}.source-classification-panel tfoot th,.source-classification-panel tfoot td{background:#edf3fc;font-weight:650;border-top:2px solid #d1ddec}
+.study-select .compare-replicates-button{min-height:40px}.source-classification-panel{margin-bottom:20px}.classification-explanation{padding:12px 14px;background:#eef4ff;border-radius:7px;font-size:13px;line-height:1.7;color:#0d4242}.source-classification-panel caption{text-align:left;font-size:11px;color:#55716c;line-height:1.6;padding:0 0 10px}.source-classification-panel tfoot th,.source-classification-panel tfoot td{background:#edf3fc;font-weight:650;border-top:2px solid #d1ddec}
 
 .global-compound-search{display:flex;align-items:flex-end;flex-wrap:wrap;gap:10px;padding:15px 18px;margin:0 0 18px}.global-compound-search label{display:flex;flex-direction:column;gap:6px;min-width:230px;flex:1;font-size:12px;color:#55716c}.global-compound-search input,.compact-controls input[type=search]{min-height:36px;width:100%;border:1px solid #b3c4be;border-radius:6px;padding:8px 10px;background:#fff;color:#0d4242;font:inherit}.global-compound-search p{flex-basis:100%;margin:0}.heat-panel .compact-controls{flex-wrap:wrap;align-items:flex-end}.heat-panel .compact-controls label:first-child{min-width:190px}.source-classification-panel thead th{white-space:normal;min-width:90px}.source-classification-panel thead th:first-child{min-width:140px}.profile-panel input[type=search]{width:100%;min-height:38px;border:1px solid #b3c4be;border-radius:6px;padding:8px 10px;color:#0d4242;font:inherit}.global-compound-search button{min-height:36px}@media(max-width:700px){.global-compound-search label{flex-basis:100%;min-width:0}.global-compound-search button{flex:1}.heat-panel .compact-controls{justify-content:flex-start}}
 
@@ -35,3 +35,25 @@ input[type=checkbox]{accent-color:#1c6a5c}
 .potency-fit-warning{display:block;font-size:11px;color:#765215;margin-top:5px;white-space:nowrap}.potency-refit-heading{margin-top:28px}.potency-explanation{margin:20px 0 0;font-size:13px;line-height:1.7}.potency-explanation summary{cursor:pointer;color:var(--blue);font-weight:600}
 
 .potency-scroll-hint{display:none}@media(max-width:850px){.potency-scroll-hint{display:block;font-size:12px;color:var(--muted)}}
+
+/* Shared action and field sizing keeps mixed control rows aligned. */
+button.primary,button.secondary,.export-svg{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;line-height:1.4;white-space:normal}
+.secondary:hover,.export-svg:hover{background:#e2efe9}
+.study-select{align-items:flex-end}
+.toolbar select,.toolbar input[type=search],.toolbar input[type=number],.global-compound-search input,.global-compound-search .compound-batch-field select,.study-select select{min-height:40px}
+.toolbar>label:not(.check),.compact-controls>label{gap:8px}
+.panel>p:not([class]){font-size:13px;line-height:1.7}
+.panel-heading>button{flex-shrink:0}
+.legend{line-height:1.6}
+@media(max-width:500px){
+ .toolbar>label:not(.check){width:100%;max-width:none}
+ .toolbar>label:not(.check)>input,.toolbar>label:not(.check)>select{width:100%;min-width:0;max-width:none}
+ .global-compound-search button{flex:1 1 100%}
+ .toolbar>button.primary,.toolbar>button.secondary{flex:1 1 auto}
+}
+
+.study-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.study-select label{min-width:0}
+.study-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}
+@media(max-width:700px){.study-select{grid-template-columns:1fr}.study-actions>button{flex:1 1 auto}}
+@media(max-width:450px){.study-actions>button{width:100%}}

@@ -48,3 +48,13 @@ body.atlas-report-open{overflow:hidden}
 
 main.data-export-mode #selectivityIdentityNotice{display:none!important}
 .atlas-export .atlas-export-presets{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:0 0 10px}.atlas-export-presets>span{font-size:12px;font-weight:600;color:#55716c;margin-right:2px}.atlas-export button.primary,.atlas-export button.secondary{border:0;border-radius:7px;padding:11px 14px;font-size:12px;font-weight:600;min-height:40px;line-height:1.4}.atlas-export button.primary{background:#1c6a5c;color:#fff}.atlas-export button.primary:hover{background:#0d4242}.atlas-export button.secondary{background:#f2f2f2;color:#0d4242}.atlas-export button.secondary:hover{background:#dfe9f5}.atlas-export-presets button[aria-pressed=true]{background:#dcf4e9;color:#1c6a5c;box-shadow:inset 0 0 0 1px #1c6a5c}.atlas-export-downloads button.primary,.atlas-export-downloads button.secondary{min-height:44px}.atlas-export .atlas-export-presets button{white-space:normal}
+
+/* Share the action row so file downloads align with the PDF scope and action. */
+@media(min-width:701px){
+ .atlas-export-downloads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px}
+ .atlas-export-downloads>div:first-child,.atlas-export-downloads>div:last-child{display:grid;grid-row:span 2;grid-template-rows:subgrid;min-width:0;gap:10px 12px;align-items:end}
+ .atlas-export-downloads>div:first-child{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .atlas-export-downloads>div:first-child p{grid-column:1/-1}
+ .atlas-export-downloads>div:last-child{grid-template-columns:minmax(0,1fr) auto}
+ .atlas-export-downloads>div>p{margin:0;align-self:start}
+}
