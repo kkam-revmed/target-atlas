@@ -11,6 +11,27 @@ try{
   await page.locator('#compareCompoundGraphs').click();await page.locator('#graphCards svg').waitFor();
   await page.locator('#graphClear').click();assert.equal(await page.locator('#graphCards svg').count(),0);
   const supplied=JSON.parse(fs.readFileSync(path.join(root,'cyclind1.json'),'utf8')),ids=supplied.compounds.slice(0,7);
+  const partialMatches=[...new Set(supplied.compounds.filter(id=>id.includes('051')).map(id=>id.replace(/-\d{3,}$/,'')))].sort();
+  await page.locator('#graphSearch').pressSequentially('051');
+  assert(await page.locator('#graphSuggestions').isVisible());
+  assert.deepEqual(await page.locator('[data-graph-suggestion]').evaluateAll(es=>es.map(e=>e.dataset.graphSuggestion)),partialMatches);
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'graphSearch');
+  const popup=await page.locator('#graphSuggestions').boundingBox();assert(popup.x>=0&&popup.x+popup.width<=width+1);
+  await page.screenshot({path:'/tmp/compound-suggestions-'+width+'.png'});
+  await page.locator('[data-graph-suggestion="RMC-0741051"]').click();
+  assert.equal(await page.locator('#graphCompound').inputValue(),'RMC-0741051');
+  assert.equal(await page.locator('#graphBatch').inputValue(),'RMC-0741051-001');
+  assert(!(await page.locator('#graphSuggestions').isVisible()));
+  await page.locator('#graphAdd').click();assert.equal(await page.locator('[data-graph-compound]').first().getAttribute('data-graph-compound'),'RMC-0741051-001');
+  await page.locator('#graphClear').click();
+  await page.locator('#graphSearch').fill('051');await page.locator('#graphSearch').press('ArrowDown');
+  assert.equal(await page.locator('#graphSearch').getAttribute('aria-activedescendant'),'graphSuggestion0');
+  await page.locator('#graphSearch').press('Enter');assert.equal(await page.locator('#graphCompound').inputValue(),partialMatches[0]);
+  assert(!(await page.locator('#graphSuggestions').isVisible()));
+  await page.locator('#graphSearch').fill('051');await page.locator('#graphSearch').press('Escape');
+  assert.equal(await page.locator('#graphSearch').inputValue(),'051');assert(!(await page.locator('#graphSuggestions').isVisible()));
+  await page.locator('#graphSearch').fill('unknown-id');assert.equal(await page.locator('[data-graph-suggestion]').count(),0);assert(await page.locator('#graphAdd').isDisabled());
+  await page.locator('#graphSearch').fill('');assert(!(await page.locator('#graphSuggestions').isVisible()));
   async function add(id){await page.locator('#graphSearch').fill(id.toLowerCase());await page.locator('#graphAdd').click();}
   await add(ids[0]);await add(ids[1]);await add(ids[2]);
   assert(await page.locator('#graphAdd').isDisabled(),'duplicate selection must be disabled');
