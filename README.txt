@@ -73,7 +73,7 @@ are not filled with independent refits. Bounds are classified only when their
 full interval fits a bin. The Methods view documents boundary precision.
 
 Experiment context and raw QC
-Editable experiment title, description, experiment ID and Benchling reference are saved only in browser storage. EXP26007301 is the export experiment ID and the user-confirmed Benchling ID. Replicate 2 Header describes 26 selected compounds plus two analogs of RMC-0741051, totaling 28 full IDs.
+Editable assay title, description, Benchling ID and optional Benchling link are saved only in browser storage. EXP numbers are labeled Benchling ID throughout the selectors, result tables and exports; original source metadata and existing section links retain their stored keys. Replicate 2 Header describes 26 selected compounds plus two analogs of RMC-0741051, totaling 28 full IDs.
 Raw plate QC preserves four raw channels, physical plate positions, source controls and mask state. It reports per-channel sample SD/positive mean CV for paired wells and controls in columns 22 and 23. Review thresholds are exploratory; no automatic exclusions. Technical replicate review combines raw CV, corrected gaps and observed peak cutoff disagreements.
 
 Confirmed physical plate mapping for EXP26007301

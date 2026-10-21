@@ -85,7 +85,7 @@ const AtlasCrosslink=(()=>{
     <p>Type a full or partial compound ID, then choose its batch and target context. The table immediately below shows each adduct percentage with and without CypA.</p>
     <div class="toolbar xlink-picker"><label>Find compound<input id="xlinkPickerSearch" type="search" placeholder="Type an RMC ID" autocomplete="off" aria-describedby="xlinkPickerStatus"></label><label>Compound<select id="xlinkCompoundSelect">${bases.map(c=>'<option>'+E(c)+'</option>').join('')}</select></label><label>Batch<select id="xlinkBatchSelect"></select></label><label>Target context<select id="xlinkContext">${data.contexts.map(c=>'<option>'+E(c)+'</option>').join('')}</select></label></div>
     <p id="xlinkPickerStatus" class="section-note" role="status" aria-live="polite"></p>
-    <p class="section-note">${data.compounds.length} tested compound batches (${bases.length} base compounds) · ${data.contexts.length} target contexts. Batches 001, 002 and 003 remain separate. The selected NanoBRET experiment, Cmax and EC50 filters do not change these results.</p>
+    <p class="section-note">${data.compounds.length} tested compound batches (${bases.length} base compounds) · ${data.contexts.length} target contexts. Batches 001, 002 and 003 remain separate. The selected NanoBRET Benchling ID, Cmax and EC50 filters do not change these results.</p>
     <div class="xlink-jumps"><a href="#xlinkSummary">Batch counts and percentages</a><a href="#xlinkBrowse">Find a compound or browse results</a><a href="#xlinkAdvanced">Compare contexts and shared hits</a><button type="button" class="secondary" data-source-group="crosslinking">View source files</button></div>
   </section>
   <div id="xlinkSelected"></div>

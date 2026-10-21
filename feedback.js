@@ -18,7 +18,7 @@
       <p class="feedback-help">Please describe the issue without attaching original workbooks or pasting experimental data.</p>
       <label class="feedback-check"><input name="includeContext" type="checkbox" checked>Include current view details</label>
       <details class="feedback-context"><summary>Review the details included</summary><pre data-feedback-context></pre></details>
-      <p class="feedback-help">View details include the selected section, experiment and compound when applicable. They do not include measurements, files, or account information.</p>
+      <p class="feedback-help">View details include the selected section, Benchling ID and compound when applicable. They do not include measurements, files, or account information.</p>
       <p data-feedback-status role="status" aria-live="polite"></p>
       <div data-feedback-copy-area hidden><label>Feedback text<textarea data-feedback-text readonly rows="6"></textarea></label><button type="button" class="secondary" data-feedback-copy>Copy feedback text</button></div>
       <p><a data-feedback-draft target="_blank" rel="noopener noreferrer" hidden>Open GitHub draft</a></p>

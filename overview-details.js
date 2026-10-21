@@ -53,7 +53,7 @@
  }
  function listCSV(qs,context){
   const basis=context.basis||'gds',refit=basis==='refit';
-  const keys=['experiment','biological_replicate','run_date','condition','response_source','target','ec50_band','cmax_cutoff','compound','cmax','cmax_basis','ec50_basis',...(refit?['independent_refit_ec50_um','independent_refit_flags']:['reported_ec50_qualifier','reported_ec50_um','source_classification','source_qc','source_valid']),'source_file','source_row','original_source_target','original_source_transfection'];
+  const keys=['benchling_id','biological_replicate','run_date','condition','response_source','target','ec50_band','cmax_cutoff','compound','cmax','cmax_basis','ec50_basis',...(refit?['independent_refit_ec50_um','independent_refit_flags']:['reported_ec50_qualifier','reported_ec50_um','source_classification','source_qc','source_valid']),'source_file','source_row','original_source_target','original_source_transfection'];
   const rows=[keys,...qs.map(q=>[context.experiment,context.replicate,context.date,context.condition,context.response,q.target,context.band,context.threshold,q.compound,cmax(q,basis),cmaxBasis(q,basis),refit?'Independent 4PL refit':'GDS reported',...(refit?[q.fit?.ec50,q.fit_flags?.join('; ')]:[q.report?.qualifier,q.report?.ec50,q.report?.source_mode,q.report?.source_qc,q.report?.source_valid]),basis==='gds'&&q.report?.source?q.report.source:(q.sources||[]).join('; '),basis==='gds'?q.report?.source_row:null,q.source_target,q.source_transfection])];
   return rows.map(r=>r.map(v=>{if(v==null)return '';let s=String(v);if(typeof v==='string'&&/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';}).join(',')).join('\r\n');
  }
