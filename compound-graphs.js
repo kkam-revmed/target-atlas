@@ -25,11 +25,12 @@ const AtlasCompoundGraphs=(()=>{
   return ['Benchling ID: '+benchling,data.biological_replicate?'Replicate '+data.biological_replicate:null,data.run_date||data.date_label,data.condition_label,data.time_hours!=null?data.time_hours+' h':null,data.response_label||'Corrected response',data.reference_plate?'RMC-0741051 · Batch 001 · reference physical plate '+data.reference_plate:null].filter(Boolean).join(' · ');
  }
  function source(q){return [q.source_compound?'Original source ID: '+q.source_compound:null,q.physical_plate?'Plate: '+q.physical_plate:null,q.identity_note,q.curve_note,...(q.sources||[]),q.report?.source,q.report?.source_row!=null?'Source row: '+q.report.source_row:null].filter(Boolean).join(' · ');}
- function graph({data,benchling,selected,target,wells=false,fits=true,connect=false}){
-  const rows=selected.map(id=>data.curves.find(q=>q.compound===id&&q.target===target));
+ function graph({data,benchling,selected,target,wells=false,fits=true,connect=false,series=null,contextLabel=null,notesOverride=null}){
+  const rows=series||selected.map(id=>data.curves.find(q=>q.compound===id&&q.target===target));
+  const seriesLabel=(q,i)=>q?.series_label||label(selected[i]);
   const doses=rows.flatMap(q=>q?.doses||[]).filter(d=>finite(d.x)&&d.x>0&&finite(d.mean));
   if(!doses.length)return '';
-  const width=800,left=64,right=22,ctx=context(data,benchling),header=wrap(ctx),top=55+header.length*16,bottom=top+280;
+  const width=800,left=64,right=22,ctx=contextLabel||context(data,benchling),header=wrap(ctx),top=55+header.length*16,bottom=top+280;
   const log=doses.map(d=>Math.log10(d.x)),xmin=Math.min(...log),xmax=Math.max(...log),pad=xmin===xmax?.5:(xmax-xmin)*.03,xd=[xmin-pad,xmax+pad];
   const values=[0,...doses.flatMap(d=>[d.mean,...(finite(d.sd)?[d.mean-d.sd,d.mean+d.sd]:[]),...(wells?(d.wells||[]).filter(finite):[])])];
   if(fits)for(const q of rows)if(q){const ds=q.doses.filter(d=>d.x>0&&finite(d.mean)),lo=Math.min(...ds.map(d=>d.x)),hi=Math.max(...ds.map(d=>d.x));values.push(...(q.fit?.line||[]).filter(([d,v])=>finite(d)&&finite(v)&&d>=lo&&d<=hi).map(p=>p[1]));}
@@ -44,26 +45,28 @@ const AtlasCompoundGraphs=(()=>{
   const omitted=[];
   rows.forEach((q,i)=>{
    if(!q){omitted.push(label(selected[i])+': no result for this target');return;}
-   const c=palette[i],ds=q.doses.filter(d=>finite(d.x)&&d.x>0&&finite(d.mean)).sort((a,b)=>a.x-b.x);
+   const c=q.series_color||palette[i%palette.length],shape=q.series_marker??i,ds=q.doses.filter(d=>finite(d.x)&&d.x>0&&finite(d.mean)).sort((a,b)=>a.x-b.x);
    const missing=q.doses.length-ds.length;if(missing)omitted.push(label(q.compound)+': '+missing+' dose(s) omitted from log plot (nonpositive dose or missing mean)');
    if(!ds.length)return;
-   body+=`<g data-graph-compound="${E(q.compound)}">`;
+   body+=`<g data-graph-compound="${E(q.compound)}" data-run-series="${E(q.series_id||q.compound)}">`;
    if(fits){const points=(q.fit?.line||[]).filter(([d,v])=>finite(d)&&finite(v)&&d>=ds[0].x&&d<=ds.at(-1).x);if(points.length)body+=`<path data-series="independent-fit" d="${path(points)}" fill="none" stroke="${c}" stroke-width="2.2" ${connect?'stroke-dasharray="6 4"':''}/>`;else omitted.push(label(q.compound)+': no independent 4PL curve available; measured points only');}
    if(connect)body+=`<path data-series="dose-means" d="${path(ds.map(d=>[d.x,d.mean]))}" fill="none" stroke="${c}" stroke-width="2"/>`;
    for(const d of ds){
     const px=x(d.x),py=y(d.mean);
     if(finite(d.sd))body+=line(px,y(d.mean-d.sd),px,y(d.mean+d.sd),c)+line(px-3,y(d.mean-d.sd),px+3,y(d.mean-d.sd),c)+line(px-3,y(d.mean+d.sd),px+3,y(d.mean+d.sd),c);
-    if(wells)(d.wells||[]).filter(finite).forEach(v=>{body+=`<circle data-series="well" cx="${px}" cy="${y(v)}" r="2.5" fill="white" stroke="${c}"><title>${E(label(q.compound)+' · '+d.x+' µM · well '+v)}</title></circle>`;});
-    body+=`<g data-dose="${d.x}" data-mean="${d.mean}" data-sd="${d.sd??''}"><title>${E(label(q.compound)+' · '+d.x+' µM · mean '+d.mean+' · SD '+(d.sd??'not reported')+' · n '+(d.n??'not reported'))}</title>${marker(px,py,i,c)}</g>`;
+    if(wells)(d.wells||[]).filter(finite).forEach(v=>{body+=`<circle data-series="well" cx="${px}" cy="${y(v)}" r="2.5" fill="white" stroke="${c}"><title>${E(seriesLabel(q,i)+' · '+d.x+' µM · well '+v)}</title></circle>`;});
+    body+=`<g data-dose="${d.x}" data-mean="${d.mean}" data-sd="${d.sd??''}"><title>${E(seriesLabel(q,i)+' · '+d.x+' µM · mean '+d.mean+' · SD '+(d.sd??'not reported')+' · n '+(d.n??'not reported'))}</title>${marker(px,py,shape,c)}</g>`;
    }
    body+='</g>';
   });
   let foot=bottom+72;
+  if(series){rows.forEach((q,i)=>{const c=q.series_color||palette[i%palette.length];body+=line(24,foot,52,foot,c,'stroke-width="2"')+marker(38,foot,q.series_marker??i,c);for(const l of wrap(seriesLabel(q,i),100)){body+=text(62,foot+4,l);foot+=18;}foot+=5;});foot+=10;}else{
   selected.forEach((id,i)=>{const lx=24+(i%2)*390,ly=foot+Math.floor(i/2)*24;body+=line(lx,ly,lx+28,ly,palette[i],'stroke-width="2"')+marker(lx+14,ly,i,palette[i])+text(lx+38,ly+4,label(id)+(!rows[i]?' · no result':''));});
   foot+=Math.ceil(selected.length/2)*24+10;
-  const notes=['Symbols: supplied dose means ± SD. '+(wells?'Open circles: individual wells.':''),fits?(connect?'Solid lines connect measured means; dashed lines show existing independent 4PL fits.':'Solid lines: existing independent 4PL fits, within the tested dose range; not GDS-reported fits.'):'Solid lines connect measured dose means. Independent 4PL fits are hidden.','Each batch, target, run and condition stays separate. No statistical significance is inferred.',...rows.flatMap(q=>q?.fit_flags?.length?[label(q.compound)+' · Independent-fit warnings: '+q.fit_flags.join('; ')]:[]),...omitted];
+  }
+  const notes=notesOverride?[...notesOverride,...omitted]:['Symbols: supplied dose means ± SD across measured wells; pooled references can span plates. '+(wells?'Open circles: individual wells.':''),fits?(connect?'Solid lines connect measured means; dashed lines show existing independent 4PL fits.':'Solid lines: existing independent 4PL fits, within the tested dose range; not GDS-reported fits.'):'Solid lines connect measured dose means. Independent 4PL fits are hidden.','Each batch, target, run and condition stays separate. No statistical significance is inferred.',...rows.flatMap(q=>q?.fit_flags?.length?[label(q.compound)+' · Independent-fit warnings: '+q.fit_flags.join('; ')]:[]),...omitted];
   for(const s of notes.flatMap(n=>wrap(n))){body+=text(20,foot,s);foot+=16;}
-  const provenance={benchling_id:benchling,context:ctx,target,line_basis:fits?(connect?'Connected measured dose means and existing independent 4PL fit':'Existing independent 4PL fit'):'Connected measured dose means',selected_batches:selected,curves:rows.filter(Boolean).map(q=>({compound:q.compound,source_compound:q.source_compound,physical_plate:q.physical_plate,source:source(q),independent_4pl:q.fit?{ec50_um:q.fit.ec50,baseline:q.fit.s0,plateau:q.fit.sinf,hill_slope:q.fit.hill,r2:q.fit.r2}:null,fit_flags:q.fit_flags}))};
+  const provenance={error_bar_basis:series?data.error_bar_basis:'Sample SD across supplied wells per concentration',benchling_id:benchling,context:ctx,target,line_basis:fits?(connect?'Connected measured dose means and existing independent 4PL fit':'Existing independent 4PL fit'):'Connected measured dose means',selected_batches:selected,curves:rows.filter(Boolean).map(q=>({series_id:q.series_id,series_label:q.series_label,benchling_id:q.benchling_id,biological_replicate:q.biological_replicate,run_date:q.run_date,condition:q.condition_label,summary_components:q.summary_components,compound:q.compound,source_compound:q.source_compound,physical_plate:q.physical_plate,source:source(q),independent_4pl:q.fit?{ec50_um:q.fit.ec50,baseline:q.fit.s0,plateau:q.fit.sinf,hill_slope:q.fit.hill,r2:q.fit.r2}:null,fit_flags:q.fit_flags}))};
   return `<svg xmlns="http://www.w3.org/2000/svg" class="compound-comparison-graph" viewBox="0 0 ${width} ${foot+14}" width="${width}" height="${foot+14}" role="img" aria-label="${E(target+' dose–response comparison of '+selected.map(label).join(', '))}"><title>${E(target+' · '+ctx)}</title><metadata>${E(JSON.stringify(provenance))}</metadata><style>.compound-comparison-graph text{font:12px Arial,sans-serif;fill:#0d4242}.compound-comparison-graph .heading{font-size:18px;font-weight:600}</style><rect width="100%" height="100%" fill="white"/>${body}</svg>`;
  }
  function save(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
@@ -139,5 +142,5 @@ const AtlasCompoundGraphs=(()=>{
   };
   search(false);draw();if(changed&&previous.length!==s.selected.length)$('graphStatus').textContent+=' '+(previous.length-s.selected.length)+' unavailable batch(es) removed for this Benchling ID.';
  }
- return {render,graph};
+ return {render,graph,exportGraph};
 })();
