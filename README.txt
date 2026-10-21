@@ -127,3 +127,7 @@ uploaded analyses cannot be shared through a section link.
 Reset filters in Data & export clears result filters while retaining selected
 datasets, measurements and columns. Numeric table previews use six significant
 digits; CSV and Excel retain the full stored numeric precision.
+
+Compare compounds and download graphs
+The Compare compounds view overlays up to six explicitly selected compound batches, with a separate graph for each target/configuration. It uses only the current Benchling ID, biological replicate, condition and response basis. Changing those controls replaces the plotted run; runs are never pooled. Selections remain separate by full batch ID, with unavailable selections removed explicitly.
+Graphs show supplied dose means and SD, with optional individual wells and existing independent-fit lines restricted to the measured concentration range. Fit warnings, source IDs/files and physical plate details remain available. Missing results are not plotted as zero. Green colors and distinct marker shapes identify compounds. PNG and SVG downloads contain exactly the selected graph, its compound/batch legend and run context; SVG metadata also retains source provenance. No experimental dataset is modified or regenerated.
