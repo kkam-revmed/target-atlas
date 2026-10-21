@@ -8,14 +8,14 @@ const fs=require('node:fs');
   const page=await browser.newPage({viewport:{width:390,height:844},acceptDownloads:true});
   await page.goto((process.env.ATLAS_URL||'http://127.0.0.1:4173/')+'?view=crosslinking');
   await page.locator('#xlinkContext').waitFor();
-  await page.locator('#xlinkCompoundSelect').selectOption('RMC-0737135');
+  await page.locator('#xlinkPickerSearch').fill('0737135');
   await page.locator('#xlinkContext').selectOption('CDK4 (CyclinD1)');
   await page.locator('#xlinkListFilter').selectOption('hits');
   await page.locator('#xlinkSearch').fill('RMC-');
   await page.locator('#xlinkAdvanced').evaluate(el=>el.open=true);
   await page.locator('#xcompareMembership').selectOption('any');
   const snapshot=()=>page.evaluate(()=>({
-   controls:Object.fromEntries(['xlinkCompoundSelect','xlinkBatchSelect','xlinkContext','xlinkSearch','xlinkListFilter','xcompareMembership'].map(id=>[id,document.getElementById(id).value])),
+   controls:Object.fromEntries(['xlinkPickerSearch','xlinkCompoundSelect','xlinkBatchSelect','xlinkContext','xlinkSearch','xlinkListFilter','xcompareMembership'].map(id=>[id,document.getElementById(id).value])),
    heading:document.getElementById('xlinkSelectedHeading').textContent,
    values:document.querySelector('.xlink-adduct-table').textContent,
    rows:[...document.querySelectorAll('#xlinkTable [data-xlink-compound]')].map(e=>e.dataset.xlinkCompound),

@@ -82,8 +82,9 @@ const AtlasCrosslink=(()=>{
   const bases=[...new Set(data.compounds.map(c=>identity(c).base))].sort();
   host.innerHTML=`<section class="panel xlink-panel" id="xlinkChoose">
     <div class="eyebrow">CROSSLINKING · INDEPENDENT ASSAY DATASET</div><h2>See adduct percentages for a compound</h2>
-    <p>Choose a compound, its batch, and a target context. The table immediately below shows each adduct percentage with and without CypA.</p>
-    <div class="toolbar xlink-picker"><label>Compound<select id="xlinkCompoundSelect">${bases.map(c=>'<option>'+E(c)+'</option>').join('')}</select></label><label>Batch<select id="xlinkBatchSelect"></select></label><label>Target context<select id="xlinkContext">${data.contexts.map(c=>'<option>'+E(c)+'</option>').join('')}</select></label></div>
+    <p>Type a full or partial compound ID, then choose its batch and target context. The table immediately below shows each adduct percentage with and without CypA.</p>
+    <div class="toolbar xlink-picker"><label>Find compound<input id="xlinkPickerSearch" type="search" placeholder="Type an RMC ID" autocomplete="off" aria-describedby="xlinkPickerStatus"></label><label>Compound<select id="xlinkCompoundSelect">${bases.map(c=>'<option>'+E(c)+'</option>').join('')}</select></label><label>Batch<select id="xlinkBatchSelect"></select></label><label>Target context<select id="xlinkContext">${data.contexts.map(c=>'<option>'+E(c)+'</option>').join('')}</select></label></div>
+    <p id="xlinkPickerStatus" class="section-note" role="status" aria-live="polite"></p>
     <p class="section-note">${data.compounds.length} tested compound batches (${bases.length} base compounds) · ${data.contexts.length} target contexts. Batches 001, 002 and 003 remain separate. The selected NanoBRET experiment, Cmax and EC50 filters do not change these results.</p>
     <div class="xlink-jumps"><a href="#xlinkSummary">Batch counts and percentages</a><a href="#xlinkBrowse">Find a compound or browse results</a><a href="#xlinkAdvanced">Compare contexts and shared hits</a><button type="button" class="secondary" data-source-group="crosslinking">View source files</button></div>
   </section>
@@ -99,12 +100,24 @@ const AtlasCrosslink=(()=>{
   <details class="panel xlink-panel" id="xlinkAdvanced"><summary>Compare contexts and shared hits</summary><div id="xlinkCompare"></div></details>
   <details class="panel xlink-panel"><summary>Assay setup and source notes</summary><p>10 µM compound, 1 µM target, 10 µM CypA in the +CypA condition, 6 hours, n = 1. No biological significance tests or error bars are inferred.</p><ul class="xlink-notes">${data.notes.map(n=>'<li>'+E(n)+'</li>').join('')}</ul></details>`;
   const $=id=>host.querySelector('#'+id);
+  function pickerMatches(){
+    const term=$('xlinkPickerSearch').value.trim().toLowerCase();
+    return data.compounds.filter(c=>c.toLowerCase().includes(term));
+  }
   function syncPicker(){
-    $('xlinkCompoundSelect').value=identity(selected).base;
+    const matches=pickerMatches(),matchingBases=[...new Set(matches.map(c=>identity(c).base))].sort();
+    const found=matches.includes(selected);
+    $('xlinkCompoundSelect').innerHTML=(found?'':'<option value="">'+(matches.length?'Choose a compound':'No matches')+'</option>')+matchingBases.map(c=>'<option>'+E(c)+'</option>').join('');
+    $('xlinkCompoundSelect').disabled=!matches.length;
+    $('xlinkBatchSelect').disabled=!found;
+    $('xlinkSelected').hidden=!found;
+    $('xlinkPickerStatus').textContent=!matches.length?'No matching compound batch. Check the ID or clear the search.':!found?matchingBases.length+' matching compounds. Choose a compound to see its adduct percentages.':$('xlinkPickerSearch').value.trim()?matchingBases.length+' matching compound'+(matchingBases.length===1?'':'s')+' · Showing '+batchLabel(selected)+'.':'';
+    $('xlinkCompoundSelect').value=found?identity(selected).base:'';
     $('xlinkBatchSelect').innerHTML=data.compounds.filter(c=>identity(c).base===identity(selected).base).map(c=>'<option value="'+E(c)+'">'+E(identity(c).batch||'Unspecified')+'</option>').join('');
     $('xlinkBatchSelect').value=selected;
   }
   function select(c,jump=false){
+    if(!pickerMatches().includes(c))$('xlinkPickerSearch').value='';
     selected=c;onCompound?.(c);syncPicker();
     $('xlinkSelected').innerHTML=compoundDetails(data,c,$('xlinkContext').value);
     $('xlinkScatter').innerHTML=scatter(shown,$('xlinkContext').value,selected);
@@ -123,10 +136,16 @@ const AtlasCrosslink=(()=>{
     $('xlinkScatter').innerHTML=scatter(shown,context,selected);
     $('xlinkTable').innerHTML=shown.length?'<table><thead><tr><th>Compound</th><th>Batch</th><th>Adduct details</th><th>No CypA total (%)</th><th>+CypA total (%)</th><th>Difference (pp)</th><th>Fold change</th><th>Hit status</th><th>Source</th></tr></thead><tbody>'+shown.map(q=>'<tr><td>'+E(identity(q.compound).base)+'</td><td>'+E(identity(q.compound).batch||'—')+'</td><td><button type="button" class="compound-link" data-xlink-compound="'+E(q.compound)+'" aria-label="View adducts for '+E(batchLabel(q.compound))+'">View adducts</button></td><td>'+F(q.conditions.no_cypa.total_percent)+'</td><td>'+F(q.conditions.with_cypa.total_percent)+'</td><td>'+F(delta(q))+'</td><td>'+E(foldText(q.comparison.total_fold))+'</td><td>'+E(AtlasCrosslinkHits.status(q))+'</td><td>'+E(q.sheet)+' · row '+q.source_row+'</td></tr>').join('')+'</tbody></table>':'<p>No batches match this search and filter in '+E(context)+'. Clear the search or choose another filter.</p>';
   }
-  $('xlinkCompoundSelect').onchange=()=>select(data.compounds.find(c=>identity(c).base===$('xlinkCompoundSelect').value));
+  $('xlinkPickerSearch').oninput=()=>{
+    const matches=pickerMatches(),matchingBases=new Set(matches.map(c=>identity(c).base));
+    if(matchingBases.size===1)select(matches.includes(selected)?selected:matches[0]);
+    else if(matches.includes(selected))select(selected);
+    else syncPicker();
+  };
+  $('xlinkCompoundSelect').onchange=()=>{const c=pickerMatches().find(c=>identity(c).base===$('xlinkCompoundSelect').value);if(c)select(c);};
   $('xlinkBatchSelect').onchange=()=>select($('xlinkBatchSelect').value);
   $('xlinkSearch').oninput=update;$('xlinkListFilter').onchange=update;
-  $('xlinkContext').onchange=()=>{update();select(selected);};$('xlinkSort').onchange=update;
+  $('xlinkContext').onchange=()=>{update();if(!$('xlinkSelected').hidden)select(selected);};$('xlinkSort').onchange=update;
   $('xlinkClear').onclick=()=>{$('xlinkSearch').value='';$('xlinkListFilter').value='all';update();};$('xlinkCSV').onclick=()=>downloadCSV(data,shown);
   host.onclick=e=>{
     const batch=e.target.closest('[data-xlink-compound]');if(batch)select(batch.dataset.xlinkCompound,true);

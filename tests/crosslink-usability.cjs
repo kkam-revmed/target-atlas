@@ -78,6 +78,31 @@ function checkCSV(rows, records) {
         await page.locator('#xlinkBatchSelect').selectOption(id);
         await checkTable(page, data.records.find(q => q.compound === id && q.context === data.contexts[2]));
       }
+      // The top picker must accept typed IDs without merging distinct batches.
+      const search=page.locator('#xlinkPickerSearch');
+      await search.pressSequentially('0737135');
+      await checkTable(page, data.records.find(q=>q.compound==='RMC-0737135-001'&&q.context===data.contexts[2]));
+      assert.equal(await page.evaluate(()=>document.activeElement.id),'xlinkPickerSearch');
+      for(const id of data.compounds.filter(c=>base(c)===base(multi))){
+        await search.fill('  '+id.toLowerCase()+'  ');
+        assert.equal(await page.locator('#xlinkBatchSelect').inputValue(),id);
+        const q=data.records.find(q=>q.compound===id&&q.context===data.contexts[2]);
+        await checkTable(page,q);
+        checkCSV(await downloadRows(page,'#xlinkSelectedCSV'),[q]);
+      }
+      await search.fill(base(multi)+'-999');
+      assert(await page.locator('#xlinkCompoundSelect').isDisabled());
+      assert(await page.locator('#xlinkBatchSelect').isDisabled());
+      assert(!(await page.locator('#xlinkSelected').isVisible()),'no match must not display the previous result');
+      assert.match(await page.locator('#xlinkPickerStatus').innerText(),/No matching compound batch/);
+      await page.locator('#xlinkContext').selectOption(data.contexts[0]);
+      await search.fill('');
+      assert.equal(await page.locator('#xlinkCompoundSelect option').count(),new Set(data.compounds.map(base)).size);
+      assert((await page.locator('#xlinkSelectedHeading').innerText()).includes(data.contexts[0]));
+      await search.fill('RMC-');
+      await page.locator('#xlinkCompoundSelect').selectOption('RMC-0737135');
+      await checkTable(page,data.records.find(q=>q.compound==='RMC-0737135-001'&&q.context===data.contexts[0]));
+      await search.fill('');
       const zero = data.records.find(q => q.conditions.no_cypa.total_percent === 0 && q.comparison.total_fold.value == null);
       assert(zero, 'the supplied data must exercise an undefined fold at a zero baseline');
       await page.locator('#xlinkContext').selectOption(zero.context);

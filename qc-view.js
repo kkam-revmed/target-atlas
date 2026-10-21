@@ -24,7 +24,13 @@ globalThis.AtlasQCView = (() => {
     const wells=plate.wells || [],lookup=new Map(wells.map(w=>[`${w.row}:${w.column}`,w]));
     const values=wells.filter(w=>!w.excluded).map(w=>w.raw?.[channel]).filter(finite).sort((a,b)=>a-b);
     const lo=quantile(values,.05),hi=quantile(values,.95);
-    const color=v=> {if(!finite(v))return '';const f=hi===lo?.5:Math.max(0,Math.min(1,(v-lo)/(hi-lo)));return `rgb(${Math.round(245-193*f)},${Math.round(249-137*f)},${Math.round(253-66*f)})`;};
+    const color=v=> {
+      if(!finite(v))return '';
+      const f=hi===lo?.5:Math.max(0,Math.min(1,(v-lo)/(hi-lo))),rgb=[Math.round(247-219*f),Math.round(251-145*f),Math.round(248-156*f)];
+      const luminance=cs=>cs.map(c=>{const n=c/255;return n<=.04045?n/12.92:((n+.055)/1.055)**2.4;}).reduce((sum,c,i)=>sum+c*[.2126,.7152,.0722][i],0);
+      const light=luminance(rgb),ink=luminance([13,66,66]),fg=(light+.05)/(ink+.05)>=4.5?'#0d4242':1.05/(light+.05)>=4.5?'#fff':'#000';
+      return `background:rgb(${rgb.join(',')});color:${fg}`;
+    };
     let out=`<div class="qc-legend"><span><i class="qc-scale"></i> Raw ${esc(channel)}: ${rawFmt(lo)} to ${rawFmt(hi)} (5th–95th percentile scale)</span><span><i class="qc-key dmso"></i> ${esc(plate.controls?.dmso?.title||'Column 22 DMSO')}</span><span><i class="qc-key inhibitory"></i> Column 23 inhibitory</span><span><i class="qc-key missing"></i> Missing / unassigned</span><span><i class="qc-key masked"></i> Masked / ignored</span></div><div class="table-scroll"><table class="qc-plate-grid" aria-label="384-well raw measurement map"><thead><tr><th scope="col">Row</th>`;
     for(let col=1;col<=24;col++)out+=`<th scope="col">${col}</th>`;
     out+='</tr></thead><tbody>';
@@ -34,7 +40,7 @@ globalThis.AtlasQCView = (() => {
         const w=lookup.get(`${row}:${col}`),v=w?.raw?.[channel],missing=!finite(v);
         const clazz=[col===22?'dmso':col===23?'inhibitory':'',missing?'missing':'',w?.excluded?'masked':''].filter(Boolean).join(' ');
         const title=`${row}${col}: ${cellTitle(w,channel)}`;
-        out+=`<td class="${clazz}"><button type="button" class="qc-well" data-qc-well="${row}:${col}" title="${esc(title)}" aria-label="${esc(title)}" style="${missing?'':`background:${color(v)};color:${hi===lo||v<lo+(hi-lo)*.65?'#0d4242':'#fff'}`}">${missing?'—':rawFmt(v,true)}${w?.excluded?'<small>×</small>':''}</button></td>`;
+        out+=`<td class="${clazz}"><button type="button" class="qc-well" data-qc-well="${row}:${col}" title="${esc(title)}" aria-label="${esc(title)}" style="${missing?'':color(v)}">${missing?'—':rawFmt(v,true)}${w?.excluded?'<small>×</small>':''}</button></td>`;
       }
       out+='</tr>';
     }

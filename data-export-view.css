@@ -58,3 +58,7 @@ main.data-export-mode #selectivityIdentityNotice{display:none!important}
  .atlas-export-downloads>div:last-child{grid-template-columns:minmax(0,1fr) auto}
  .atlas-export-downloads>div>p{margin:0;align-self:start}
 }
+
+/* Wrapped labels share a row height; every filter control sits on the same baseline. */
+.atlas-export-filters>label{min-width:0;justify-content:space-between}
+.atlas-export-filters input,.atlas-export-filters select{min-width:0;height:42px;flex-shrink:0}
