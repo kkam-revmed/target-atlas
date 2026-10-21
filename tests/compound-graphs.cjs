@@ -22,13 +22,25 @@ try{
    assert.deepEqual(got,selected.map(id=>({id,points:data.curves.find(q=>q.compound===id).doses.filter(d=>d.x>0&&Number.isFinite(d.mean)).map(d=>({x:d.x,mean:d.mean,sd:d.sd??null})).sort((a,b)=>a.x-b.x)})));
   }
   await checkPoints('cyclind1.json',ids.slice(0,3));
+  assert.equal(await page.locator('#graphStyle').inputValue(),'4pl');
+  assert.equal(await page.locator('[data-series="independent-fit"]').count(),3);
+  assert.equal(await page.locator('[data-series="dose-means"]').count(),0);
+  await page.locator('#graphStyle').selectOption('measured');
   assert.equal(await page.locator('[data-series="independent-fit"]').count(),0);
-  await page.locator('#graphFits').check();assert.equal(await page.locator('[data-series="independent-fit"]').count(),3);
+  assert.equal(await page.locator('[data-series="dose-means"]').count(),3);
+  await page.locator('#graphStyle').selectOption('both');
+  assert.equal(await page.locator('[data-series="dose-means"]').count(),3);
+  assert.equal(await page.locator('[data-series="independent-fit"][stroke-dasharray]').count(),3);
+  const bothPending=page.waitForEvent('download');await page.locator('[data-format="svg"]').click();const bothSVG=fs.readFileSync(await (await bothPending).path(),'utf8');assert(bothSVG.includes('Solid lines connect measured means; dashed lines show existing independent 4PL fits.'));
+  await page.locator('#graphStyle').selectOption('4pl');assert.equal(await page.locator('[data-series="independent-fit"]').count(),3);
   await page.locator('#graphWells').check();assert(await page.locator('[data-series="well"]').count()>0);
   const pending=page.waitForEvent('download');await page.locator('[data-format="svg"]').click();const svg=fs.readFileSync(await (await pending).path(),'utf8');
   const meta=await page.evaluate(svg=>JSON.parse(new DOMParser().parseFromString(svg,'image/svg+xml').querySelector('metadata').textContent),svg);
   assert.deepEqual(meta.selected_batches,ids.slice(0,3));assert.equal(meta.benchling_id,'EXP26003438');assert.match(meta.context,/Replicate 1/);assert.match(meta.context,/\+25 µM/);
   for(const id of ids.slice(0,3)){assert(svg.includes(id));assert(meta.curves.find(q=>q.compound===id).source.includes('EXP26003438_CyclinD1_well_export.xlsx'));}
+  assert.equal(meta.line_basis,'Existing independent 4PL fit');
+  for(const q of supplied.curves.filter(q=>ids.slice(0,3).includes(q.compound)))assert.deepEqual(meta.curves.find(c=>c.compound===q.compound).independent_4pl,{ec50_um:q.fit.ec50,baseline:q.fit.s0,plateau:q.fit.sinf,hill_slope:q.fit.hill,r2:q.fit.r2});
+  assert(svg.includes('Solid lines: existing independent 4PL fits'));
   assert(svg.includes('Independent-fit warnings'));assert(!svg.includes(ids[3]));
   const pngWait=page.waitForEvent('download');await page.locator('[data-format="png"]').click();const png=fs.readFileSync(await (await pngWait).path());assert.equal(png.subarray(1,4).toString(),'PNG');assert.equal(png.readUInt32BE(16),1600);
   const before=await page.locator('#graphCards svg').evaluate(e=>e.outerHTML);await page.locator('#graphSearch').fill('070');await page.locator('#graphSearch').focus();await page.setViewportSize({width,height:700});await page.waitForTimeout(350);assert.equal(await page.locator('#graphCards svg').evaluate(e=>e.outerHTML),before);assert.equal(await page.locator('#graphSearch').inputValue(),'070');assert.equal(await page.evaluate(()=>document.activeElement.id),'graphSearch');
