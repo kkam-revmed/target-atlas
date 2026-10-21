@@ -10,8 +10,8 @@ const AtlasCompoundGraphs=(()=>{
  const wrap=(value,max=95)=>{const lines=[];let line='';for(const word of String(value).split(/\s+/)){if(line.length+word.length+1>max&&line){lines.push(line);line='';}line+=(line?' ':'')+word;}if(line)lines.push(line);return lines;};
  const text=(x,y,value,extra='')=>`<text x="${x}" y="${y}" ${extra}>${E(value)}</text>`;
  const line=(x1,y1,x2,y2,color='#dae5df',extra='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" ${extra}/>`;
- function marker(x,y,i,color,r=4){
-  const attrs=`fill="${color}" stroke="${color}"`;
+ function marker(x,y,i,color,r=4,open=false){
+  const attrs=`fill="${open?'white':color}" stroke="${color}"`;
   switch(i%6){
    case 1:return `<rect x="${x-r}" y="${y-r}" width="${2*r}" height="${2*r}" ${attrs}/>`;
    case 2:return `<path d="M${x},${y-r-1} L${x+r+1},${y+r} L${x-r-1},${y+r} Z" ${attrs}/>`;
@@ -25,7 +25,7 @@ const AtlasCompoundGraphs=(()=>{
   return ['Benchling ID: '+benchling,data.biological_replicate?'Replicate '+data.biological_replicate:null,data.run_date||data.date_label,data.condition_label,data.time_hours!=null?data.time_hours+' h':null,data.response_label||'Corrected response',data.reference_plate?'RMC-0741051 · Batch 001 · reference physical plate '+data.reference_plate:null].filter(Boolean).join(' · ');
  }
  function source(q){return [q.source_compound?'Original source ID: '+q.source_compound:null,q.physical_plate?'Plate: '+q.physical_plate:null,q.identity_note,q.curve_note,...(q.sources||[]),q.report?.source,q.report?.source_row!=null?'Source row: '+q.report.source_row:null].filter(Boolean).join(' · ');}
- function graph({data,benchling,selected,target,wells=false,fits=true,connect=false,series=null,contextLabel=null,notesOverride=null,showComponents=false}){
+ function graph({data,benchling,selected,target,wells=false,fits=true,connect=false,series=null,contextLabel=null,notesOverride=null,showComponents=false,wellMarkersBySeries=false}){
   const rows=series||selected.map(id=>data.curves.find(q=>q.compound===id&&q.target===target));
   const seriesLabel=(q,i)=>q?.series_label||label(selected[i]);
   const doses=rows.flatMap(q=>q?.doses||[]).filter(d=>finite(d.x)&&d.x>0&&finite(d.mean));
@@ -55,7 +55,7 @@ const AtlasCompoundGraphs=(()=>{
    for(const d of ds){
     const px=x(d.x),py=y(d.mean);
     if(finite(d.sd))body+=line(px,y(d.mean-d.sd),px,y(d.mean+d.sd),c)+line(px-3,y(d.mean-d.sd),px+3,y(d.mean-d.sd),c)+line(px-3,y(d.mean+d.sd),px+3,y(d.mean+d.sd),c);
-    if(wells)(d.wells||[]).filter(finite).forEach(v=>{body+=`<circle data-series="well" cx="${px}" cy="${y(v)}" r="2.5" fill="white" stroke="${c}"><title>${E(seriesLabel(q,i)+' · '+d.x+' µM · well '+v)}</title></circle>`;});
+    if(wells)(d.wells||[]).filter(finite).forEach(v=>{const title=`<title>${E(seriesLabel(q,i)+' · '+d.x+' µM · well '+v)}</title>`;body+=wellMarkersBySeries?`<g data-series="well" data-well-marker="${shape}">${title}${marker(px,y(v),shape,c,3,true)}</g>`:`<circle data-series="well" cx="${px}" cy="${y(v)}" r="2.5" fill="white" stroke="${c}">${title}</circle>`;});
     if(showComponents)for(const component of d.components||[]){
      if(!finite(component.mean))continue;
      const cy=y(component.mean),shape=component.replicate===2?`<rect x="${px-4}" y="${cy-4}" width="8" height="8" fill="white" stroke="${c}"/>`:`<circle cx="${px}" cy="${cy}" r="4" fill="white" stroke="${c}"/>`;
@@ -72,7 +72,7 @@ const AtlasCompoundGraphs=(()=>{
   }
   const notes=notesOverride?[...notesOverride,...omitted]:['Symbols: supplied dose means ± SD across measured wells; pooled references can span plates. '+(wells?'Open circles: individual wells.':''),fits?(connect?'Solid lines connect measured means; dashed lines show existing independent 4PL fits.':'Solid lines: existing independent 4PL fits, within the tested dose range; not GDS-reported fits.'):'Solid lines connect measured dose means. Independent 4PL fits are hidden.','Each batch, target, run and condition stays separate. No statistical significance is inferred.',...rows.flatMap(q=>q?.fit_flags?.length?[label(q.compound)+' · Independent-fit warnings: '+q.fit_flags.join('; ')]:[]),...omitted];
   for(const s of notes.flatMap(n=>wrap(n))){body+=text(20,foot,s);foot+=16;}
-  const provenance={error_bar_basis:series?data.error_bar_basis:'Sample SD across supplied wells per concentration',benchling_id:benchling,context:ctx,target,line_basis:fits?(connect?'Connected measured dose means and existing independent 4PL fit':'Existing independent 4PL fit'):'Connected measured dose means',selected_batches:selected,curves:rows.filter(Boolean).map(q=>({series_id:q.series_id,series_label:q.series_label,benchling_id:q.benchling_id,biological_replicate:q.biological_replicate,run_date:q.run_date,condition:q.condition_label,summary_components:q.summary_components,compound:q.compound,source_compound:q.source_compound,physical_plate:q.physical_plate,source:source(q),independent_4pl:q.fit?{ec50_um:q.fit.ec50,baseline:q.fit.s0,plateau:q.fit.sinf,hill_slope:q.fit.hill,r2:q.fit.r2}:null,fit_flags:q.fit_flags}))};
+  const provenance={error_bar_basis:series?data.error_bar_basis:'Sample SD across supplied wells per concentration',benchling_id:benchling,context:ctx,target,line_basis:fits?(rows.some(q=>q?.fit_basis)?(connect?'Connected measured means and new 4PL fit to displayed means':'New 4PL fit to displayed means'):(connect?'Connected measured dose means and existing independent 4PL fit':'Existing independent 4PL fit')):'Connected measured dose means',selected_batches:selected,curves:rows.filter(Boolean).map(q=>({series_id:q.series_id,series_label:q.series_label,benchling_id:q.benchling_id,biological_replicate:q.biological_replicate,run_date:q.run_date,condition:q.condition_label,summary_components:q.summary_components,compound:q.compound,source_compound:q.source_compound,physical_plate:q.physical_plate,source:source(q),independent_4pl:q.fit?{ec50_um:q.fit.ec50,baseline:q.fit.s0,plateau:q.fit.sinf,hill_slope:q.fit.hill,r2:q.fit.r2}:null,fit_basis:q.fit_basis||(q.fit?'Supplied independent per-run fit':null),fit_flags:q.fit_flags}))};
   return `<svg xmlns="http://www.w3.org/2000/svg" class="compound-comparison-graph" viewBox="0 0 ${width} ${foot+14}" width="${width}" height="${foot+14}" role="img" aria-label="${E(target+' dose–response comparison of '+selected.map(label).join(', '))}"><title>${E(target+' · '+ctx)}</title><metadata>${E(JSON.stringify(provenance))}</metadata><style>.compound-comparison-graph text{font:12px Arial,sans-serif;fill:#0d4242}.compound-comparison-graph .heading{font-size:18px;font-weight:600}</style><rect width="100%" height="100%" fill="white"/>${body}</svg>`;
  }
  function save(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}

@@ -16,3 +16,13 @@ const bothBatches=api.buildSeries(data,['RMC-0732120-001','RMC-0732120-002'],ena
 const differences=api.plateDifferences(series);assert.equal(differences.length,20);for(const d of differences){assert.equal(d.delta_plate2_minus_plate1,d.plate2_mean-d.plate1_mean);assert.equal(d.plate2_source,'RMC-0741051-002');}
 assert.equal(api.csv(series).split('\r\n').length,61);assert.equal(api.csv(summaries).split('\r\n').length,31);assert.equal(JSON.stringify(data),before);
 console.log('PASS: measured-well sample SD; 48-well D1 reference vs 2-well selectivity; two biological means weighted equally; plate/batch/assay isolation; missing-run SD unavailable; no interpolation; exact plate differences; source data unchanged');
+require('../engine.js');
+const pooled=api.pooledSummary(series);assert.equal(pooled.length,3);
+for(const q of pooled)for(const d of q.doses){const expectedN=q.benchling_id==='EXP26003438'?96:4;assert.equal(d.n,expectedN);assert.equal(d.n_biological,2);assert.equal(d.wells.length,expectedN);const m=d.wells.reduce((a,b)=>a+b,0)/expectedN;assert.equal(d.mean,m);assert(Math.abs(d.sd-Math.sqrt(d.wells.reduce((a,b)=>a+(b-m)**2,0)/(expectedN-1)))<1e-10);}
+// Unequal technical counts weight a pooled summary by wells, but biological means equally by run.
+const unequal=series.filter(q=>q.choice_key.startsWith('sel-')&&q.plate_group==='1').map(q=>q.biological_replicate===1?{...q,doses:q.doses.map(d=>({...d,mean:d.wells[0],sd:null,n:1,wells:[d.wells[0]]}))}:q);
+const equalBio=api.biologicalSummary(unequal)[0],unequalPooled=api.pooledSummary(unequal)[0];assert.equal(equalBio.doses[0].n,2);assert.equal(unequalPooled.doses[0].n,3);assert.notEqual(equalBio.doses[0].mean,unequalPooled.doses[0].mean);
+const summaryBefore=JSON.stringify(summaries),coreFit=globalThis.AtlasCore.fit4pl,inputs=[];globalThis.AtlasCore.fit4pl=points=>{inputs.push(points);return coreFit(points);};
+const fitted=api.fitDisplayedMeans(summaries);assert.equal(fitted.length,3);assert(fitted.every(q=>q.fit&&q.fit_basis.includes('one equally weighted point')));for(let i=0;i<inputs.length;i++){assert.equal(inputs[i].length,10);inputs[i].forEach((p,j)=>assert.deepEqual(p,{x:summaries[i].doses[j].x,y:summaries[i].doses[j].mean}));}
+assert.equal(JSON.stringify(summaries),summaryBefore);assert.equal(JSON.stringify(data),before);assert(api.csv(fitted).includes('fit_ec50_um'));assert(api.fitDisplayedMeans([{...summaries[0],doses:summaries[0].doses.slice(0,3)}])[0].fit===null);
+console.log('PASS: pooled well means/sample SD, unequal counts vs equal biological weighting, exact displayed-mean 4PL inputs, fit provenance, insufficient-dose handling and source immutability');
