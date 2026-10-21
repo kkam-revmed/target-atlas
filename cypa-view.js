@@ -31,11 +31,13 @@ const AtlasCypAView=(()=>{
     for(let y=Math.ceil(ymin/20)*20;y<=ymax;y+=20){out+=`<line x1="${L}" y1="${Y(y)}" x2="${w-R}" y2="${Y(y)}" stroke="#e5eaf1"/><text x="${L-10}" y="${Y(y)+4}" text-anchor="end">${fmt(y,0)}</text>`;}
     for(let k=0;k<=6;k++){const v=10**(lx+(hx-lx)*k/6);out+=`<line x1="${X(v)}" y1="${T}" x2="${X(v)}" y2="${h-B}" stroke="#edf0f5"/><text x="${X(v)}" y="${h-B+20}" text-anchor="middle">${sig(v)}</text>`;}
     out+=`<text x="${(L+w-R)/2}" y="${h-12}" text-anchor="middle">Concentration (µM)</text><text transform="translate(18 ${(T+h-B)/2}) rotate(-90)" text-anchor="middle">Normalized response (%)</text>`;
+    out+=`<line data-reference="normalization-100" data-response="100" x1="${L}" y1="${Y(100)}" x2="${w-R}" y2="${Y(100)}" stroke="#55716c" stroke-width="1.4" stroke-dasharray="10 5"/>`;
     for(const s of curves){const q=s.q;if(!q)continue;const fit=q.fit?.line;if(fit?.length){out+=`<path d="${fit.map((p,i)=>`${i?'L':'M'}${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="2" ${s.dash?`stroke-dasharray="${s.dash}"`:''} opacity=".72"/>`;}
       for(const p of q.doses||[]){if(p.x<=0)continue;const xx=X(p.x),lo=Y(p.mean-p.sd),hi=Y(p.mean+p.sd),yy=Y(p.mean);out+=`<line x1="${xx}" y1="${hi}" x2="${xx}" y2="${lo}" stroke="${s.color}" stroke-width="1.3"/><line x1="${xx-4}" y1="${hi}" x2="${xx+4}" y2="${hi}" stroke="${s.color}"/><line x1="${xx-4}" y1="${lo}" x2="${xx+4}" y2="${lo}" stroke="${s.color}"/><circle cx="${xx}" cy="${yy}" r="4.1" fill="#fff" stroke="${s.color}" stroke-width="2"/>`;
         for(const well of p.wells||[])out+=`<circle cx="${xx}" cy="${Y(well.normalized)}" r="2" fill="${s.color}" opacity=".65"/>`;
       }
     }
+    out+=`<text x="${w-R-4}" y="${Y(100)-7}" text-anchor="end" style="paint-order:stroke;stroke:white;stroke-width:4px;stroke-linejoin:round">DMSO control · 100%</text>`;
     out+=`<text x="${L}" y="${h+17}" style="font-weight:bold;fill:#0d4242">${esc(batchLabel(compound))} · biological replicate and inhibitor condition</text>`;
     specs.forEach((s,i)=>{const xx=L+(i%2)*(w-L-R)/2,yy=h+42+Math.floor(i/2)*25;out+=`<line x1="${xx}" y1="${yy-4}" x2="${xx+27}" y2="${yy-4}" stroke="${s.color}" stroke-width="2.5" ${s.dash?`stroke-dasharray="${s.dash}"`:''}/><text x="${xx+36}" y="${yy}">${esc(s.label.replace('Biological replicate','Replicate').replace('No inhibitor','No CypA inhibitor'))}</text>`;});
     host.querySelector('#cypaPlot').innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h+87}" role="img" aria-label="Four matched Cyclin D1 CypA dose-response curves with replicate and inhibitor legend"><style>text{font:11px Arial,sans-serif;fill:#55716c}</style>${out}</svg>`;
