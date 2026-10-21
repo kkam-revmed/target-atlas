@@ -1,0 +1,82 @@
+/* In-vitro presentation conventions; never transforms measurements or fits. */
+const AtlasGraphFormat=(()=>{
+ 'use strict';
+ const finite=Number.isFinite;
+ const css=`.atlas-scientific-graph text{font:12px Arial,sans-serif;fill:#000}
+ .atlas-scientific-graph .axis-tick,.atlas-scientific-graph .axis-ticks text{font-size:11pt;font-weight:bold}
+ .atlas-scientific-graph .axis-title{font-size:12pt;font-weight:bold;fill:#000}
+ .atlas-scientific-graph .heading{font-size:18px;font-weight:bold}
+ .atlas-scientific-graph .graph-axis{stroke:#000;stroke-width:2pt;fill:none}
+ .atlas-scientific-graph [data-reference="normalization-100"]{stroke:#000}
+ .atlas-scientific-graph .graph-error{stroke-width:.5pt;fill:none}`;
+ const axes=(left,top,right,bottom)=>`<path class="graph-axis" d="M${left},${top}V${bottom}H${right}"/>`;
+ function concentrationDomain(curves){
+  const values=curves.flatMap(q=>q?.doses||[]).filter(d=>finite(d.x)&&d.x>0&&finite(d.mean)).map(d=>Math.log10(d.x));
+  if(!values.length)return null;
+  const lo=Math.min(...values),hi=Math.max(...values),pad=lo===hi?.5:(hi-lo)*.03;
+  return [lo-pad,hi+pad];
+ }
+ function sampleSize(q){
+  const ds=(q?.doses||[]).filter(d=>finite(d.x)&&d.x>0&&finite(d.mean));
+  if(!ds.length)return 'No measured concentrations';
+  const counts=ds.map(d=>d.n).filter(n=>finite(n)&&n>=0),lo=Math.min(...counts),hi=Math.max(...counts);
+  const basis=q.summary_kind==='pooled_wells'?'pooled wells':q.summary_components?'biological runs':'measured wells';
+  if(!counts.length)return 'n not reported';
+  return `n = ${lo===hi?lo:lo+'–'+hi} ${basis} per concentration${counts.length<ds.length?'; n unavailable at some concentrations':''}`;
+ }
+ const plots=new Map();
+ const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function limits(auto,options,prefix,log=false){
+  const lo=options[prefix+'Min']??auto[0],hi=options[prefix+'Max']??auto[1];
+  if(!finite(lo)||!finite(hi)||!finite(hi-lo)||lo>=hi||(log&&lo<=0))throw new Error(prefix.toUpperCase()+' minimum must be less than maximum'+(log?', and both must be positive for a log axis.':'.'));
+  return [lo,hi];
+ }
+ function editable(key,factory,{xOnly=false}={}){
+  const previous=plots.get(key),options=previous?.options||{};
+  const record={factory,options};plots.set(key,record);
+  let svg;
+  try{svg=factory(options);}catch{record.options={};svg=factory({});}
+  if(!svg)return '';
+  svg=tag(svg,key);
+  return `<div class="editable-graph" data-graph-editor="${escape(key)}"><details class="graph-axis-editor"><summary>Axes &amp; export</summary><p>Set the displayed range; leave a box blank for automatic. Measurements, SD and fits are unchanged. Data CSV exports keep all selected concentrations.</p><div class="graph-axis-fields">${[['xMin','X minimum'],['xMax','X maximum'],['yMin','Y minimum'],['yMax','Y maximum']].filter(([name])=>!xOnly||name.startsWith('x')).map(([name,label])=>`<label>${label}<input type="number" step="any" data-axis-field="${name}" value="${escape(record.options[name])}" placeholder="Auto"></label>`).join('')}</div><div class="graph-axis-actions"><button type="button" data-axis-action="apply">Apply axes</button><button type="button" data-axis-action="reset">Reset to automatic</button><button type="button" data-axis-action="png">Download PNG</button><button type="button" data-axis-action="svg">Download SVG</button></div><p class="graph-axis-status" role="status"></p></details><div class="editable-graph-image">${svg}</div></div>`;
+ }
+ const tag=(svg,key)=>svg.replace('<svg ',`<svg data-axis-key="${escape(key)}" `);
+ function current(svg){
+  const key=new DOMParser().parseFromString(svg,'image/svg+xml').documentElement.getAttribute('data-axis-key');
+  const record=plots.get(key);return record?tag(record.factory(record.options),key):svg;
+ }
+ document.addEventListener('click',async event=>{
+  const button=event.target.closest('[data-axis-action]');if(!button)return;
+  const host=button.closest('[data-graph-editor]'),key=host.dataset.graphEditor,record=plots.get(key),status=host.querySelector('.graph-axis-status');
+  try{
+   if(button.dataset.axisAction==='apply'||button.dataset.axisAction==='reset'){
+    const options={};if(button.dataset.axisAction==='apply')for(const input of host.querySelectorAll('[data-axis-field]')){
+     if(input.validity.badInput)throw new Error('Enter a valid number or leave the box blank.');
+     if(input.value.trim()){const v=Number(input.value);if(!finite(v))throw new Error('Axis limits must be finite numbers.');options[input.dataset.axisField]=v;}
+    }
+    const svg=record.factory(options);record.options=options;
+    host.querySelector('.editable-graph-image').innerHTML=tag(svg,key);
+    for(const input of host.querySelectorAll('[data-axis-field]'))input.value=options[input.dataset.axisField]??'';
+    status.textContent=Object.keys(options).length?'Custom axes applied. Values outside the range are hidden in the graph only.':'Automatic axes restored.';
+   }else{
+    button.disabled=true;await AtlasCompoundGraphs.exportGraph(host.querySelector('svg').outerHTML,key.replace(/[^a-z0-9_-]/gi,'_'),button.dataset.axisAction);status.textContent='Downloaded this graph with its current axis limits.';
+   }
+  }catch(error){status.textContent=error.message;}finally{button.disabled=false;}
+ });
+ function tickStep([lo,hi]){const raw=(hi-lo)/5,power=10**Math.floor(Math.log10(raw));return raw>0&&power>0?[1,2,5,10].find(n=>n*power>=raw)*power:hi-lo;}
+ function niceDomain(domain){const step=tickStep(domain);return [Math.floor(domain[0]/step)*step,Math.ceil(domain[1]/step)*step];}
+ function linearTicks([lo,hi]){const step=tickStep([lo,hi]),values=[lo],first=Math.ceil(lo/step)*step;for(let i=0;i<8;i++){const v=first+i*step;if(v>=hi)break;if(v>lo&&v>values.at(-1))values.push(v);}values.push(hi);return values;}
+ function logTicks([lo,hi]){const step=Math.max(1,Math.ceil((hi-lo)/5)),values=[];for(let z=Math.ceil(lo);z<=hi;z+=step)values.push(10**z);return values.length>1?values:[10**lo,10**hi];}
+ // Every remaining SVG figure gets the same standalone PNG/SVG export support.
+ const seen=new WeakSet();
+ function discoverExports(){
+  document.querySelectorAll('main svg[role="img"]').forEach(svg=>{
+   if(svg.closest('[data-graph-editor]')||seen.has(svg))return;seen.add(svg);
+   const toolbar=document.createElement('div');toolbar.className='graph-downloads standalone-graph-exports';
+   for(const format of ['png','svg']){const button=document.createElement('button');button.type='button';button.className='secondary';button.textContent='Download '+format.toUpperCase();button.onclick=async()=>{button.disabled=true;try{await AtlasCompoundGraphs.exportGraph(svg.outerHTML,(svg.getAttribute('aria-label')||'atlas-graph').replace(/[^a-z0-9_-]/gi,'_').slice(0,150),format);}catch(error){toolbar.querySelector('[role="status"]').textContent=error.message;}finally{button.disabled=false;}};toolbar.append(button);}
+   const status=document.createElement('span');status.setAttribute('role','status');toolbar.append(status);svg.after(toolbar);
+  });
+ }
+ new MutationObserver(discoverExports).observe(document.documentElement,{childList:true,subtree:true});
+ return {css,axes,concentrationDomain,sampleSize,limits,editable,current,linearTicks,logTicks,niceDomain};
+})();

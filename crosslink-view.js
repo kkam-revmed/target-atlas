@@ -13,23 +13,30 @@ const AtlasCrosslink=(()=>{
  const fold=r=>r.comparison.total_fold.value;
  function foldText(item){return item.value==null?'— ('+(item.undefined_reason||'unavailable')+')':F(item.value,3)+'×';}
  function tip(t){return 'data-tip="'+E(t)+'"';}
- function scatter(records,context,selected){
+ function scatter(records,context,selected,axes={}){
   const w=740,h=415,l=62,r=22,t=24,b=89,max=Math.max(100,...records.flatMap(q=>[q.conditions.no_cypa.total_percent,q.conditions.with_cypa.total_percent]));
-  const X=v=>l+v/max*(w-l-r),Y=v=>h-b-v/max*(h-t-b);let s='';
-  for(let i=0;i<=5;i++){const v=max*i/5;s+='<path d="M'+X(v)+','+t+'V'+(h-b)+'M'+l+','+Y(v)+'H'+(w-r)+'" stroke="#e5eaf1"/><text x="'+X(v)+'" y="'+(h-b+20)+'" text-anchor="middle">'+F(v,0)+'</text><text x="'+(l-9)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+F(v,0)+'</text>';}
-  s+='<path d="M'+X(0)+','+Y(0)+'L'+X(max)+','+Y(max)+'" stroke="#8f9eb1" stroke-dasharray="5 4"/>';
+  const xd=AtlasGraphFormat.limits([0,max],axes,'x'),yd=AtlasGraphFormat.limits([0,max],axes,'y'),X=v=>l+(v-xd[0])/(xd[1]-xd[0])*(w-l-r),Y=v=>h-b-(v-yd[0])/(yd[1]-yd[0])*(h-t-b);let s=AtlasGraphFormat.axes(l,t,w-r,h-b)+'<g class="axis-ticks">';
+  for(const v of AtlasGraphFormat.linearTicks(xd))s+='<path d="M'+X(v)+','+t+'V'+(h-b)+'" stroke="#e5eaf1"/><text x="'+X(v)+'" y="'+(h-b+20)+'" text-anchor="middle">'+F(v)+'</text>';
+  for(const v of AtlasGraphFormat.linearTicks(yd))s+='<path d="M'+l+','+Y(v)+'H'+(w-r)+'" stroke="#e5eaf1"/><text x="'+(l-9)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+F(v)+'</text>';
+  s+='</g>';
+  s+='<defs><clipPath id="xlink-scatter-clip"><rect x="'+l+'" y="'+t+'" width="'+(w-l-r)+'" height="'+(h-t-b)+'"/></clipPath></defs><g clip-path="url(#xlink-scatter-clip)">';
+  const equalLo=Math.max(xd[0],yd[0]),equalHi=Math.min(xd[1],yd[1]);if(equalLo<equalHi)s+='<path d="M'+X(equalLo)+','+Y(equalLo)+'L'+X(equalHi)+','+Y(equalHi)+'" stroke="#8f9eb1" stroke-dasharray="5 4"/>';
   for(const q of [...records].sort((a,b)=>Number(a.compound===selected)-Number(b.compound===selected))){const no=q.conditions.no_cypa.total_percent,yes=q.conditions.with_cypa.total_percent,active=q.compound===selected;s+='<circle cx="'+X(no)+'" cy="'+Y(yes)+'" r="'+(active?5:3.3)+'" fill="'+(active?'#c28100':'#1c6a5c')+'" opacity="'+(active?'1':'.66')+'" stroke="white" tabindex="0" role="button" data-xlink-compound="'+E(q.compound)+'" aria-label="'+E(batchLabel(q.compound)+': '+F(no)+'% No CypA; '+F(yes)+'% +CypA')+'" '+tip(batchLabel(q.compound)+' · '+context+'\nNo CypA: '+F(no)+'% · +CypA: '+F(yes)+'%\nDifference: '+F(delta(q))+' percentage points')+'/>';}
-  s+='<text x="'+((l+w-r)/2)+'" y="'+(h-45)+'" text-anchor="middle">No CypA · total crosslinking (%)</text><text transform="translate(17 '+((t+h-b)/2)+') rotate(-90)" text-anchor="middle">+CypA · total crosslinking (%)</text><text x="'+l+'" y="15">'+E(context)+' · dashed diagonal: equal responses</text>';
+  s+='</g>';
+  s+='<text x="'+((l+w-r)/2)+'" y="'+(h-45)+'" text-anchor="middle" class="axis-title">No CypA · total crosslinking (%)</text><text transform="translate(17 '+((t+h-b)/2)+') rotate(-90)" text-anchor="middle" class="axis-title">+CypA · total crosslinking (%)</text><text x="'+l+'" y="15">'+E(context)+' · dashed diagonal: equal responses</text>';
   s+='<text x="'+l+'" y="'+(h-9)+'">Source: 20261015 Cyclin xlink mastersheet n1 ZA 3.xlsx · '+records.length+' compound batches</text>';
-  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Crosslinking No CypA versus +CypA"><style>text{font:11px Arial;fill:#55716c}</style>'+s+'</svg>';
+  if(Object.keys(axes).length)s+='<text x="'+l+'" y="'+(h-26)+'">Custom axes; values outside range hidden.</text>';
+  return '<svg class="atlas-scientific-graph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Crosslinking No CypA versus +CypA"><style>'+AtlasGraphFormat.css+'</style>'+s+'</svg>';
  }
- function adductPlot(q){
-  const w=640,h=195,left=95,right=16,totals=Object.values(q.conditions).map(c=>c.adduct_percent.reduce((a,v)=>a+v,0)),max=Math.max(100,...totals),X=v=>left+v/max*(w-left-right);let s='<text x="16" y="13">'+E(batchLabel(q.compound)+' · '+q.context)+'</text>';
-  Object.entries(q.conditions).forEach(([key,c],j)=>{const y=23+j*43;let acc=0;s+='<text x="'+(left-10)+'" y="'+(y+17)+'" text-anchor="end">'+(key==='no_cypa'?'No CypA':'+CypA')+'</text>';c.adduct_percent.forEach((v,i)=>{s+='<rect x="'+X(acc)+'" y="'+y+'" width="'+Math.max(0,X(acc+v)-X(acc))+'" height="25" fill="'+palette[i]+'" '+tip((i===0?'No adduct':i+' adduct'+(i>1?'s':''))+': '+F(v,3)+'%')+'/>';acc+=v;});});
-  for(let i=0;i<=5;i++)s+='<text x="'+X(i*20)+'" y="118" text-anchor="middle">'+(i*20)+'</text>';
+ function adductPlot(q,axes={}){
+  const w=640,h=195,left=95,right=16,totals=Object.values(q.conditions).map(c=>c.adduct_percent.reduce((a,v)=>a+v,0)),max=Math.max(100,...totals),xd=AtlasGraphFormat.limits([0,max],axes,'x'),X=v=>left+(v-xd[0])/(xd[1]-xd[0])*(w-left-right);let s='<text x="16" y="13">'+E(batchLabel(q.compound)+' · '+q.context)+'</text>';
+  s+='<defs><clipPath id="adduct-bars-clip"><rect x="'+left+'" y="20" width="'+(w-left-right)+'" height="80"/></clipPath></defs>';
+  Object.entries(q.conditions).forEach(([key,c],j)=>{const y=23+j*43;let acc=0;s+='<text x="'+(left-10)+'" y="'+(y+17)+'" text-anchor="end">'+(key==='no_cypa'?'No CypA':'+CypA')+'</text>';c.adduct_percent.forEach((v,i)=>{s+='<rect clip-path="url(#adduct-bars-clip)" x="'+X(acc)+'" y="'+y+'" width="'+Math.max(0,X(acc+v)-X(acc))+'" height="25" fill="'+palette[i]+'" '+tip((i===0?'No adduct':i+' adduct'+(i>1?'s':''))+': '+F(v,3)+'%')+'/>';acc+=v;});});
+  for(const v of AtlasGraphFormat.linearTicks(xd))s+='<text x="'+X(v)+'" y="118" text-anchor="middle" class="axis-tick">'+F(v)+'</text>';
   q.conditions.no_cypa.adduct_percent.forEach((_,i)=>{const x=left+i*87;s+='<rect x="'+x+'" y="139" width="9" height="9" fill="'+palette[i]+'"/><text x="'+(x+14)+'" y="147">'+(i===0?'No adduct':i+' adduct'+(i>1?'s':''))+'</text>';});
   s+='<text x="16" y="172">Adduct distribution (%) · Source: 20261015 Cyclin xlink mastersheet n1 ZA 3.xlsx</text>';
-  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+E(q.context+' adduct distributions, percentages')+'"><style>text{font:11px Arial;fill:#55716c}</style>'+s+'</svg>';
+  if(Object.keys(axes).length)s+='<text x="16" y="189">Custom axes; values outside range hidden.</text>';
+  return '<svg class="atlas-scientific-graph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+E(q.context+' adduct distributions, percentages')+'"><style>'+AtlasGraphFormat.css+'</style>'+s+'</svg>';
  }
  function compact({host,data,compound}){
   if(typeof host==='string')host=document.getElementById(host);if(!host)return;
@@ -63,7 +70,7 @@ const AtlasCrosslink=(()=>{
     <h2 id="xlinkSelectedHeading" tabindex="-1">${E(batchLabel(compound))} · ${E(context)}</h2>
     <p class="xlink-reading-guide"><strong>0 = unmodified protein. 1, 2, 3… = attached compound molecules.</strong> Read each condition column separately.</p>
     <div class="xlink-adduct-layout"><div>${adductTable(q)}<p class="section-note">Percentages describe the adduct distribution within this sample, not the fraction of tested compounds. Total crosslinking is the reported total for one or more adducts. Source percentages are not forced to sum to 100. A dash means not reported.</p></div>
-    <div><div class="plot" id="xlink-adduct-0">${adductPlot(q)}</div><button type="button" class="export-svg" data-plot="xlink-adduct-0">Export distribution SVG</button></div></div>
+    <div><div class="plot" id="xlink-adduct-0">${AtlasGraphFormat.editable('adduct-'+q.compound+'-'+q.context,axes=>adductPlot(q,axes),{xOnly:true})}</div><button type="button" class="export-svg" data-plot="xlink-adduct-0">Export distribution SVG</button></div></div>
     <p><strong>${E(AtlasCrosslinkHits.status(q))}</strong> · Total fold (+CypA / No CypA): ${E(foldText(q.comparison.total_fold))} · Difference: ${F(delta(q))} percentage points.</p>
     <p class="section-note">A hit requires +CypA total crosslinking &gt;20% AND total fold &gt;2. A nonzero adduct signal alone does not meet this rule. The study reports n = 1; these results do not establish statistical significance or a binding site.</p>
     <button type="button" class="secondary" id="xlinkSelectedCSV">Export this batch and context CSV</button>
@@ -120,7 +127,7 @@ const AtlasCrosslink=(()=>{
     if(!pickerMatches().includes(c))$('xlinkPickerSearch').value='';
     selected=c;onCompound?.(c);syncPicker();
     $('xlinkSelected').innerHTML=compoundDetails(data,c,$('xlinkContext').value);
-    $('xlinkScatter').innerHTML=scatter(shown,$('xlinkContext').value,selected);
+    $('xlinkScatter').innerHTML=AtlasGraphFormat.editable('crosslink-'+$('xlinkContext').value,axes=>scatter(shown,$('xlinkContext').value,selected,axes));
     const exportButton=$('xlinkSelectedCSV');if(exportButton)exportButton.onclick=()=>downloadCSV(data,matchingRecords(data,selected).filter(q=>q.context===$('xlinkContext').value));
     if(jump){$('xlinkSelectedHeading')?.focus({preventScroll:true});$('xlinkChoose').scrollIntoView({block:'start',behavior:'smooth'});}
   }
@@ -133,7 +140,7 @@ const AtlasCrosslink=(()=>{
     $('xlinkCount').textContent=shown.length+' of '+tested.length+' tested compound batches in '+context+' shown. Export includes exactly these rows, both conditions, all reported adduct classes and source details.';
     $('xlinkCSV').disabled=!shown.length;
     $('xlinkPlotTitle').textContent=context+' · total crosslinking (%)';
-    $('xlinkScatter').innerHTML=scatter(shown,context,selected);
+    $('xlinkScatter').innerHTML=AtlasGraphFormat.editable('crosslink-'+context,axes=>scatter(shown,context,selected,axes));
     $('xlinkTable').innerHTML=shown.length?'<table><thead><tr><th>Compound</th><th>Batch</th><th>Adduct details</th><th>No CypA total (%)</th><th>+CypA total (%)</th><th>Difference (pp)</th><th>Fold change</th><th>Hit status</th><th>Source</th></tr></thead><tbody>'+shown.map(q=>'<tr><td>'+E(identity(q.compound).base)+'</td><td>'+E(identity(q.compound).batch||'—')+'</td><td><button type="button" class="compound-link" data-xlink-compound="'+E(q.compound)+'" aria-label="View adducts for '+E(batchLabel(q.compound))+'">View adducts</button></td><td>'+F(q.conditions.no_cypa.total_percent)+'</td><td>'+F(q.conditions.with_cypa.total_percent)+'</td><td>'+F(delta(q))+'</td><td>'+E(foldText(q.comparison.total_fold))+'</td><td>'+E(AtlasCrosslinkHits.status(q))+'</td><td>'+E(q.sheet)+' · row '+q.source_row+'</td></tr>').join('')+'</tbody></table>':'<p>No batches match this search and filter in '+E(context)+'. Clear the search or choose another filter.</p>';
   }
   $('xlinkPickerSearch').oninput=()=>{
