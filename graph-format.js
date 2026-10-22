@@ -123,5 +123,7 @@ const AtlasGraphFormat=(()=>{
   });
  }
  new MutationObserver(discoverExports).observe(document.documentElement,{childList:true,subtree:true});
- return {css,axes,concentrationDomain,sampleSize,limits,editable,current,linearTicks,logTicks,niceDomain};
+ // Read a copy of applied limits; unfinished input edits must not affect exports.
+ const optionsFor=key=>({...plots.get(key)?.options});
+ return {css,axes,concentrationDomain,sampleSize,limits,editable,current,linearTicks,logTicks,niceDomain,optionsFor};
 })();
