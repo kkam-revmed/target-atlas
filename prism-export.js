@@ -35,6 +35,45 @@
   const cell=v=>v==null?'':typeof v==='number'?String(v):'"'+String(v).replaceAll('"','""')+'"';
   return [headers,...rows].map(r=>r.map(cell).join(separator)).join('\r\n')+'\r\n';
  }
+ function datasetLetter(index){let name='';for(let n=index+1;n>0;n=Math.floor((n-1)/26))name=String.fromCharCode(65+(n-1)%26)+name;return name;}
+ function columnGuide(table,series,{native=false,context={}}={}){
+  const unknown='Not supplied',map=[],sections=[];
+  const slots=Math.max(native?48:1,...table.datasets.map(d=>d.columns.length));
+  table.datasets.forEach((dataset,i)=>{
+   const q=series[i],letter=datasetLetter(i),biological=!!q.summary_components&&q.summary_kind!=='pooled_wells';
+   const columns=dataset.columns.map((column,j)=>{
+    const member=q.summary_components?.find(c=>c.series_id===column.source_series_id)||q;
+    const fallback=column.label.startsWith('Supplied dose mean'),kind=biological?'Biological-run mean':fallback?'Supplied dose mean':'Individual well value';
+    const entry={prism_column:letter+':Y'+(j+1),dataset:letter,series_title:dataset.title,observation:column.label,observation_type:kind,
+     biological_replicate:member.biological_replicate??member.replicate??unknown,run_date:member.run_date??member.measurement_date??unknown,
+     benchling_id:q.benchling_id??unknown,compound_batch:q.compound??unknown,target:q.target??unknown,condition:q.condition_label??unknown,
+     plate_group:q.plate_group??unknown,physical_plate:member.physical_plate??unknown,source_compound:member.source_compound??unknown,
+     source_series_id:column.source_series_id??q.series_id??unknown,source_files:(member.sources||q.sources||[]).join('; ')||unknown,
+     populated_doses:column.values.filter(finite).length,missing_doses:column.values.filter(v=>!finite(v)).length};
+    map.push(entry);
+    return `${entry.prism_column} = ${kind}; ${column.label}; run ${entry.biological_replicate}; date ${entry.run_date}; plate ${entry.physical_plate}. ${entry.populated_doses} populated dose rows${entry.missing_doses?'; '+entry.missing_doses+' blank dose rows':''}.`;
+   });
+   const method=biological?'One technical-well mean per biological run and concentration. The displayed mean gives each contributing run equal weight; sample SD is between run means; n counts runs.':q.summary_kind==='pooled_wells'?'Each included well is a separate observation. The displayed mean and sample SD pool wells across runs; n counts wells. Runs with more wells contribute more. These wells are not independent biological replicates.':dataset.columns[0]?.label.startsWith('Supplied dose mean')?'Only supplied dose means are available. These are not individual wells; one mean per dose cannot reconstruct technical variability.':'Each subcolumn contains a well value at that concentration. The displayed mean and sample SD are within this run; n counts wells. Compare biological runs keeps separate run datasets and does not turn these bars into between-run SD.';
+   sections.push(`DATASET ${letter}: ${dataset.title}\nCompound/batch: ${q.compound||unknown}\nAssay/target: ${q.target||unknown}\nBenchling ID: ${q.benchling_id||unknown}\nCondition: ${q.condition_label||unknown}\nPlate group: ${q.plate_group||unknown}\n${method}\n${columns.join('\n')}`+(dataset.columns.length<slots?`\n${letter}:Y${dataset.columns.length+1}${dataset.columns.length+1<slots?' through '+letter+':Y'+slots:''} = unused template slots; blank, not extra replicates.`:''));
+  });
+  const intro=[
+   'ATLAS COLUMN GUIDE & ANALYSIS',
+   'Read this sheet alongside the Selected observations table. A, B, C identify separate selected datasets; Y1, Y2, etc. identify observation subcolumns inside that dataset. Y1 does NOT automatically mean biological replicate 1. The exact map for this export is below.',
+   'Selected display mode: '+({technical:'Compare technical wells',individual:'Compare biological runs (technical means)',summary:'Combine biological means',pooled:'Combine technical + biological wells'}[context.display_mode]||'See the dataset-specific input descriptions below')+'.',
+   native?'X = log10 concentration in molar units: log10(concentration in µM) - 6. Thus -6 = 1 µM and -5 = 10 µM. Each row is one tested concentration.':'X = concentration in µM. Each row is one tested concentration; these X values are not already log-transformed.',
+   'Y = exported response values on the supplied measurement basis. '+(context.response_basis?'Source basis: '+context.response_basis+'. ':'')+'Atlas does not renormalize values during export. The NanoBRET normalized response (%) label is a presentation label; source context is retained in provenance.',
+   'Technical well slots follow source value order at each concentration. They are not matched subjects across concentrations. Physical well coordinates are not retained in this plotted-value export, so a slot cannot be interpreted as a coordinate such as B03. Blank cells mean missing or unused, never zero. No concentrations are interpolated.',
+   'Mean = arithmetic average. Sample SD = sqrt(sum((value - mean)^2)/(n - 1)); no SD with fewer than two observations. SD describes spread, not SEM, a confidence interval or a significance test. In biological-mean mode the values in this formula are run means; in well modes they are well values.',
+   'The D1/CypA RMC-0741051 reference can already contain up to 48 wells per dose across plates within one run. Two pooled runs can contribute 96 wells, but still only two biological runs. Separately supplied plate groups, assays, batches and conditions are not merged.',
+   native?'PRISM ANALYSIS: Prism recalculates an independent agonist 4PL for each dataset using unweighted least squares on its nonblank exported observations. Bottom, Top, LogEC50 and HillSlope are free; no baseline is fixed at 100%. Y = Bottom + (Top - Bottom)/(1 + 10^((LogEC50 - X)*HillSlope)). Bottom and Top are fitted response plateaus, HillSlope controls steepness, and LogEC50 is log10(EC50 in M). EC50 in µM = 10^(LogEC50 + 6). This is not a GDS-reported fit.':'ANALYSIS: This data-only .pzfx contains tables, not a Prism analysis or graph. The other table, Displayed mean, SD and n, preserves the Atlas summaries. Its columns mean exactly Mean, Sample SD and n; they are not three observations.',
+   native?'FIT INPUTS: Biological-mean mode fits the separate run means; well modes fit individual exported wells. All observations have equal weight, so a dose with more observations contributes more to the fit. Atlas combined-mode fits instead use one displayed mean per concentration. Prism and Atlas EC50 values can therefore differ. Inspect Prism Results for convergence, warnings and confidence intervals; a smooth line does not establish a reliable EC50.':'Reported GDS and Atlas independent fits are retained as provenance only; no fitted parameters are imported as Prism results.',
+   native?'GRAPH ERROR BARS: The native graph inherits the Prism template settings. Check Format Graph to confirm SD versus SEM before presenting. Do not infer this from the appearance of the bars. Exact Atlas mean, sample SD and n are in the companion selected-data.pzfx.':'The sample size n counts the units described for each dataset below, not necessarily independent biological replicates.'
+  ];
+  const text=[...intro,...sections].join('\n\n');
+  const keys=Object.keys(map[0]||{}),cell=v=>'"'+String(v??'').replaceAll('"','""')+'"';
+  const csv=[keys,...map.map(row=>keys.map(k=>row[k]))].map(row=>row.map(cell).join(',')).join('\r\n')+'\r\n';
+  return {text,map,csv};
+ }
  function build(series,{title:projectTitle='Target Atlas selected comparison',context={}}={}){
   if(!Array.isArray(series)||!series.length)throw new Error('Choose at least one measured series before exporting to Prism.');
   const x=[...new Set(series.flatMap(q=>(q.doses||[]).map(d=>d.x).filter(finite)))].sort((a,b)=>a-b);
@@ -52,14 +91,15 @@
    'All selected concentrations are exported, including those outside custom graph axis limits. No experimental files are uploaded.',
    'The exact source labels and measurement context are embedded below as JSON. Original workbook archives are not included.'
   ];
-  const provenance={format:'Target Atlas Prism data export',version:1,concentration_unit:'µM',project_title:projectTitle,context,notes,observations:observations.datasets.map(d=>({series_id:d.series_id,title:d.title,subcolumns:d.columns.map(c=>({title:c.label,source_series_id:c.source_series_id}))})),series:series.map(q=>({...q,doses:(q.doses||[]).map(d=>({...d}))}))};
+  const guide=columnGuide(observations,series,{context});
+  const provenance={format:'Target Atlas Prism data export',version:1,concentration_unit:'µM',project_title:projectTitle,context,notes,column_map:guide.map,observations:observations.datasets.map(d=>({series_id:d.series_id,title:d.title,subcolumns:d.columns.map(c=>({title:c.label,source_series_id:c.source_series_id}))})),series:series.map(q=>({...q,doses:(q.doses||[]).map(d=>({...d}))}))};
   const tables=[observations,summaries],readme=notes.join('\n\n');
   const pzfx='<?xml version="1.0" encoding="UTF-8"?>\n<GraphPadPrismFile PrismXMLVersion="5.00">'+
    '<InfoSequence><Ref ID="Info0" Selected="1"/></InfoSequence><TableSequence>'+tables.map((_,i)=>`<Ref ID="Table${i}"${i===0?' Selected="1"':''}/>`).join('')+'</TableSequence>'+
-   '<Info ID="Info0"><Title>Atlas selection, methods and provenance</Title><Notes>'+xml(readme+'\n\n'+JSON.stringify(provenance,null,2))+'</Notes></Info>'+tables.map(tableXML).join('')+'</GraphPadPrismFile>\n';
+   '<Info ID="Info0"><Title>Atlas column guide and analysis</Title><Notes>'+xml(readme+'\n\n'+guide.text+'\n\nFULL SOURCE PROVENANCE\n'+JSON.stringify(provenance,null,2))+'</Notes></Info>'+tables.map(tableXML).join('')+'</GraphPadPrismFile>\n';
   return {tables,pzfx,tsv:delimited(observations,'\t'),csv:delimited(observations,','),provenance,readme};
  }
  function save(text,name,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  function download(series,name='target-atlas-prism',options={}){const result=build(series,options);save(result.pzfx,name.replace(/[^a-z0-9._-]/gi,'_')+'.pzfx','application/xml;charset=utf-8');return result;}
- const api={build,download,observationCount:q=>observationColumns(q).length};root.AtlasPrismExport=api;if(typeof module==='object'&&module.exports)module.exports=api;
+ const api={build,download,columnGuide,observationCount:q=>observationColumns(q).length};root.AtlasPrismExport=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);

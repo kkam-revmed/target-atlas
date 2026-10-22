@@ -1,0 +1,50 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const P=require('../prism-export.js'),N=require('../prism-native.js'),R=require('../run-comparison.js');
+const I=require('../selectivity-identity.js');
+const data=I.prepare(require('../sample.json'),{referencePlate:'all'});
+const data2=I.prepare(require('../selectivity-rep2.json'),{referencePlate:'all'});
+const runs=R.buildSeries({'sel-1-1':data,'sel-2-1':data2},['RMC-0741051-001'],['sel-1-1','sel-2-1'],'Cyclin D3','A');
+const before=JSON.stringify(runs),pooled=R.pooledSummary(runs);
+const result=N.build(pooled,{context:{display_mode:'pooled',response_basis:'Supplied corrected response'}});
+const map=result.provenance.column_map;
+assert.deepEqual(map.map(c=>c.prism_column),['A:Y1','A:Y2','A:Y3','A:Y4']);
+assert.deepEqual(map.map(c=>c.biological_replicate),[1,1,2,2]);
+assert.deepEqual(map.map(c=>c.run_date),['2026-10-09','2026-10-09','2026-10-15','2026-10-15']);
+assert(map.every(c=>c.plate_group==='1'&&c.observation_type==='Individual well value'));
+assert(map.every(c=>c.physical_plate!=='Not supplied'&&c.source_files!=='Not supplied'));
+const guide=result.provenance.column_guide;
+for(const text of ['A:Y5 through A:Y48 = unused','Y1 does NOT automatically mean biological replicate 1','not independent biological replicates','Bottom, Top, LogEC50 and HillSlope are free','Check Format Graph','not retained','96 wells'])assert(guide.includes(text),text);
+assert(result.entries.find(e=>e.name==='COLUMN_GUIDE.txt').data===guide);
+assert(result.entries.find(e=>e.name==='column-map.csv').data.includes('"A:Y3"'));
+const biological=P.build(R.biologicalSummary(runs),{context:{display_mode:'summary'}});
+assert.deepEqual(biological.provenance.column_map.map(c=>c.observation_type),['Biological-run mean','Biological-run mean']);
+assert.deepEqual(biological.provenance.column_map.map(c=>c.biological_replicate),[1,2]);
+assert(biological.pzfx.includes('each contributing run equal weight'));
+assert(biological.pzfx.includes('not already log-transformed'));
+const separate=P.build(runs);
+assert.deepEqual(separate.provenance.column_map.map(c=>c.prism_column),['A:Y1','A:Y2','B:Y1','B:Y2']);
+assert.deepEqual(separate.provenance.column_map.map(c=>c.biological_replicate),[1,1,2,2]);
+// The 96-column boundary preserves which run each slot belongs to.
+const d1=[require('../cyclind1-bio1-A.json'),require('../cyclind1-bio2-A.json')];
+const reference=R.buildSeries({'d1-1':d1[0],'d1-2':d1[1]},['RMC-0741051-001'],['d1-1','d1-2'],'','A');
+const wide=N.build(R.pooledSummary(reference));
+assert.equal(wide.provenance.column_map.length,96);
+assert.equal(wide.provenance.column_map[47].biological_replicate,1);
+assert.equal(wide.provenance.column_map[48].prism_column,'A:Y49');
+assert.equal(wide.provenance.column_map[48].biological_replicate,2);
+assert.equal(wide.provenance.column_map[95].prism_column,'A:Y96');
+const sparse=[{series_id:'unknown',doses:[{x:1,mean:2},{x:2,mean:3}]}];
+const fallback=P.build(sparse).provenance.column_map[0];
+assert.equal(fallback.observation_type,'Supplied dose mean');assert.equal(fallback.physical_plate,'Not supplied');
+// Decode the actual native file, verifying the guide is inside Prism, not only in the ZIP.
+const seed=fs.readFileSync(require('node:path').join(__dirname,'../assets/prism/atlas-empty.prism'));
+const bytes=Buffer.from(N.populateInput(seed,result.table,result.provenance));let p=0,info;
+while(bytes.readUInt32LE(p)===0x04034b50){
+ const size=bytes.readUInt32LE(p+18),n=bytes.readUInt16LE(p+26),start=p+30+n+bytes.readUInt16LE(p+28);
+ const name=bytes.subarray(p+30,p+30+n).toString();
+ if(name.startsWith('info/')&&name.endsWith('/sheet.json'))info=JSON.parse(bytes.subarray(start,start+size));
+ p=start+size;
+}
+assert.equal(info.title,'Atlas column guide and analysis');assert(info.notesText.startsWith(guide));
+assert.equal(JSON.stringify(runs),before);
+console.log('PASS: exact four-well pooled, separate-run, biological-mean and 96-well column mappings; dates/plates; explicit unavailable metadata; guide embedded in native Prism Info; source immutability');
