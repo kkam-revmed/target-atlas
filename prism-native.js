@@ -94,6 +94,25 @@ prism_task_script="$prism_task_dir/Run_Atlas_Prism.pzc"
 { printf 'SetPath "%s"\\n' "$prism_task_hfs"; cat "$prism_task_dir/Open_in_Prism.pzc"; } > "$prism_task_script"
 open -b com.GraphPad.Prism "$prism_task_script"
 `;
+ // Keep one approved launcher; choose a fresh export instead of opening a new command file.
+ const reusableLauncher=launcher
+  .replace('prism_task_dir="$(cd -- "$(dirname -- "$0")" && pwd)"','prism_task_dir=""')
+  .replace('fi\nprism_task_hfs=',`fi
+if ! prism_task_dir="$(osascript -e 'POSIX path of (choose folder with prompt "Choose the Atlas_Prism folder from your extracted Target Atlas download")')"; then
+  echo "No folder selected."
+  exit 0
+fi
+if [ ! -f "$prism_task_dir/Atlas_Input.prism" ] || [ ! -f "$prism_task_dir/Open_in_Prism.pzc" ]; then
+  echo "Choose the extracted Atlas_Prism folder containing Atlas_Input.prism and Open_in_Prism.pzc."
+  exit 1
+fi
+prism_task_hfs=`);
+ const reusableReadme=`TARGET ATLAS — REUSABLE MAC LAUNCHER\n\nONE-TIME SETUP\nExtract this ZIP. Move Atlas_Prism_Launcher.command to a permanent folder, such as Documents/Atlas Prism Launcher. Open it and, if macOS blocks it, approve this file through System Settings > Privacy & Security > Open Anyway. Keep this same copy for later exports; do not replace it with each download.\n\nEACH EXPORT\nDownload Prism graph + 4PL from Target Atlas and extract the entire ZIP. Open your saved Atlas_Prism_Launcher.command and choose the extracted Atlas_Prism folder containing Atlas_Input.prism and Open_in_Prism.pzc. Wait for Prism to finish, then open Atlas_Result.prism in that selected folder. You do not need to open the freshly downloaded Open_in_Prism.command.\n\nUse packages you downloaded from Target Atlas. Requires Prism 11 on Mac. This launcher does not change security settings or remove quarantine flags. Reusing an approved file normally avoids repeated approval, but managed Mac policies may still require IT approval. The reusable folder chooser awaits confirmation on a Mac; the shared Prism launch steps are unchanged.\n`;
+ function downloadMacLauncher(){
+  const data=zip([{name:'Atlas_Prism_Launcher.command',data:reusableLauncher,executable:true},{name:'README.txt',data:reusableReadme}]);
+  const url=URL.createObjectURL(new Blob([data],{type:'application/zip'})),a=document.createElement('a');a.href=url;a.download='Atlas_Mac_Launcher.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ }
+ if(typeof document!=='undefined')document.addEventListener('click',event=>{if(event.target.closest('[data-prism-mac-launcher]'))downloadMacLauncher();});
  // Use Windows' built-in PowerShell for path handling and a file picker. The
  // batch file contains readable commands; no policy changes, downloads or admin.
  const windowsCommands=[
@@ -193,6 +212,6 @@ open -b com.GraphPad.Prism "$prism_task_script"
   const url=URL.createObjectURL(new Blob([data],{type:'application/zip'})),a=document.createElement('a');a.href=url;a.download=name.replace(/[^a-z0-9._-]/gi,'_')+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   return result;
  }
- function help(){return '<details class="prism-handoff"><summary>Open the graph in Prism 11 · Windows or Mac</summary><p>Choose <strong>Prism graph + 4PL</strong> and extract the entire ZIP. <strong>Windows:</strong> double-click <strong>Open_in_Prism.bat</strong>. <strong>Mac:</strong> double-click <strong>Open_in_Prism.command</strong>. Open <strong>Atlas_Result.prism</strong> when Prism finishes. If Windows asks, select your installed Prism 11 program (prism.exe).</p><p>Creates a new independent, unweighted 4PL for each selected series. Review fit warnings and confidence intervals in Prism. The native graph uses template colors and error-bar settings; Atlas styling is retained in PNG/SVG exports. X uses log₁₀(M); manual limits carry over.</p><p>Up to 96 observations per dose. Exports above 48 observations are awaiting confirmation in Prism 11. For larger pooled selections, use the data-only .pzfx download. The package also includes original values, displayed mean/SD/n and source provenance. No data are uploaded. Windows native results are awaiting confirmation.</p></details>';}
- const api={zip,build,download,limits,help,populateInput,availability,showAvailability,MAX_OBSERVATIONS};root.AtlasPrismNative=api;if(typeof module==='object'&&module.exports)module.exports=api;
+ function help(){return '<details class="prism-handoff"><summary>Open the graph in Prism 11 · Windows or Mac</summary><p>Choose <strong>Prism graph + 4PL</strong> and extract the entire ZIP. <strong>Windows:</strong> double-click <strong>Open_in_Prism.bat</strong>. <strong>Mac:</strong> double-click <strong>Open_in_Prism.command</strong>. Open <strong>Atlas_Result.prism</strong> when Prism finishes. If Windows asks, select your installed Prism 11 program (prism.exe).</p><div class="prism-reusable-mac"><h4>Mac: avoid approving a new launcher each time</h4><button type="button" data-prism-mac-launcher class="secondary">Download reusable Mac launcher</button><p>Set up once: unzip this launcher, save it in a permanent folder and approve it through Privacy &amp; Security if prompted. Keep that same copy.</p><p>For each new export, unzip the Prism package, open your saved <strong>Atlas_Prism_Launcher.command</strong>, and choose the new <strong>Atlas_Prism</strong> folder. There is no need to open the command file inside each new download. Your Mac security settings stay enabled.</p></div><p>Creates a new independent, unweighted 4PL for each selected series. Review fit warnings and confidence intervals in Prism. The native graph uses template colors and error-bar settings; Atlas styling is retained in PNG/SVG exports. X uses log₁₀(M); manual limits carry over.</p><p>Up to 96 observations per dose. Exports above 48 observations are awaiting confirmation in Prism 11. For larger pooled selections, use the data-only .pzfx download. The package also includes original values, displayed mean/SD/n and source provenance. No data are uploaded. Windows native results are awaiting confirmation.</p></details>';}
+ const api={zip,build,download,limits,help,populateInput,availability,showAvailability,MAX_OBSERVATIONS,downloadMacLauncher,reusableLauncher};root.AtlasPrismNative=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);

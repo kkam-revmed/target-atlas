@@ -34,5 +34,7 @@ try{
  await download('#cypaPrismGraph');await page.screenshot({path:'/tmp/atlas-prism-mobile.png'});
  // Failed asset fetch produces a useful message and restores the button.
  await page.route('**/assets/prism/atlas-empty.prism',route=>route.fulfill({status:503,body:'unavailable'}));await page.locator('#cypaPrismGraph').click();await page.waitForFunction(()=>document.querySelector('#cypaPrismStatus').textContent.includes('could not be loaded'));assert(!await page.locator('#cypaPrismGraph').isDisabled());
+ await page.locator('#biologicalReplicates .prism-handoff').evaluate(e=>e.open=true);
+ const launcherWait=page.waitForEvent('download');await page.locator('#biologicalReplicates [data-prism-mac-launcher]').click();const launcherDownload=await launcherWait;assert.equal(launcherDownload.suggestedFilename(),'Atlas_Mac_Launcher.zip');const launcherFiles=unzip(fs.readFileSync(await launcherDownload.path()));assert(launcherFiles['Atlas_Prism_Launcher.command'].includes(Buffer.from('choose folder')));assert(launcherFiles['README.txt'].includes(Buffer.from('Keep this same copy')));assert(!Object.keys(launcherFiles).some(name=>name.endsWith('.prism')));
  assert.deepEqual(errors,[]);console.log('PASS: desktop/mobile native ZIP downloads; selected compounds and original plate labels; biological means; exact input serialization; applied manual axes; normalized/corrected labels; pooled limit and fetch error recovery.');
 }finally{await browser?.close();server.kill();}})().catch(e=>{console.error(e);process.exitCode=1;});

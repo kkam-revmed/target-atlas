@@ -12,6 +12,20 @@ provenance.json. No server or new service is required. Data stay in the browser
 and downloaded files. The original supplied templates and workbook archives are
 not published; the site serves only an extracted empty linked graph family.
 
+## Reusable Mac launcher
+
+In the graph options, expand **Open the graph in Prism 11 · Windows or Mac**
+and choose **Download reusable Mac launcher**. Extract the ZIP, save
+`Atlas_Prism_Launcher.command` in a permanent folder, and approve that file once
+through Privacy & Security if macOS asks. Keep the same approved copy.
+
+For later exports, extract the Prism package, open the saved launcher and choose
+its `Atlas_Prism` folder. The launcher checks for the input project and Prism
+script, then uses the existing launch steps with that folder. It does not change
+security settings, strip quarantine attributes or execute the new package's shell
+launcher. Managed Mac policy may still require IT approval. The chooser has shell
+and browser-download tests here; its native Mac behavior still needs confirmation.
+
 ## Data and analysis behavior
 
 Each selected assay/compound batch/condition/plate group is a separate Y dataset.
