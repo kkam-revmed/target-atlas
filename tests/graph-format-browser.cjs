@@ -23,8 +23,8 @@ try{
  assert(svg.includes('&quot;yMax&quot;:200')||svg.includes('"yMax":200'));assert(svg.includes('Custom axis limits'));assert(svg.includes('11pt'));assert(svg.includes('clipPath'));
  download=page.waitForEvent('download');await page.locator('#runPNG').click();const png=fs.readFileSync(await (await download).path());assert.equal(png.subarray(1,4).toString(),'PNG');assert.equal(png.readUInt32BE(16),1600);
  const good=await editor.locator('svg').evaluate(e=>e.outerHTML);
- await editor.locator('[data-axis-field="xMin"]').fill('0');await editor.locator('[data-axis-action="apply"]').click();assert.match(await editor.locator('[role="status"]').textContent(),/positive/);assert.equal(await editor.locator('svg').evaluate(e=>e.outerHTML),good);
- await editor.locator('[data-axis-field="xMin"]').fill('20');await editor.locator('[data-axis-action="apply"]').click();assert.match(await editor.locator('[role="status"]').textContent(),/minimum/);
+ await editor.locator('[data-axis-field="xMin"]').fill('0');await editor.locator('[data-axis-action="apply"]').click();assert.match(await editor.locator('.graph-axis-status').textContent(),/positive/);assert.equal(await editor.locator('svg').evaluate(e=>e.outerHTML),good);
+ await editor.locator('[data-axis-field="xMin"]').fill('20');await editor.locator('[data-axis-action="apply"]').click();assert.match(await editor.locator('.graph-axis-status').textContent(),/minimum/);
  await editor.locator('[data-axis-action="reset"]').click();assert.deepEqual((await meta()).display_axes.custom,{});
  await page.setViewportSize({width:390,height:900});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  await editor.locator('[data-axis-field="yMin"]').fill('110');await editor.locator('[data-axis-field="yMax"]').fill('200');await editor.locator('[data-axis-action="apply"]').click();assert.equal(await editor.locator('[data-reference]').count(),0,'out-of-range control must not float outside plot');
