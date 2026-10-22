@@ -49,13 +49,15 @@ digits (maximum difference in the returned test: 3.7e-13 response units).
   native graph. Check Format Graph in Prism; exact Atlas mean/SD/n are included
   in selected-data.pzfx. The binary graph SD/SEM setting is not independently
   verified by the structural tests. PNG/SVG exports retain Atlas appearance.
-- Maximum 48 observations per concentration per series. Larger pooled reference
+- Maximum 96 observations per concentration per series. Larger pooled reference
   selections show the required observation count beside the export buttons before
   downloading; the graph-export button is disabled. Choose **Compare biological
   runs separately** to change the graph explicitly, or **Download all selected
   Prism data** to retain every pooled well in .pzfx tables without changing the
-  graph. No observations are truncated. Extending the native template above 48
-  columns still needs a native Prism validation.
+  graph. No observations are truncated. The native input expands its replicate
+  definitions, table width and data columns together for 49–96 observations;
+  these expanded files have structural/data tests but still await native Prism 11
+  confirmation. The existing ≤48-column Mac workflow remains validated.
 - Nonpositive doses and series with fewer than four measured concentrations are
   rejected for this log-dose 4PL export. The data-only download remains available.
 - The owner verified the single-compound and two-compound native workflows in

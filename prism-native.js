@@ -1,7 +1,7 @@
 /* Native Prism 11 handoff. Source values stay local; Prism calculates its own fits. */
 (function(root){
  'use strict';
- const enc=new TextEncoder(),finite=Number.isFinite;
+ const enc=new TextEncoder(),finite=Number.isFinite,MAX_OBSERVATIONS=96;
  // Stored ZIP entries need no external library, service or network dependency.
  function zip(entries){
   const chunks=[],central=[];let offset=0;
@@ -38,13 +38,15 @@
   const get=name=>JSON.parse(dec.decode(byName.get(name)?.data));
   const put=(name,value)=>{byName.get(name).data=JSON.stringify(value);};
   const sheet='data/sheets/58C3734F-A41D-42C1-9347-2A825697B8BD/sheet.json',tablePath='data/tables/A8CB8A16-CF2B-4606-A7F4-3BCC05585DF7/';
-  const first=table.datasets[0];
-  const csv=table.x.map((x,r)=>[Math.log10(x)-6,...Array.from({length:48},(_,s)=>first.columns[s]?.values[r]??'')].join(',')).join('\n')+'\n';
+  const first=table.datasets[0],slots=Math.max(48,...table.datasets.map(d=>d.columns.length));
+  if(slots>MAX_OBSERVATIONS)throw Error('This Prism graph export supports up to '+MAX_OBSERVATIONS+' observations per dose.');
+  const csv=table.x.map((x,r)=>[Math.log10(x)-6,...Array.from({length:slots},(_,s)=>first.columns[s]?.values[r]??'')].join(',')).join('\n')+'\n';
   byName.get(tablePath+'data.csv').data=csv;
-  const meta=get(tablePath+'content.json');meta.numberOfColumns=49;meta.numberOfRows=table.x.length;put(tablePath+'content.json',meta);
-  const input=get(sheet);input.title=label(provenance.project_title);put(sheet,input);
+  const meta=get(tablePath+'content.json');meta.numberOfColumns=slots+1;meta.numberOfRows=table.x.length;put(tablePath+'content.json',meta);
+  const input=get(sheet);input.title=label(provenance.project_title);input.table.replicatesCount=slots;put(sheet,input);
   for(const [id,title] of [['2BF51D2B-DD4A-429A-BDCF-6FF10EC594B4','log10 concentration (M)'],['61BE1DFA-EF80-4CA9-8C5B-4D7F68FBE468',label(first.title)]]){
    const name='data/sets/'+id+'.json',obj=get(name);obj.title=title;
+   if(!id.startsWith('2BF'))obj.replicates=Array.from({length:slots},(_,i)=>({...(obj.replicates[i]||obj.replicates[0])}));
    for(const [s,rep] of obj.replicates.entries()){
     const values=id.startsWith('2BF')?table.x:first.columns[s]?.values||[];
     const positions=values.map((v,r)=>finite(v)?r:-1).filter(r=>r>=0);
@@ -122,12 +124,12 @@ open -b com.GraphPad.Prism "$prism_task_script"
  function availability(series){
   const exporter=root.AtlasPrismExport||(typeof require==='function'?require('./prism-export.js'):null);
   const count=Math.max(0,...series.map(q=>exporter.observationCount(q)));
-  return {available:series.length>0&&count<=48,count,limit:48,message:count>48?`This selection needs ${count} observation columns per series; the Prism graph template supports 48. No measurements have been removed. Compare biological runs separately to create graphs, or keep this pooled selection and download all values as Prism data (.pzfx; tables only).`:''};
+  return {available:series.length>0&&count<=MAX_OBSERVATIONS,count,limit:MAX_OBSERVATIONS,message:count>MAX_OBSERVATIONS?`This selection needs ${count} observation columns per series; the Prism graph template supports ${MAX_OBSERVATIONS}. No measurements have been removed. Compare biological runs separately to create graphs, or keep this pooled selection and download all values as Prism data (.pzfx; tables only).`:count>48?`This export includes all ${count} observation columns per series. The expanded native layout has passed data and file-structure checks; confirmation in Prism 11 is still pending.`:''};
  }
  function showAvailability(host,series,{separate,data}){
   const result=availability(series);host.hidden=!result.message;
-  host.innerHTML=result.message?'<p>'+result.message+'</p><div class="graph-downloads"><button type="button" data-prism-separate class="secondary">Compare biological runs separately</button><button type="button" data-prism-all-data class="secondary">Download all selected Prism data</button></div>':'';
-  if(result.message){host.querySelector('[data-prism-separate]').onclick=separate;host.querySelector('[data-prism-all-data]').onclick=data;}
+  host.innerHTML=result.message?'<p>'+result.message+'</p>'+(!result.available?'<div class="graph-downloads"><button type="button" data-prism-separate class="secondary">Compare biological runs separately</button><button type="button" data-prism-all-data class="secondary">Download all selected Prism data</button></div>':''):'';
+  if(result.message&&!result.available){host.querySelector('[data-prism-separate]').onclick=separate;host.querySelector('[data-prism-all-data]').onclick=data;}
   return result;
  }
  function build(series,options={}){
@@ -135,8 +137,8 @@ open -b com.GraphPad.Prism "$prism_task_script"
   const exported=api.build(series,options),table=exported.tables[0],axes=limits(series,options.axes);
   if(!table.datasets.length)throw Error('Choose at least one series.');
   const slots=Math.max(...table.datasets.map(d=>d.columns.length));
-  if(slots>48)throw Error('This Prism graph export supports up to 48 observations per dose. For pooled reference wells, choose separate biological runs, or download all selected data as .pzfx.');
-  // Native template has 48 subcolumns, validated with unequal observation counts.
+  if(slots>MAX_OBSERVATIONS)throw Error('This Prism graph export supports up to '+MAX_OBSERVATIONS+' observations per dose. Choose separate biological runs, or download all selected data as .pzfx.');
+  // Expand all native table/replicate metadata together when more than 48 slots are needed.
   // Leave unused cells blank; never duplicate or zero-pad the measurements.
   const script=['CreateLog','SetScriptDialogTitle "Atlas: build selected 4PL comparison"',
    'Open "Atlas_Input.prism"','GoTo D 1',`SetTitle "${label(options.title||'Atlas selected comparison')}"`];
@@ -162,6 +164,7 @@ open -b com.GraphPad.Prism "$prism_task_script"
    `SetAxisLimits Y bottom ${axes.yMin}`,`SetAxisLimits Y top ${axes.yMax}`,`SetAxisLimits Y interval ${axes.yStep}`,
    'Save "Atlas_Result.prism"','');
   const notes=[
+   ...(slots>48?['The expanded native layout supports up to 96 observation columns. Every selected value is included; data and file-structure checks pass, but native Prism 11 confirmation is pending.']:[]),
    'This package creates a native Prism 11 table, separate independent agonist 4PL analyses and an editable graph using the approved template.',
    'Prism fits selected observations with unweighted least squares and free Bottom, Top, LogEC50 and HillSlope. It does not reuse GDS or Atlas fitted parameters. Fits can differ from Atlas, particularly when Atlas fits concentration means.',
    'Replicate display determines the inputs: biological summaries use one mean per run; pooled mode uses each selected well. Assays, batches, conditions and plate groups remain separate datasets. Well slots are not paired subjects.',
@@ -190,6 +193,6 @@ open -b com.GraphPad.Prism "$prism_task_script"
   const url=URL.createObjectURL(new Blob([data],{type:'application/zip'})),a=document.createElement('a');a.href=url;a.download=name.replace(/[^a-z0-9._-]/gi,'_')+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   return result;
  }
- function help(){return '<details class="prism-handoff"><summary>Open the graph in Prism 11 · Windows or Mac</summary><p>Choose <strong>Prism graph + 4PL</strong> and extract the entire ZIP. <strong>Windows:</strong> double-click <strong>Open_in_Prism.bat</strong>. <strong>Mac:</strong> double-click <strong>Open_in_Prism.command</strong>. Open <strong>Atlas_Result.prism</strong> when Prism finishes. If Windows asks, select your installed Prism 11 program (prism.exe).</p><p>Creates a new independent, unweighted 4PL for each selected series. Review fit warnings and confidence intervals in Prism. The native graph uses template colors and error-bar settings; Atlas styling is retained in PNG/SVG exports. X uses log₁₀(M); manual limits carry over.</p><p>Up to 48 observations per dose. For larger pooled selections, use the data-only .pzfx download. The package also includes original values, displayed mean/SD/n and source provenance. No data are uploaded. Windows native results are awaiting confirmation.</p></details>';}
- const api={zip,build,download,limits,help,populateInput,availability,showAvailability};root.AtlasPrismNative=api;if(typeof module==='object'&&module.exports)module.exports=api;
+ function help(){return '<details class="prism-handoff"><summary>Open the graph in Prism 11 · Windows or Mac</summary><p>Choose <strong>Prism graph + 4PL</strong> and extract the entire ZIP. <strong>Windows:</strong> double-click <strong>Open_in_Prism.bat</strong>. <strong>Mac:</strong> double-click <strong>Open_in_Prism.command</strong>. Open <strong>Atlas_Result.prism</strong> when Prism finishes. If Windows asks, select your installed Prism 11 program (prism.exe).</p><p>Creates a new independent, unweighted 4PL for each selected series. Review fit warnings and confidence intervals in Prism. The native graph uses template colors and error-bar settings; Atlas styling is retained in PNG/SVG exports. X uses log₁₀(M); manual limits carry over.</p><p>Up to 96 observations per dose. Exports above 48 observations are awaiting confirmation in Prism 11. For larger pooled selections, use the data-only .pzfx download. The package also includes original values, displayed mean/SD/n and source provenance. No data are uploaded. Windows native results are awaiting confirmation.</p></details>';}
+ const api={zip,build,download,limits,help,populateInput,availability,showAvailability,MAX_OBSERVATIONS};root.AtlasPrismNative=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);
