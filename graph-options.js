@@ -18,12 +18,13 @@ const AtlasGraphOptions=(()=>{
   if(host.dataset.colorSeries!==signature){
    host.dataset.colorSeries=signature;
    const swatches=bdrPalette.map(([name,color])=>`<button type="button" class="bdr-swatch" data-bdr-color="${color}" style="--swatch:${color}" aria-label="${E(name)} (${color.toUpperCase()})" aria-pressed="false" title="${E(name)} · ${color.toUpperCase()}"></button>`).join('');
-   host.innerHTML=series.length?'<div class="bdr-palette-intro"><strong>BDR graph palette</strong><label>Curve to recolor<select data-color-series>'+series.map(q=>`<option value="${E(q.series_id)}">${E(q.series_label)}</option>`).join('')+'</select></label><small data-selected-curve></small><p>Click a color below to change this curve.</p><div class="bdr-swatches" role="group" aria-label="BDR colors">'+swatches+'</div><small data-color-status role="status"></small><button type="button" data-apply-bdr class="secondary">Apply BDR palette to all curves</button><small>Assigns colors in palette order. Slides 4, 7 and 42.</small></div><div class="graph-color-list">'+series.map(q=>`<div class="graph-color-row"><label><input type="color" data-graph-color="${E(q.series_id)}" value="${E(q.series_color)}"><span>${E(q.series_label)}</span></label></div>`).join('')+'</div><button type="button" data-reset-colors class="secondary">Reset colors</button>':'<p>No plotted series selected.</p>';
+   host.innerHTML=series.length?'<div class="bdr-palette-intro"><strong>BDR graph palette</strong><label>Curve to recolor<select data-color-series>'+series.map(q=>`<option value="${E(q.series_id)}">${E(q.series_label)}</option>`).join('')+'</select></label><small data-selected-curve></small><p>Click a color below to change this curve.</p><div class="bdr-swatches" role="group" aria-label="BDR colors">'+swatches+'</div><small data-color-status role="status"></small><button type="button" data-apply-bdr class="secondary">Apply BDR palette to all curves</button><small>Assigns colors in palette order. Slides 4, 7 and 42.</small></div><div class="graph-color-list">'+series.map(q=>`<div class="graph-color-row"><div class="graph-color-choice"><button type="button" class="curve-color-button" data-select-curve="${E(q.series_id)}" style="--swatch:${E(q.series_color)}" aria-label="Select ${E(q.series_label)} for the palette" aria-pressed="false"></button><span>${E(q.series_label)}</span></div><details class="custom-curve-color"><summary>Custom hex color</summary><label>Hex code<input type="text" data-graph-color="${E(q.series_id)}" value="${E(q.series_color)}" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Custom hex color for ${E(q.series_label)}"></label></details></div>`).join('')+'</div><button type="button" data-reset-colors class="secondary">Reset colors</button>':'<p>No plotted series selected.</p>';
   }
   const selector=host.querySelector('[data-color-series]');
   const syncSwatches=()=>{
    const selected=series.find(q=>q.series_id===selector?.value);
    host.querySelectorAll('[data-bdr-color]').forEach(button=>button.setAttribute('aria-pressed',String(selected?.series_color.toLowerCase()===button.dataset.bdrColor)));
+   host.querySelectorAll('[data-select-curve]').forEach(button=>{const q=series.find(q=>q.series_id===button.dataset.selectCurve);button.style.setProperty('--swatch',q.series_color);button.setAttribute('aria-pressed',String(q.series_id===selector.value));});
    const group=host.querySelector('.bdr-swatches');
    if(group){group.setAttribute('aria-label',`BDR colors for ${selected.series_label}`);host.querySelector('[data-selected-curve]').textContent=selected.series_label;}
   };
@@ -34,6 +35,8 @@ const AtlasGraphOptions=(()=>{
   host.oninput=customColor;
   host.onchange=e=>{if(e.target.matches('[data-color-series]')){syncSwatches();announce('Click a swatch to change this curve.');}else customColor(e);};
   host.onclick=e=>{
+   const curve=e.target.closest('[data-select-curve]');
+   if(curve&&selector){selector.value=curve.dataset.selectCurve;syncSwatches();announce('Curve selected. Choose a color from the palette.');host.querySelector('.bdr-swatches').scrollIntoView({block:'nearest'});return;}
    const swatch=e.target.closest('[data-bdr-color]');
    if(swatch&&selector){overrides[selector.value]=swatch.dataset.bdrColor;redraw();announce(`Curve color changed to ${bdrPalette.find(p=>p[1]===swatch.dataset.bdrColor)[0]}.`);}
    else if(e.target.closest('[data-apply-bdr]')){series.forEach((q,i)=>overrides[q.series_id]=bdrPalette[i%bdrPalette.length][1]);redraw();announce('BDR palette applied to all curves. Select a curve above to customize its color.');}

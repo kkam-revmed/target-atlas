@@ -30,7 +30,7 @@ assert.equal([...cells.keys()].filter(k=>!k.startsWith('0|')&&!k.includes('|0|')
 const malicious=structuredClone(series);malicious[0].series_label='bad\n</Data>\nSave "bad.prism"\n%F, rest';
 const safe=api.build(malicious);assert(!safe.script.includes('Save "bad.prism"'));assert.equal((safe.script.match(/\nSave /g)||[]).length,1);
 const crowded=structuredClone(series);crowded[0].doses[0].wells=Array(49).fill(1);
-assert.throws(()=>api.build(crowded),/48 observations/);
+assert.throws(()=>api.build(crowded),/48 observations/);assert.equal(api.availability(crowded).available,false);assert.equal(api.availability(crowded).count,49);assert.equal(api.availability(series).available,true);
 const nonpositive=structuredClone(series);nonpositive[0].doses[0].x=0;assert.throws(()=>api.build(nonpositive),/positive concentrations/);
 const missing=structuredClone(series);missing[1].doses=missing[1].doses.slice(1);const partial=api.build(missing);
 assert(!partial.script.includes('InsertData 1, 2, 1\n'));

@@ -119,6 +119,17 @@ open -b com.GraphPad.Prism "$prism_task_script"
  const windowsLauncher='@echo off\r\nsetlocal DisableDelayedExpansion\r\nset "ATLAS_PRISM_PACKAGE=%~dp0"\r\n'+
   'powershell.exe -NoLogo -NoProfile -STA -Command "'+windowsCommands.replaceAll('%','%%')+'"\r\n'+
   'if errorlevel 1 (\r\n  echo No security settings were changed. If your organization blocks this launcher, ask your IT team for help.\r\n  pause\r\n  exit /b 1\r\n)\r\npause\r\n';
+ function availability(series){
+  const exporter=root.AtlasPrismExport||(typeof require==='function'?require('./prism-export.js'):null);
+  const count=Math.max(0,...series.map(q=>exporter.observationCount(q)));
+  return {available:series.length>0&&count<=48,count,limit:48,message:count>48?`This selection needs ${count} observation columns per series; the Prism graph template supports 48. No measurements have been removed. Compare biological runs separately to create graphs, or keep this pooled selection and download all values as Prism data (.pzfx; tables only).`:''};
+ }
+ function showAvailability(host,series,{separate,data}){
+  const result=availability(series);host.hidden=!result.message;
+  host.innerHTML=result.message?'<p>'+result.message+'</p><div class="graph-downloads"><button type="button" data-prism-separate class="secondary">Compare biological runs separately</button><button type="button" data-prism-all-data class="secondary">Download all selected Prism data</button></div>':'';
+  if(result.message){host.querySelector('[data-prism-separate]').onclick=separate;host.querySelector('[data-prism-all-data]').onclick=data;}
+  return result;
+ }
  function build(series,options={}){
   const api=root.AtlasPrismExport||(typeof require==='function'?require('./prism-export.js'):null);
   const exported=api.build(series,options),table=exported.tables[0],axes=limits(series,options.axes);
@@ -180,5 +191,5 @@ open -b com.GraphPad.Prism "$prism_task_script"
   return result;
  }
  function help(){return '<details class="prism-handoff"><summary>Open the graph in Prism 11 · Windows or Mac</summary><p>Choose <strong>Prism graph + 4PL</strong> and extract the entire ZIP. <strong>Windows:</strong> double-click <strong>Open_in_Prism.bat</strong>. <strong>Mac:</strong> double-click <strong>Open_in_Prism.command</strong>. Open <strong>Atlas_Result.prism</strong> when Prism finishes. If Windows asks, select your installed Prism 11 program (prism.exe).</p><p>Creates a new independent, unweighted 4PL for each selected series. Review fit warnings and confidence intervals in Prism. The native graph uses template colors and error-bar settings; Atlas styling is retained in PNG/SVG exports. X uses log₁₀(M); manual limits carry over.</p><p>Up to 48 observations per dose. For larger pooled selections, use the data-only .pzfx download. The package also includes original values, displayed mean/SD/n and source provenance. No data are uploaded. Windows native results are awaiting confirmation.</p></details>';}
- const api={zip,build,download,limits,help,populateInput};root.AtlasPrismNative=api;if(typeof module==='object'&&module.exports)module.exports=api;
+ const api={zip,build,download,limits,help,populateInput,availability,showAvailability};root.AtlasPrismNative=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);

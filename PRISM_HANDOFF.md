@@ -50,8 +50,12 @@ digits (maximum difference in the returned test: 3.7e-13 response units).
   in selected-data.pzfx. The binary graph SD/SEM setting is not independently
   verified by the structural tests. PNG/SVG exports retain Atlas appearance.
 - Maximum 48 observations per concentration per series. Larger pooled reference
-  selections receive an explanation rather than being truncated. Use separate
-  biological runs or the data-only .pzfx download for those selections.
+  selections show the required observation count beside the export buttons before
+  downloading; the graph-export button is disabled. Choose **Compare biological
+  runs separately** to change the graph explicitly, or **Download all selected
+  Prism data** to retain every pooled well in .pzfx tables without changing the
+  graph. No observations are truncated. Extending the native template above 48
+  columns still needs a native Prism validation.
 - Nonpositive doses and series with fewer than four measured concentrations are
   rejected for this log-dose 4PL export. The data-only download remains available.
 - The owner verified the single-compound and two-compound native workflows in

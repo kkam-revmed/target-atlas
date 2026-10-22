@@ -61,5 +61,5 @@
  }
  function save(text,name,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  function download(series,name='target-atlas-prism',options={}){const result=build(series,options);save(result.pzfx,name.replace(/[^a-z0-9._-]/gi,'_')+'.pzfx','application/xml;charset=utf-8');return result;}
- const api={build,download};root.AtlasPrismExport=api;if(typeof module==='object'&&module.exports)module.exports=api;
+ const api={build,download,observationCount:q=>observationColumns(q).length};root.AtlasPrismExport=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);
