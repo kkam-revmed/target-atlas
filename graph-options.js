@@ -46,6 +46,12 @@ const AtlasGraphOptions=(()=>{
  const modes=[['technical','Compare technical wells'],['individual','Compare biological runs (technical means)'],['summary','Combine biological means'],['pooled','Combine technical + biological wells']];
  const help={technical:'See individual wells and their run mean at each concentration. Error bars show within-run sample SD; n counts wells.',individual:'Compare a separate mean curve for each biological run. Technical wells are averaged within each run; error bars show within-run SD, not between-run SD.',summary:'Combine run means with equal weight at each concentration. Error bars show between-run sample SD; n counts biological runs.',pooled:'Combine all included wells with equal weight at each concentration. Error bars show pooled-well SD; n counts wells, not independent biological runs.'};
  function modeGuide(){return `<details class="replicate-mode-guide"><summary>What do these four modes mean?</summary>
+  <p><strong>Start with your question:</strong></p><ul>
+   <li>Do the wells agree within a run? Choose <strong>Compare technical wells</strong>.</li>
+   <li>Do the repeated experiments agree? Choose <strong>Compare biological runs</strong>.</li>
+   <li>What is the average response across experiments? Choose <strong>Combine biological means</strong>; each run has equal weight.</li>
+   <li>What is the distribution of all measured wells together? Choose <strong>Combine technical + biological wells</strong>; this does not increase the number of independent experiments.</li>
+  </ul>
   <p><strong>Technical replicates</strong> are repeated wells within the same assay run, usually on the same physical plate. They show how much the well measurements vary.</p>
   <p><strong>Biological replicates</strong> here are the separate runs labeled Replicate 1 and Replicate 2 in the supplied datasets. They represent repeats of the experiment and may share the same Benchling ID. Compound batch numbers are not replicate numbers.</p>
   <section><h4>Compare technical wells</h4><p>Inspect individual well values alongside each run’s mean at every concentration. Bars show sample SD across wells within that run; n counts wells. Wells are not paired across concentrations.</p></section>
@@ -56,6 +62,19 @@ const AtlasGraphOptions=(()=>{
   <p>Calculations keep compounds, batches, assays, conditions and plate groups separate. Plate 1 and Plate 2 remain separate summaries where supplied separately. Only matching concentrations are combined; missing doses are not interpolated.</p>
   <p><strong>SD means standard deviation:</strong> it describes the spread of the included values. It is not SEM, a confidence interval or a test of statistical significance.</p>
  </details>`;}
+ function fitSummary(series,mode,style){
+  if(!series.length)return '';
+  if(style==='measured')return '<p><strong>Measured curves:</strong> lines connect observed means. No 4PL curves are displayed.</p>';
+  const missing=series.filter(q=>!Number.isFinite(q.fit?.ec50));
+  const flagged=series.filter(q=>q.fit_flags?.length);
+  const combined=mode==='summary'||mode==='pooled';
+  const lowN=combined&&series.some(q=>q.doses.some(d=>(mode==='summary'?d.n:d.n_biological)<2));
+  return `<p><strong>4PL review:</strong> ${series.length-missing.length} of ${series.length} series have fitted EC50 values; ${flagged.length} have warnings${missing.length?`; ${missing.length} have no fitted EC50`:''}. ${combined?'Atlas fits one displayed mean per concentration.':'Atlas shows supplied independent per-run fits.'}</p>
+   ${lowN?'<p>Some concentrations have fewer than two biological runs. They cannot establish between-run variability.</p>':''}
+   <p>A smooth curve or no automatic warning does not establish a reliable EC50. Check plateaus, dose range and fit warnings.</p>
+   ${flagged.length||missing.length?'<details><summary>Show affected series</summary><ul>'+series.filter(q=>flagged.includes(q)||missing.includes(q)).map(q=>'<li><strong>'+E(q.series_label)+'</strong>: '+E([...(q.fit_flags||[]),...(missing.includes(q)?['No fitted EC50 available']:[])].join('; '))+'</li>').join('')+'</ul></details>':''}
+   <button type="button" class="secondary" data-review-fits>Review activity &amp; fit parameters</button>`;
+ }
  function controls(prefix){return `<label>Compare or combine<select id="${prefix}Mode">${modes.map(([key,label])=>`<option value="${key}">${label}</option>`).join('')}</select></label><label>Curve display<select id="${prefix}Style"><option value="measured">Measured curves · no 4PL</option><option value="4pl">4PL curves</option><option value="both">Measured curves + 4PL</option></select></label><label class="check"><input type="checkbox" id="${prefix}Wells">Show individual wells</label><p id="${prefix}ModeHelp" class="workspace-mode-help"></p>${modeGuide()}<details open class="graph-colors"><summary>Series colors</summary><div id="${prefix}Colors"></div></details>`;}
- return {applyColors,colors,controls,help,modeGuide,bdrPalette};
+ return {applyColors,colors,controls,help,modeGuide,fitSummary,bdrPalette};
 })();

@@ -17,6 +17,18 @@ All modes preserve separate assays, conditions, batches and plate groups. The se
 
 Measured curves, independent 4PL curves, or both can be displayed. Existing per-run fits and derived fits to displayed combined means remain distinct from GDS-reported parameters. This workspace change does not change the calculations. Fit warnings and parameter provenance are in **Activity & fits**. PNG/SVG exports use the current axes; CSV exports the selected displayed series with their SD basis, well values and source metadata. Axis clipping does not discard data from CSV.
 
+The graph now has a compact **4PL review** showing the number of available fits,
+flagged series and missing EC50 estimates. Expand affected series or choose
+**Review activity & fit parameters** without changing the selection. Combined
+views also identify doses with fewer than two biological runs. Measured-only
+mode explicitly states that no fits are displayed. None of these labels certify
+fit quality or change the fit calculation.
+
+**What do these four modes mean?** starts with a question-to-mode guide.
+**Which download should I use?** distinguishes the exact Atlas figure, native
+Prism analysis package, data-only PZFX and CSV. Native Prism exports always
+calculate new 4PL analyses, even if the Atlas curve display hides fits.
+
 ## Validation
 
 - `tests/workspace-browser.cjs`: default navigation, partial search, selected batches, persistent tabs, four replicate modes, inline assay evidence, exports, keyboard navigation, empty selection, legacy entry points and 1440/390/320 px layouts.

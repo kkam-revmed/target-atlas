@@ -64,3 +64,20 @@ owner's previously returned Prism files.
 - Technical well slots do not identify paired subjects or necessarily retain
   physical well coordinates. The column guide states missing provenance rather
   than inventing it.
+
+## Usability critique and follow-up — 22 October 2026
+
+| Criticism | Work completed | Remaining boundary |
+| --- | --- | --- |
+| Users need help to choose a replicate mode | Added question-to-mode guidance beside graph controls, retaining the detailed SD and weighting definitions | Independent experimental repeats still depend on supplied run metadata |
+| Smooth 4PL curves can hide weak evidence | Added graph-adjacent counts of available fits, warnings and missing EC50s; expandable affected series; direct navigation to fit parameters; low-biological-n notice | Automatic flags are not scientific validation; incomplete plateaus still need review |
+| Download buttons suggest equivalent outputs | Added a download-choice guide distinguishing Atlas images, native Prism graph/analysis packages, data-only PZFX and CSV | Native export always calculates new 4PL analyses, even when hidden in Atlas |
+| People open the wrong Prism file or lose track of folders | Added immediate post-download instructions, reusable-launcher setup, numbered-folder examples and the result location; repeated guidance in package README | Native execution still depends on installed Prism and OS permissions |
+| Atlas/Prism parity is easy to overstate | Exposed fit-input/constraint differences and template styling/error-bar limitations before export | Numerical and styling parity are not implemented; do not describe native output as identical to Atlas |
+| Validation evidence is scattered | Added a checked-versus-pending section linked to this audit in the website's Prism help | Windows, expanded native projects, Mac chooser and template SD/SEM remain pending |
+
+Follow-up checks include `tests/workspace-clarity-browser.cjs`: actual downloads,
+folder guidance, launcher download, fit-parameter navigation, missing and flagged
+fits, single-run summaries, neutral startup, HTML escaping, unchanged graph
+metadata and layouts at 1440, 390 and 320 pixels. This is browser-level evidence,
+not a substitute for running Prism on the target operating system.

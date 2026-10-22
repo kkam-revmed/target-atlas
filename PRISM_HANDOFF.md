@@ -26,6 +26,18 @@ security settings, strip quarantine attributes or execute the new package's shel
 launcher. Managed Mac policy may still require IT approval. The chooser has shell
 and browser-download tests here; its native Mac behavior still needs confirmation.
 
+The newly extracted graph folder can stay in Downloads, separate from the saved
+launcher. Finder may number it (for example `Atlas_Prism 9`). Select the folder
+containing `Atlas_Input.prism` and `Open_in_Prism.pzc`; `Atlas_Result.prism` is
+written there. After download, the website displays these next steps with an
+optional first-time launcher download. The package README repeats this guidance.
+
+Before download, **Which download should I use?** explains that PNG/SVG preserves
+the Atlas appearance, PZFX contains tables only, and the native package calculates
+new 4PL fits using the template's appearance. The native export does not inherit
+Atlas's measured-only toggle. **What has been validated?** in the Prism help
+separates saved Mac result checks from pending native application checks.
+
 ## Data and analysis behavior
 
 Each selected assay/compound batch/condition/plate group is a separate Y dataset.
