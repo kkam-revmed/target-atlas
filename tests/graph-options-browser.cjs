@@ -44,6 +44,13 @@ async function verifyCypaValues(plot,compound,mode){
    await page.setViewportSize({width:1440,height:1000});await page.goto(base+c.url);if(c.url.includes('runComparison'))await require('./select-workspace.cjs')(page);const plot=page.locator(c.plot);await plot.locator('svg').waitFor();if(c.name==='cypa')await page.locator('#cypaCompound').selectOption(cypaSource.reference);
    const mode=page.locator('#'+c.prefix+'Mode'),style=page.locator('#'+c.prefix+'Style'),wells=page.locator('#'+c.prefix+'Wells'),colors=page.locator('#'+c.prefix+'Colors');
    await mode.waitFor();await mode.selectOption('individual');await style.selectOption('both');
+   const guide=page.locator('.replicate-mode-guide');
+   await guide.locator('summary').focus();await page.keyboard.press('Enter');
+   assert(await guide.evaluate(e=>e.open),c.name+': replicate guide opens with keyboard');
+   assert.deepEqual(await guide.locator('h4').allTextContents(),['Compare technical wells','Compare biological runs (technical means)','Combine biological means','Combine technical + biological wells']);
+   const guideText=await guide.innerText();
+   for(const explanation of ['same physical plate','same Benchling ID','equal weight per run','not independent biological replicates','96 wells','not SEM'])assert(guideText.includes(explanation),c.name+': guide explains '+explanation);
+   await guide.locator('summary').click();
    const snapshots=()=>plot.locator('svg').evaluate(svg=>({metadata:JSON.parse(svg.querySelector('metadata').textContent),values:[...svg.querySelectorAll('[data-dose]')].map(e=>[e.dataset.dose,e.dataset.mean,e.dataset.sd])}));
    const colorInput=colors.locator('[data-graph-color]').first(),original=await colorInput.inputValue(),key=await colorInput.getAttribute('data-graph-color'),before=await snapshots();
    const seriesColors=()=>plot.locator('[data-run-series]').evaluateAll(es=>Object.fromEntries(es.map(e=>[e.dataset.runSeries,[...new Set([...e.querySelectorAll('[stroke]')].map(n=>n.getAttribute('stroke')))]])));
@@ -57,6 +64,7 @@ async function verifyCypaValues(plot,compound,mode){
    await style.selectOption('both');
    for(const [index,value] of ['technical','individual','summary','pooled'].entries()){
     await mode.selectOption(value);assert.equal(await plot.locator('[data-run-series]').count(),c.counts[index]);
+    assert.equal(await page.locator('#'+c.prefix+'ModeHelp').textContent(),await page.evaluate(value=>AtlasGraphOptions.help[value],value),'Selected mode has the shared explanation');
     const metadata=(await snapshots()).metadata;
     if(value==='technical')assert((await plot.locator('[data-series="well"]').count())>0);
     if(value==='summary'){
@@ -82,6 +90,7 @@ async function verifyCypaValues(plot,compound,mode){
    await plot.locator('..').screenshot({path:'/tmp/atlas-graph-options-'+c.name+'-1440.png'});
    const beforeResize=await snapshots();
    for(const width of [390,320]){
+    await page.setViewportSize({width,height:900});await guide.locator('summary').click();assert(await guide.locator('h4').first().isVisible());assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Expanded replicate guide fits narrow screens');await guide.locator('summary').click();
     await page.setViewportSize({width,height:900});await page.waitForTimeout(250);assert.equal(await mode.inputValue(),'individual','Resize must retain chosen replicate mode');assert.deepEqual(await snapshots(),beforeResize,'Resize must retain selected compound, fits and measurements');await mode.scrollIntoViewIfNeeded();assert(await mode.isVisible());assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),c.name+': no page overflow at '+width);
     const stack=await plot.evaluate(e=>{const group=e.closest('.graph-with-options'),a=group.querySelector('.graph-options').getBoundingClientRect(),b=e.getBoundingClientRect();return a.bottom<=b.top+1;});assert(stack,c.name+': controls should stack immediately above mobile graph');
     if(width===390)await plot.locator('..').screenshot({path:'/tmp/atlas-graph-options-'+c.name+'-390.png'});
