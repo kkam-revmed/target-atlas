@@ -17,6 +17,27 @@ The compound workspace and matched CypA comparison have a **Graph options** menu
 
 Each displayed series has its own color picker. Colors are remembered during the current mounted comparison, including switching away from a replicate mode and back. **Reset colors** restores defaults. Both PNG and SVG use the current colors; changing color does not change data, SD or fits. CypA selections and display settings survive viewport resizing.
 
+**Apply BDR palette** assigns BDR colors to the currently displayed series. **Choose a BDR color** offers named swatches for one series; custom colors remain available. The explicit graph RGB values on slides 4 and 7 take priority over the differing brand appendix values on slide 41. The secondary swatches come from slide 42. No clinical drug identity is assigned to an RMC compound through color. The light Approachable color is optional; the first two colors applied automatically are Progressive Green and Blue-Violet.
+
+| BDR swatch | Exact hex | Slide |
+| --- | --- | --- |
+| Progressive Green | #13D377 | 4 / 7 |
+| Blue-Violet | #5136E0 | 4 |
+| Purple | #A24DFF | 4 |
+| Balanced Green | #1F6B5D | 7 |
+| Light Blue-Violet | #8D9BFF | 7 / 42 |
+| Approachable | #7AFFE5 | 7 |
+| Black | #000000 | 4 / 7 |
+| Light Purple | #D1A6FF | 42 |
+| Dark Purple | #5C2C91 | 42 |
+| Dark Blue-Violet | #2B1980 | 42 |
+| Light Red-Orange | #FF9966 | 42 |
+| Red-Orange | #FF5400 | 42 |
+| Dark Red-Orange | #C44202 | 42 |
+| Light Yellow-Orange | #FFCD69 | 42 |
+| Yellow-Orange | #FFAA00 | 42 |
+| Dark Yellow-Orange | #C28100 | 42 |
+
 **Download Prism data (.pzfx)** transfers the selected measurements and provenance as Prism tables. It does not create Prism graphs or analyses. See [Prism handoff](PRISM_HANDOFF.md) for Mac Prism 11 and the template requirement for automatic graph creation.
 
 Open **Axes & export** beside a dose-response, CypA, orientation or crosslinking figure. Set X/Y minimum and maximum, then choose **Apply axes**. Blank fields use automatic limits; **Reset to automatic** restores them. Concentration limits must be positive. Minimum must be less than maximum. Adduct distribution has a numeric X axis and categorical condition rows, so only X limits are editable.

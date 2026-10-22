@@ -1,0 +1,23 @@
+const {chromium}=require('playwright-core'),{spawn}=require('node:child_process'),fs=require('node:fs'),assert=require('node:assert/strict'),path=require('node:path');
+const root=path.resolve(__dirname,'..'),base='http://127.0.0.1:4196/';
+const expected=['#13d377','#5136e0','#a24dff','#1f6b5d','#8d9bff','#7affe5','#000000','#d1a6ff','#5c2c91','#2b1980','#ff9966','#ff5400','#c44202','#ffcd69','#ffaa00','#c28100'];
+(async()=>{const server=spawn('python3',['-m','http.server','4196','--bind','127.0.0.1'],{cwd:root,stdio:'ignore'});let browser;
+try{
+ for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
+ browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--disable-dev-shm-usage']});const page=await browser.newPage({viewport:{width:1440,height:1000},acceptDownloads:true}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ for(const c of [{url:'?view=runComparison',colors:'#runColors',plot:'#runGraph',svg:'#runSVG',png:'#runPNG',mode:'#runMode'},{url:'?view=biologicalReplicates&experiment=EXP26003438',colors:'#cypaGraphColors',plot:'#cypaPlot',svg:'#cypaExport',mode:'#cypaGraphMode'}]){
+  await page.setViewportSize({width:1440,height:1000});await page.goto(base+c.url);const plot=page.locator(c.plot),colors=page.locator(c.colors);await plot.locator('svg').waitFor();
+  const snapshot=()=>plot.locator('svg').evaluate(svg=>({metadata:JSON.parse(svg.querySelector('metadata').textContent),values:[...svg.querySelectorAll('[data-dose]')].map(e=>[e.dataset.dose,e.dataset.mean,e.dataset.sd])}));
+  const before=await snapshot(),defaults=await colors.locator('[data-graph-color]').evaluateAll(es=>es.map(e=>e.value));
+  assert.deepEqual(await page.evaluate(()=>AtlasGraphOptions.bdrPalette.map(p=>p[1])),expected);
+  await colors.locator('[data-apply-bdr]').click();assert.deepEqual(await colors.locator('[data-graph-color]').evaluateAll(es=>es.map(e=>e.value)),expected.slice(0,defaults.length));assert.deepEqual(await snapshot(),before,'Applying the palette must not affect measurements, fits or provenance');
+  await colors.locator('.bdr-series-palette summary').first().click();const swatch=colors.locator('.bdr-series-palette').first().locator('[data-bdr-color="#c44202"]');await swatch.click();assert.equal(await swatch.getAttribute('aria-pressed'),'true');assert.equal(await colors.locator('[data-graph-color]').first().inputValue(),'#c44202');assert.equal(await colors.locator('[data-graph-color]').nth(1).inputValue(),'#5136e0');assert.deepEqual(await snapshot(),before);
+  let wait=page.waitForEvent('download');await page.locator(c.svg).click();assert(fs.readFileSync(await (await wait).path(),'utf8').includes('#c44202'),'SVG preserves selected BDR swatch');
+  if(c.png){wait=page.waitForEvent('download');await page.locator(c.png).click();const png=fs.readFileSync(await (await wait).path());assert.equal(png.subarray(1,4).toString(),'PNG');const count=await page.evaluate(async url=>{const img=new Image();img.src=url;await img.decode();const canvas=document.createElement('canvas');canvas.width=img.width;canvas.height=img.height;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0);const p=ctx.getImageData(0,0,img.width,img.height).data;let n=0;for(let i=0;i<p.length;i+=4)if(p[i]===196&&p[i+1]===66&&p[i+2]===2)n++;return n;},'data:image/png;base64,'+png.toString('base64'));assert(count>20,'PNG artwork uses the chosen BDR RGB value');}
+  await plot.locator('..').screenshot({path:'/tmp/bdr-palette-'+(c.png?'workspace':'cypa')+'.png'});
+  await page.setViewportSize({width:390,height:900});await page.waitForTimeout(250);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await colors.locator('.bdr-series-palette').first().locator('[data-bdr-color="#13d377"]').focus();await page.keyboard.press('Enter');assert.equal(await colors.locator('[data-graph-color]').first().inputValue(),'#13d377');
+  await colors.locator('[data-reset-colors]').click();assert.deepEqual(await colors.locator('[data-graph-color]').evaluateAll(es=>es.map(e=>e.value)),defaults);assert.deepEqual(await snapshot(),before);
+  await page.locator(c.mode).selectOption('summary');await colors.locator('[data-apply-bdr]').click();assert.equal(await colors.locator('[data-graph-color]').first().inputValue(),'#13d377');assert.equal(await colors.locator('[data-graph-color]').count(),2);
+ }
+ assert.deepEqual(errors,[]);console.log('PASS: exact16BDRswatches; apply-all and per-series choices; SVG/PNG RGB; unchanged values/fits/source metadata; keyboard/mobile/reset and combined-mode palettes');
+}finally{await browser?.close();server.kill();}})().catch(e=>{console.error(e);process.exitCode=1;});

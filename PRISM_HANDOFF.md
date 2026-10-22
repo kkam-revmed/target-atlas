@@ -18,6 +18,10 @@ GraphPad documents Mac automation through `.pzc` scripts opened by double-click 
 
 The remaining requirements are a blank Prism template containing the owner's graph and 4PL settings, its intended table/subcolumn structure, a resolved local file path, and validation on the owner's Mac. Atlas does not currently launch or control Prism. No untested launcher or fabricated `.prism` project is included. A static GitHub Pages site cannot silently control an installed Mac app.
 
+For the one-time setup, open an Atlas comparison in Prism 11. Choose **Analyze → Nonlinear regression → Dose-response curves – Stimulation → [Agonist] vs. response – Variable slope**. The exported X values are actual concentrations in µM: set the graph X axis logarithmic, rather than choosing a model that expects already log-transformed X values. Review the analysis's selected series, weighting, constraints and replicate basis. The DMSO 100% reference is not a reason to fix the fitted baseline or plateau. Format the graph and save a blank template retaining the analysis and graph; Prism 11's template format is `.prismt`, and a data-cleared PZFX project is also useful for the documented XML replacement workflow.
+
+The owner's BDR deck contains six embedded native Prism projects on slide 39. They were inspected locally. Their analyses use a log(inhibitor) variable-slope model with log-transformed X, and contain example measurements, cached results and opaque graph data. They are not a verified concentration-based agonist template for Atlas. The embedded projects and their example measurements are not included in the repository or website.
+
 References:
 
 - [GraphPad integration and template workflow](https://www.graphpad.com/support/faq/prism-integrated-saves-prism-files-instruments/)
