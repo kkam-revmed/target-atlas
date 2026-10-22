@@ -1,6 +1,6 @@
 # Compound workspace
 
-The default landing view is `?view=runComparison`. Choose up to three exact compound batches once, then use the same selection across **Graph & export**, **Activity & fits**, **Dose values**, **Other assays**, and **Sources & methods**. Partial IDs such as `051` filter the available batches. Selection and the active tab survive navigation to another Atlas view and back during the page session; reloading starts a fresh comparison.
+The default landing view is `?view=runComparison`. Choose exact compound batches once, then use the same selection across **Graph & export**, **Activity & fits**, **Dose values**, **Other assays**, and **Sources & methods**. Partial IDs such as `051` filter the available batches. Selection and the active tab survive navigation to another Atlas view and back during the page session; reloading starts a fresh comparison.
 
 The graph supports Cyclin D1/CypA, selectivity, or both. Choose biological runs and physical plates in the expandable control. Orientation and specialist QC tools remain under **Advanced tools**; existing links still work. Kd1, TR-FRET, primary-screen summaries and crosslinking evidence appear inline for the exact selected batches under **Other assays**.
 
@@ -24,3 +24,5 @@ Measured curves, independent 4PL curves, or both can be displayed. Existing per-
 - Existing graph-format browser tests: axes, exact 100 reference, SVG/PNG contents and unchanged measurements/fits.
 - Retained environment verification helper: navigation adapted to open overview explicitly and expand collapsed tool groups; all scientific, export, catalog and deep-link assertions retained.
 - All 22 supplied dataset JSON files match the retained SHA-256 baseline; catalog count remains 270659.
+
+From Activity overview, click an EC50 count and then **Graph these compounds** to open all visible batches in the workspace. The current list search is respected; no three-compound truncation is applied. This shortcut supports the supplied D1/CypA and selectivity curves. It selects the current run and target/condition. The unassigned D1 GDS report opens the same batches’ measured curves without CypA inhibitor, with an explicit note that the biological run and independent fit are not the GDS-reported fit.

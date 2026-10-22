@@ -5,7 +5,7 @@
  const F=v=>Number.isFinite(v)?Number(v.toPrecision(5)).toString():'Unavailable';
  const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
  const sd=a=>a.length>1?Math.sqrt(a.reduce((s,v)=>s+(v-mean(a))**2,0)/(a.length-1)):null;
- const palette=['#0d4242','#378158','#637d25'];
+ const palette=['#0d4242','#378158','#637d25','#5136e0','#a24dff','#c44202','#2b1980','#c28100'];
  const choices=[{key:'d1-1',study:'EXP26003438',rep:1,label:'D1/CypA · Replicate 1'},{key:'d1-2',study:'EXP26003438',rep:2,label:'D1/CypA · Replicate 2'},... [1,2].flatMap(rep=>[1,2].map(plate=>({key:`sel-${rep}-${plate}`,study:'EXP26007301',rep,plate,label:`Selectivity · Replicate ${rep} · Plate ${plate}`})))];
  function buildSeries(datasets,selected,enabled,target,condition){
   const result=[];
@@ -16,7 +16,7 @@
    const plate=choice.plate?String(choice.plate):'Provided D1 plate aggregate';
    const date=choice.study==='EXP26003438'?(choice.rep===1?'2026-09-02':'2026-09-03'):(choice.rep===1?'2026-10-09':'2026-10-15');
    const conditionLabel=choice.study==='EXP26003438'?(condition==='A'?'No CypA inhibitor':'+25 µM CypA inhibitor'):'Selectivity assay';
-   result.push({...q,series_id:id+'|'+choice.key,choice_key:choice.key,series_label:`${id} · ${wanted} · Rep ${choice.rep}${choice.plate?' · Plate '+choice.plate:''} · ${date}`,series_color:palette[index],series_marker:marker,benchling_id:choice.study,biological_replicate:choice.rep,run_date:date,condition_label:conditionLabel,plate_group:plate,error_bar_basis:'Sample SD across supplied wells at this dose',source_compound:q.source_compound||q.compound});
+   result.push({...q,series_id:id+'|'+choice.key,choice_key:choice.key,series_label:`${id} · ${wanted} · Rep ${choice.rep}${choice.plate?' · Plate '+choice.plate:''} · ${date}`,series_color:palette[index%palette.length],series_marker:marker,benchling_id:choice.study,biological_replicate:choice.rep,run_date:date,condition_label:conditionLabel,plate_group:plate,error_bar_basis:'Sample SD across supplied wells at this dose',source_compound:q.source_compound||q.compound});
   }));
   return result;
  }
@@ -92,7 +92,7 @@
     <label id="runTargetField">Target<select id="runTarget">${s.data['sel-1-1'].targets.map(t=>`<option ${t===s.target?'selected':''}>${E(t)}</option>`).join('')}</select></label>
     <label id="runConditionField" hidden>CypA inhibitor condition<select id="runCondition"><option value="A">No CypA inhibitor</option><option value="B">+25 µM CypA inhibitor</option></select></label>
    </div>
-   <p id="runStatus" class="section-note" role="status"></p>
+   <p id="runSelectionNote" class="workspace-mode-help" hidden></p><p id="runStatus" class="section-note" role="status"></p>
    <div class="workspace-tabs" role="tablist" aria-label="Selected compound information">${[['graph','Graph & export'],['activity','Activity & fits'],['measurements','Dose values'],['evidence','Other assays'],['sources','Sources & methods']].map(([key,label])=>`<button id="runTab-${key}" type="button" role="tab" data-workspace-tab="${key}" aria-selected="${key==='graph'}" aria-controls="runPane-${key}" tabindex="${key==='graph'?0:-1}">${label}</button>`).join('')}</div>
    <section id="runPane-graph" role="tabpanel" aria-labelledby="runTab-graph"><div class="graph-downloads"><button id="runPNG" type="button" class="secondary">Download PNG</button><button id="runSVG" type="button" class="secondary">Download SVG</button><button id="runPrism" type="button" class="secondary">Download Prism data (.pzfx)</button><button id="runCSV" type="button" class="secondary">Export displayed dose values CSV</button></div><div class="graph-with-options"><aside class="graph-options" aria-label="Graph options"><h3>Graph options</h3>    <label>Compare or combine<select id="runMode"><option value="technical">Compare technical wells</option><option value="individual">Compare biological runs (technical means)</option><option value="summary">Combine biological means</option><option value="pooled">Combine technical + biological wells</option></select></label>
     <label>Graph style<select id="runStyle"><option value="measured">Measured curves · no 4PL</option><option value="4pl">4PL fit</option><option value="both" selected>Measured + 4PL</option></select></label>
@@ -106,7 +106,7 @@
   </section>`;
   const $=id=>host.querySelector('#'+id);
   function search(){const term=$('runSearch').value.trim().toLowerCase(),matches=ids.filter(id=>id.toLowerCase().includes(term));$('runCompound').innerHTML=matches.map(id=>`<option>${E(id)}</option>`).join('');$('runSearchCount').textContent=matches.length+' matching compound batches. Batches remain separate.';addState();}
-  function addState(){$('runAdd').disabled=!$('runCompound').value||s.selected.includes($('runCompound').value)||s.selected.length>=3;}
+  function addState(){$('runAdd').disabled=!$('runCompound').value||s.selected.includes($('runCompound').value);}
   function table(headers,rows){return '<table><thead><tr>'+headers.map(h=>'<th>'+E(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>'<td>'+E(v??'Unavailable')+'</td>').join('')+'</tr>').join('')+'</tbody></table>';}
   function scope(){
    $('runAssay').value=s.assay;$('runTargetField').hidden=s.assay==='d1';$('runConditionField').hidden=s.assay==='selectivity';
@@ -133,6 +133,7 @@
   }
   function draw(){
    if(s.loading)return;
+   $('runSelectionNote').hidden=!s.selectionNote;$('runSelectionNote').textContent=s.selectionNote||'';
    s.series=buildSeries(s.data,s.selected,s.enabled,s.target,s.condition);const summaries=biologicalSummary(s.series),summary=s.mode==='summary',pooled=s.mode==='pooled',combined=summary||pooled,technical=s.mode==='technical';s.display=summary?summaries:pooled?pooledSummary(s.series):s.series;
    if(combined&&s.style!=='measured')s.display=fitDisplayedMeans(s.display);
    $('runModeHelp').textContent={technical:'Each open symbol is a measured well. Compare wells within a run; no pairing between concentrations is assumed.',individual:'Technical wells are averaged within each run. Compare biological runs on the same graph; bars show within-run SD.',summary:'Each biological run contributes one mean per concentration. Bars show between-run SD; n counts biological runs.',pooled:'All included wells contribute equally within each assay and plate group. Bars show pooled-well SD; n counts wells, not biological runs.'}[s.mode];
@@ -162,7 +163,7 @@
    if(s.tab==='evidence')evidence();
    const deltas=plateDifferences(s.series);$('runPlateDelta').innerHTML=deltas.length?table(['Compound batch','Target','Replicate','Dose (µM)','Plate 1 mean','Plate 2 mean','Δ plate 2 − plate 1','Original labels'],deltas.map(d=>[d.compound,d.target,d.replicate,F(d.dose_um),F(d.plate1_mean),F(d.plate2_mean),F(d.delta_plate2_minus_plate1),d.plate1_source+' / '+d.plate2_source])):'<p>Select both plate groups for the same replicate and RMC-0741051 to compare plate measurements.</p>';
   }
-  $('runSearch').oninput=search;$('runCompound').onchange=addState;$('runAdd').onclick=()=>{const id=$('runCompound').value;if(id&&!s.selected.includes(id)&&s.selected.length<3){s.selected.push(id);draw();}};
+  $('runSearch').oninput=search;$('runCompound').onchange=addState;$('runAdd').onclick=()=>{const id=$('runCompound').value;if(id&&!s.selected.includes(id)){s.selected.push(id);draw();}};
   host.onclick=e=>{const tab=e.target.closest('[data-workspace-tab]');if(tab)selectTab(tab.dataset.workspaceTab);const b=e.target.closest('[data-run-remove]');if(b){s.selected=s.selected.filter(id=>id!==b.dataset.runRemove);draw();}};
   host.querySelectorAll('[data-run-choice]').forEach(el=>el.onchange=()=>{s.enabled=[...host.querySelectorAll('[data-run-choice]:checked')].map(e=>e.dataset.runChoice);draw();});
   $('runAssay').onchange=()=>changeAssay($('runAssay').value);
@@ -172,8 +173,22 @@
   for(const format of ['PNG','SVG'])$('run'+format).onclick=async()=>{try{await AtlasCompoundGraphs.exportGraph(s.svg,'runs_'+s.graphTitle.replace(/\W+/g,'_')+'_'+s.mode,format.toLowerCase());}catch(e){$('runStatus').textContent=e.message;}};
   $('runPrism').onclick=()=>{try{AtlasPrismExport.download(s.display,'atlas_'+s.mode,{title:s.graphTitle,context:{display_mode:s.mode,graph_style:s.style,response_basis:'Supplied corrected response',colors:s.display.map(q=>({series_id:q.series_id,color:q.series_color}))}});}catch(e){$('runStatus').textContent=e.message;}};
   $('runCSV').onclick=()=>saveCSV(csv(s.display),'selected_runs_'+s.mode+'_dose_values.csv');
-  s.select=(id,assay)=>{if(!ids.includes(id)){$('runSearch').value=id;search();return;}s.selected=[id];if(assay)changeAssay(assay);selectTab('graph');draw();};s.ready=true;scope();search();draw();if(s.pendingSelection)s.select(s.pendingSelection.compound,s.pendingSelection.assay);
+  s.select=async options=>{
+   const version=++s.version,condition=options.condition||s.condition;
+   if(condition!==s.condition){
+    s.loading=true;$('runStatus').textContent='Loading the selected assay condition…';$('runGraph').innerHTML='';for(const id of ['runPNG','runSVG','runCSV','runPrism'])$(id).disabled=true;
+    try{const data=await datasets(condition);if(version!==s.version)return;s.data=data;s.condition=condition;}
+    catch(e){if(version!==s.version)return;s.loading=false;draw();$('runStatus').textContent=e.message;return;}
+   }
+   if(version!==s.version)return;s.loading=false;
+   s.selected=[...new Set(options.compounds||[options.compound])].filter(Boolean);s.selectionNote=options.selectionNote||'';
+   if(options.assay){s.assay=options.assay;s.enabled=choices.filter(c=>s.assay==='both'||c.study===(s.assay==='d1'?'EXP26003438':'EXP26007301')).map(c=>c.key);}
+   if(options.enabled)s.enabled=options.enabled.filter(key=>choices.some(c=>c.key===key));
+   if(options.target&&s.data['sel-1-1'].targets.includes(options.target))s.target=options.target;
+   $('runTarget').value=s.target;$('runCondition').value=s.condition;s.mode='individual';scope();selectTab('graph');draw();
+  };s.ready=true;scope();search();draw();if(s.pendingSelection)s.select(s.pendingSelection);
  }
- function select({host,compound,assay}){if(!mounts.has(host))render({host});const s=mounts.get(host);if(s.ready)s.select(compound,assay);else s.pendingSelection={compound,assay};}
+ function select(options){const {host}=options;if(!mounts.has(host))render({host});const s=mounts.get(host);if(s.ready)s.select(options);else s.pendingSelection=options;}
+
  const api={select,buildSeries,biologicalSummary,pooledSummary,fitDisplayedMeans,plateDifferences,csv,render};root.AtlasRunComparison=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);

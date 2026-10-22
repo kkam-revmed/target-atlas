@@ -17,7 +17,7 @@ The compound workspace and matched CypA comparison have a **Graph options** menu
 
 Each displayed series has its own color picker. Colors are remembered during the current mounted comparison, including switching away from a replicate mode and back. **Reset colors** restores defaults. Both PNG and SVG use the current colors; changing color does not change data, SD or fits. CypA selections and display settings survive viewport resizing.
 
-**Apply BDR palette** assigns BDR colors to the currently displayed series. **Choose a BDR color** offers named swatches for one series; custom colors remain available. The explicit graph RGB values on slides 4 and 7 take priority over the differing brand appendix values on slide 41. The secondary swatches come from slide 42. No clinical drug identity is assigned to an RMC compound through color. The light Approachable color is optional; the first two colors applied automatically are Progressive Green and Blue-Violet.
+**Curve to recolor** selects one displayed series; clicking a named BDR swatch immediately changes that curve. **Apply BDR palette to all curves** assigns colors in palette order to every displayed series. Custom colors remain available. The explicit graph RGB values on slides 4 and 7 take priority over the differing brand appendix values on slide 41. The secondary swatches come from slide 42. No clinical drug identity is assigned to an RMC compound through color. The light Approachable color is optional; the first two colors applied automatically are Progressive Green and Blue-Violet.
 
 | BDR swatch | Exact hex | Slide |
 | --- | --- | --- |

@@ -122,7 +122,8 @@ function renderOverviewList(){
  $('overviewListContext').textContent=overviewBasisDescription(s.basis)+'. '+(refit?'Observed peak dose mean':'Cmax')+' > '+fmt(state.threshold)+'. The EC50 filter above does not restrict this list; it follows the clicked band. '+(state.includeReference?'Positive reference included.':'Positive reference excluded.')+(refit?' Fit warnings are included below.':' GDS qualifiers and source QC are included below.');
  $('overviewListCount').textContent=shown.length+' of '+all.length+' matching compound batches shown.';
  $('overviewListTable').innerHTML=shown.length?AtlasOverview.detailTable(shown,overviewDimension(),s.basis):'<p class="section-note">'+(all.length?'No compounds match your search.':'No compounds meet this band and Cmax cutoff for this EC50 source.')+'</p>';
- displayCompoundLinks($('overviewListTable'));$('exportOverviewList').disabled=!shown.length;renderCampaignComparison();
+ displayCompoundLinks($('overviewListTable'));$('exportOverviewList').disabled=!shown.length;
+ $('graphOverviewList').hidden=state.localAnalysis||!['EXP26003438','EXP26007301'].includes(state.study);$('graphOverviewList').disabled=!shown.length;$('graphOverviewList').textContent='Graph these compounds'+(shown.length?' ('+new Set(shown.map(q=>q.compound)).size+')':'');renderCampaignComparison();
 }
 let campaignRenderVersion=0,campaignVisibleRows=[],campaignLeftContext=null;
 const campaignRightContext={benchling_id:'EXP26003438',biological_replicate:'',run_date:'',condition:'No CypA inhibitor',response_source:'Separate GDS source parameter report'};
@@ -343,6 +344,13 @@ for(const id of ['potencySummary','potencyRefitSummary'])$(id).addEventListener(
 $('overviewListSearch').addEventListener('input',()=>{state.overviewSearch=$('overviewListSearch').value;renderOverviewList();});
 $('closeOverviewList').addEventListener('click',closeOverviewList);
 $('overviewCompoundList').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeOverviewList();}});
+$('graphOverviewList').addEventListener('click',()=>{
+ const selection=state.overviewSelection,rows=overviewListMembers();if(!selection||!rows.length||state.localAnalysis)return;
+ const d1=state.study==='EXP26003438',unassigned=d1&&selection.basis==='gds',rep=d1?state.d1Replicate:state.selectivityReplicate;
+ const compounds=[...new Set(rows.map(q=>q.compound))],enabled=d1?['d1-'+rep]:[...new Set(rows.map(q=>'sel-'+rep+'-'+q.plate_number))];
+ const selectionNote='Opened from Activity overview: '+$('overviewListHeading').textContent+' · original list: '+compounds.length+' compound batches · Cmax > '+state.threshold+'. '+(unassigned?'The GDS source report has no biological replicate assignment. This graph starts with corrected measurements from replicate '+rep+' without CypA inhibitor for the same batches; its 4PL curves are independent fits, not the GDS-reported fit.':'The graph starts with the selected biological replicate and assay condition. 4PL curves are independent fits, not GDS-reported fits.');
+ setView('runComparison');AtlasRunComparison.select({host:$('runComparison'),compounds,assay:d1?'d1':'selectivity',target:selection.target,condition:unassigned?'A':state.d1Condition,enabled,selectionNote});
+});
 $('exportOverviewList').addEventListener('click',()=>{const s=state.overviewSelection;if(!s)return;const rows=overviewListMembers(),context={...overviewBasisContext(s.basis),band:s.basis==='refit'&&s.band==='unreported'?'Fit unavailable':AtlasPotency.labels[s.band],threshold:state.threshold};download(new Blob(['\uFEFF'+AtlasOverview.listCSV(rows,context)],{type:'text/csv;charset=utf-8'}),context.experiment+'_'+s.basis+(context.replicate?'_rep'+context.replicate:'_replicate-unassigned')+'_'+s.band+'_visible_compounds.csv');});
 document.addEventListener('click',e=>{const button=e.target.closest('[data-compound]');if(button)chooseCompound(button.dataset.compound,button.dataset.target);const pt=e.target.closest('[data-map-compound]');if(pt){state.mapCompound=pt.dataset.mapCompound;syncCompoundPicker('mapCompound');$('mapCompoundSearchStatus').textContent='';renderMap();}const out=e.target.closest('.export-svg');if(out)exportSVG(out.dataset.plot);});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-map-compound]')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));}});
