@@ -37,8 +37,9 @@ const AtlasGraphFormat=(()=>{
   let svg;
   try{svg=factory(options);}catch{record.options={};svg=factory({});}
   if(!svg)return '';
+  const concentration=svg.includes('data-concentration-axis="true"');
   svg=tag(svg,key);
-  return `<div class="editable-graph" data-graph-editor="${escape(key)}"><details class="graph-axis-editor"><summary>Axes &amp; export</summary><p>Set the displayed range; leave a box blank for automatic. Measurements, SD and fits are unchanged. Data CSV exports keep all selected concentrations.</p><div class="graph-axis-fields">${[['xMin','X minimum'],['xMax','X maximum'],['yMin','Y minimum'],['yMax','Y maximum']].filter(([name])=>!xOnly||name.startsWith('x')).map(([name,label])=>`<label>${label}<input type="number" step="any" data-axis-field="${name}" value="${escape(record.options[name])}" placeholder="Auto"></label>`).join('')}</div><div class="graph-axis-actions"><button type="button" data-axis-action="apply">Apply axes</button><button type="button" data-axis-action="reset">Reset to automatic</button><button type="button" data-axis-action="png">Download PNG</button><button type="button" data-axis-action="svg">Download SVG</button></div><p class="graph-axis-status" role="status"></p></details><div class="editable-graph-image">${svg}</div></div>`;
+  return `<div class="editable-graph" data-graph-editor="${escape(key)}"><details class="graph-axis-editor"><summary>Axes &amp; export</summary><p>Set the displayed range; leave a box blank for automatic. Measurements, SD and fits are unchanged. Data CSV exports keep all selected concentrations.</p>${concentration?`<label class="graph-x-labels">Concentration axis labels<select data-x-labels><option value="um" ${record.options.xLabels==='um'?'selected':''}>µM values · logarithmic spacing</option><option value="logM" ${!record.options.xLabels||record.options.xLabels==='logM'?'selected':''}>log₁₀(M) · −6 = 1 µM</option><option value="logUM" ${record.options.xLabels==='logUM'?'selected':''}>log₁₀(µM) · 0 = 1 µM</option></select></label><p class="section-note">X minimum and maximum are entered in µM in every mode. Only the tick labels change; spacing and fitted curves stay the same.</p>`:''}<div class="graph-axis-fields">${[['xMin','X minimum'],['xMax','X maximum'],['yMin','Y minimum'],['yMax','Y maximum']].filter(([name])=>!xOnly||name.startsWith('x')).map(([name,label])=>`<label>${label}${concentration&&name.startsWith('x')?' (µM)':''}<input type="number" step="any" data-axis-field="${name}" value="${escape(record.options[name])}" placeholder="Auto"></label>`).join('')}</div><div class="graph-axis-actions"><button type="button" data-axis-action="apply">Apply axes</button><button type="button" data-axis-action="reset">Reset to automatic</button><button type="button" data-axis-action="png">Download PNG</button><button type="button" data-axis-action="svg">Download SVG</button></div><p class="graph-axis-status" role="status"></p></details><div class="editable-graph-image">${svg}</div></div>`;
  }
  const tag=(svg,key)=>svg.replace('<svg ',`<svg data-axis-key="${escape(key)}" `);
  function current(svg){
@@ -54,7 +55,9 @@ const AtlasGraphFormat=(()=>{
      if(input.validity.badInput)throw new Error('Enter a valid number or leave the box blank.');
      if(input.value.trim()){const v=Number(input.value);if(!finite(v))throw new Error('Axis limits must be finite numbers.');options[input.dataset.axisField]=v;}
     }
+    const labels=host.querySelector('[data-x-labels]');if(button.dataset.axisAction==='apply'&&labels&&labels.value!=='logM')options.xLabels=labels.value;
     const svg=record.factory(options);record.options=options;
+    if(labels)labels.value=options.xLabels||'logM';
     host.querySelector('.editable-graph-image').innerHTML=tag(svg,key);
     for(const input of host.querySelectorAll('[data-axis-field]'))input.value=options[input.dataset.axisField]??'';
     status.textContent=Object.keys(options).length?'Custom axes applied. Values outside the range are hidden in the graph only.':'Automatic axes restored.';
