@@ -1,8 +1,8 @@
-# Prism 11 on Mac
+# Prism 11 on Windows and Mac
 
 In **Compound Workspace → Graph & export**, or the matched CypA comparison,
-choose **Prism graph + 4PL (Mac)**. Unzip the package, keep its files together,
-and run **Open_in_Prism.command**. Open **Atlas_Result.prism** when it finishes.
+choose **Prism graph + 4PL**. Unzip the package, keep its files together,
+and run **Open_in_Prism.bat** on Windows or **Open_in_Prism.command** on Mac. Open **Atlas_Result.prism** when it finishes.
 Do not open the intermediate Atlas_Input.prism directly: the script adds the
 remaining series, recalculates and applies labels and axes.
 
@@ -102,3 +102,19 @@ linked IDs. The original attachment remains local.
 - https://www.graphpad.com/guides/prism/latest/user-guide/adding_a_line_of_identity.htm
 - https://www.graphpad.com/guides/prism/latest/user-guide/changing_graphs.htm
 - https://www.graphpad.com/guides/prism/latest/user-guide/general_commands.htm
+
+## Windows launcher
+
+The same ZIP now includes Open_in_Prism.bat. It uses built-in Windows PowerShell
+to find Prism 11 in standard Program Files locations, or ask for its prism.exe
+through a file picker. It checks version 11, writes an explicit local SetPath
+with UTF-8 BOM, and invokes the documented prism.exe @script.pzc command. The
+shared analysis script and all data are the same as the Mac package. It does not
+change execution policies, permissions, registry associations or install software.
+
+If Windows blocks the launcher, retain the displayed error and consult local IT;
+no security-policy bypass is included. Native completion needs a Windows Prism 11
+user to return Atlas_Result.prism (or the first error from the script log). The
+owner has a Mac only; no Windows-native verification is claimed.
+
+Reference: https://www.graphpad.com/guides/prism/latest/user-guide/command_line_switches.htm

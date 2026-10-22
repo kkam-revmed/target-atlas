@@ -92,6 +92,33 @@ prism_task_script="$prism_task_dir/Run_Atlas_Prism.pzc"
 { printf 'SetPath "%s"\\n' "$prism_task_hfs"; cat "$prism_task_dir/Open_in_Prism.pzc"; } > "$prism_task_script"
 open -b com.GraphPad.Prism "$prism_task_script"
 `;
+ // Use Windows' built-in PowerShell for path handling and a file picker. The
+ // batch file contains readable commands; no policy changes, downloads or admin.
+ const windowsCommands=[
+  "$ErrorActionPreference = 'Stop'",
+  "try {",
+  "$folder = [IO.Path]::GetFullPath($env:ATLAS_PRISM_PACKAGE)",
+  "if ($folder.IndexOf([char]37) -ge 0 -or $folder.IndexOf([char]34) -ge 0 -or $folder.Contains([char]10) -or $folder.Contains([char]13)) { throw 'Move the extracted folder to a path without percent signs, quotes or line breaks, then retry.' }",
+  "$source = Join-Path $folder 'Open_in_Prism.pzc'",
+  "if (!(Test-Path -LiteralPath $source -PathType Leaf) -or !(Test-Path -LiteralPath (Join-Path $folder 'Atlas_Input.prism') -PathType Leaf)) { throw 'Extract the entire ZIP first and keep its files together.' }",
+  "$exe = $null",
+  "foreach ($base in @($env:ProgramFiles, ${env:ProgramFiles(x86)})) { if ($base) { foreach ($relative in @('GraphPad Software\\Prism 11\\prism.exe','GraphPad\\Prism 11\\prism.exe','GraphPad Software\\Prism11\\prism.exe','GraphPad\\Prism11\\prism.exe')) { $candidate = Join-Path $base $relative; if (Test-Path -LiteralPath $candidate -PathType Leaf) { $exe = $candidate; break } }; if ($exe) { break } } }",
+  "if (!$exe) { Add-Type -AssemblyName System.Windows.Forms; $picker = New-Object System.Windows.Forms.OpenFileDialog; $picker.Title = 'Select your installed GraphPad Prism 11 prism.exe'; $picker.Filter = 'GraphPad Prism (prism.exe)|prism.exe'; if ($picker.ShowDialog() -ne [System.Windows.Forms.DialogResult]::OK) { throw 'No Prism program selected. Install Prism 11 or run this launcher again and select prism.exe.' }; $exe = $picker.FileName; $picker.Dispose() }",
+  "$version = [Diagnostics.FileVersionInfo]::GetVersionInfo($exe)",
+  "if ($version.FileMajorPart -ne 11) { throw 'This export requires GraphPad Prism 11. Select the Prism 11 installation.' }",
+  "$scriptPath = Join-Path $folder 'Run_Atlas_Prism_Windows.pzc'",
+  "$quote = [char]34",
+  "$prefix = 'SetPath ' + $quote + $folder + $quote + [Environment]::NewLine",
+  "$encoding = New-Object System.Text.UTF8Encoding($true)",
+  "[IO.File]::WriteAllText($scriptPath, $prefix + [IO.File]::ReadAllText($source, [Text.Encoding]::UTF8), $encoding)",
+  "Start-Process -FilePath $exe -WorkingDirectory $folder -ArgumentList ('@' + $quote + $scriptPath + $quote)",
+  "Write-Host 'Prism has started. When its script finishes, open Atlas_Result.prism in this extracted folder.'",
+  "Write-Host 'If Prism reports an error, keep Run_Atlas_Prism_Windows.log and report the first error.'",
+  "} catch { Write-Host ('Atlas could not start Prism: ' + $_.Exception.Message); exit 1 }"
+ ].join('; ').replaceAll('{;', '{').replaceAll('; } catch', ' } catch');
+ const windowsLauncher='@echo off\r\nsetlocal DisableDelayedExpansion\r\nset "ATLAS_PRISM_PACKAGE=%~dp0"\r\n'+
+  'powershell.exe -NoLogo -NoProfile -STA -Command "'+windowsCommands.replaceAll('%','%%')+'"\r\n'+
+  'if errorlevel 1 (\r\n  echo No security settings were changed. If your organization blocks this launcher, ask your IT team for help.\r\n  pause\r\n  exit /b 1\r\n)\r\npause\r\n';
  function build(series,options={}){
   const api=root.AtlasPrismExport||(typeof require==='function'?require('./prism-export.js'):null);
   const exported=api.build(series,options),table=exported.tables[0],axes=limits(series,options.axes);
@@ -133,9 +160,9 @@ open -b com.GraphPad.Prism "$prism_task_script"
    'The script and companion data retain source precision. Prism 11 script import was observed to save 15 significant digits (maximum difference in the owner test: 3.7e-13 response units). No repository dataset is changed.',
   ];
   const provenance={...exported.provenance,format:'Target Atlas native Prism handoff',native_fit:{equation:'Y=Bottom+(Top-Bottom)/(1+10^((LogEC50-X)*HillSlope))',weighting:'unweighted selected observations',constraints:[],x_unit:'log10(M)',axes},native_notes:notes};
-  const readme=`TARGET ATLAS — PRISM 11 FOR MAC\n\n1. Unzip and keep all files together.\n2. Double-click Open_in_Prism.command. Terminal opens briefly and starts Prism.\n3. Open Atlas_Result.prism from this folder when the script finishes.\n\nDo not open Atlas_Input.prism directly: it is an intermediate first-series project; the script adds the other series and applies labels and axes. No copying, pasting or analysis setup is needed.\nIf the script stops, keep Run_Atlas_Prism.log and report its first error. The launcher uses only your installed Prism; no uploads or installations.\n\n${notes.join('\n\n')}\n`;
+  const readme=`TARGET ATLAS — PRISM 11 FOR WINDOWS AND MAC\n\n1. Extract the entire ZIP and keep all files together.\n2. Windows: double-click Open_in_Prism.bat. Mac: double-click Open_in_Prism.command.\n3. Open Atlas_Result.prism from this folder when Prism finishes its script.\n\nWindows uses built-in Windows PowerShell and looks for Prism 11 in standard installation folders. If needed, a picker asks you to select the installed prism.exe. It does not install Prism or change security settings. The console may open before the Prism window; wait for the script to finish.\n\nDo not open Atlas_Input.prism directly: it is an intermediate first-series project; the script adds the other series and applies labels and axes. No copying, pasting or analysis setup is needed.\nIf the script stops, keep Run_Atlas_Prism_Windows.log (Windows) or Run_Atlas_Prism.log (Mac) and report its first error. The launcher uses only your installed Prism; no uploads or installations.\n\nThe native workflow has been verified in Prism 11 on Mac. Windows packaging follows GraphPad's documented prism.exe @script.pzc interface; a Windows Prism result still needs native confirmation.\n\n${notes.join('\n\n')}\n`;
   return {script:script.join('\n'),axes,provenance,table,entries:[
-   {name:'Open_in_Prism.command',data:launcher,executable:true},{name:'Open_in_Prism.pzc',data:script.join('\n')},
+   {name:'Open_in_Prism.command',data:launcher,executable:true},{name:'Open_in_Prism.bat',data:windowsLauncher},{name:'Open_in_Prism.pzc',data:script.join('\n')},
    {name:'README.txt',data:readme},{name:'provenance.json',data:JSON.stringify(provenance,null,2)},
    {name:'selected-data.pzfx',data:exported.pzfx},{name:'original-values.csv',data:exported.csv}]};
  }
@@ -152,6 +179,6 @@ open -b com.GraphPad.Prism "$prism_task_script"
   const url=URL.createObjectURL(new Blob([data],{type:'application/zip'})),a=document.createElement('a');a.href=url;a.download=name.replace(/[^a-z0-9._-]/gi,'_')+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   return result;
  }
- function help(){return '<details class="prism-handoff"><summary>Open the graph in Prism 11 (Mac)</summary><p>Choose <strong>Prism graph + 4PL (Mac)</strong>, unzip the download, then double-click <strong>Open_in_Prism.command</strong>. Open <strong>Atlas_Result.prism</strong> when it finishes.</p><p>Creates a new independent, unweighted 4PL for each selected series. Review fit warnings and confidence intervals in Prism. The native graph uses template colors and error-bar settings; Atlas styling is retained in PNG/SVG exports. X uses log₁₀(M); manual limits carry over.</p><p>Up to 48 observations per dose. For larger pooled selections, use the data-only .pzfx download. The package also includes original values, displayed mean/SD/n and source provenance. No data are uploaded.</p></details>';}
+ function help(){return '<details class="prism-handoff"><summary>Open the graph in Prism 11 · Windows or Mac</summary><p>Choose <strong>Prism graph + 4PL</strong> and extract the entire ZIP. <strong>Windows:</strong> double-click <strong>Open_in_Prism.bat</strong>. <strong>Mac:</strong> double-click <strong>Open_in_Prism.command</strong>. Open <strong>Atlas_Result.prism</strong> when Prism finishes. If Windows asks, select your installed Prism 11 program (prism.exe).</p><p>Creates a new independent, unweighted 4PL for each selected series. Review fit warnings and confidence intervals in Prism. The native graph uses template colors and error-bar settings; Atlas styling is retained in PNG/SVG exports. X uses log₁₀(M); manual limits carry over.</p><p>Up to 48 observations per dose. For larger pooled selections, use the data-only .pzfx download. The package also includes original values, displayed mean/SD/n and source provenance. No data are uploaded. Windows native results are awaiting confirmation.</p></details>';}
  const api={zip,build,download,limits,help,populateInput};root.AtlasPrismNative=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(globalThis);
