@@ -1,0 +1,34 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{execFileSync}=require('node:child_process');
+const root=path.resolve(__dirname,'..'),P=require('../prism-export.js'),R=require('../run-comparison.js');
+const source=(name)=>JSON.parse(fs.readFileSync(path.join(root,name),'utf8'));
+const q1=source('cyclind1-bio1-A.json').curves.find(q=>q.compound==='RMC-0741051-001'),q2=source('cyclind1-bio2-A.json').curves.find(q=>q.compound==='RMC-0741051-001');
+const rows=[q1,q2].map((q,i)=>({...q,series_id:'reference-'+i,series_label:'RMC-0741051-001 · Rep '+(i+1),benchling_id:'EXP26003438',biological_replicate:i+1,condition_label:'No CypA inhibitor',plate_group:'Provided D1 plate aggregate',source_compound:q.compound,error_bar_basis:'Within-run supplied-well sample SD'}));
+const before=JSON.stringify(rows),result=P.build(rows);
+assert.equal(JSON.stringify(rows),before,'export must not mutate measurements or labels');
+assert.equal(result.tables[0].datasets.length,2);
+assert.equal(result.tables[0].datasets[0].columns.length,48);
+for(let i=0;i<2;i++)for(let dose=0;dose<rows[i].doses.length;dose++)for(let well=0;well<rows[i].doses[dose].wells.length;well++)assert.equal(result.tables[0].datasets[i].columns[well].values[dose],rows[i].doses[dose].wells[well]);
+assert.equal(result.provenance.series[0].source_compound,'RMC-0741051-001');
+const bio=R.biologicalSummary(rows),b=P.build(bio);
+assert.equal(b.tables[0].datasets[0].columns.length,2);
+assert.equal(b.tables[0].datasets[0].columns[0].values[0],q1.doses[0].mean);
+assert.equal(b.tables[0].datasets[0].columns[1].values[0],q2.doses[0].mean);
+assert.equal(b.tables[1].datasets[0].columns[1].values[0],bio[0].doses[0].sd);
+const pooled=R.pooledSummary(rows),p=P.build(pooled);
+assert.equal(p.tables[0].datasets[0].columns.length,96);
+assert(p.pzfx.includes('<HugeTable ID="Table0"'));
+assert.equal(p.tables[0].datasets[0].columns[48].values[0],q2.doses[0].wells[0]);
+assert.equal(p.tables[1].datasets[0].columns[2].values[0],96);
+// A missing biological run at a dose stays in its own blank subcolumn.
+const missing=structuredClone(rows);missing[0].doses=missing[0].doses.slice(1);
+const m=P.build(R.biologicalSummary(missing));assert.equal(m.tables[0].datasets[0].columns.find(c=>c.source_series_id==='reference-0').values[0],null);
+assert.equal(m.tables[1].datasets[0].columns[1].values[0],null);assert.equal(m.tables[1].datasets[0].columns[2].values[0],1);
+const special=[{series_id:'one',compound:'RMC-0732120-002',series_label:'A < B & "C"',condition_label:'B + inhibitor',doses:[{x:0,mean:0,sd:null,n:1,wells:[0]},{x:1,mean:2,sd:null,n:1,wells:[2]}]},{series_id:'two',compound:'RMC-0732120-001',doses:[{x:.5,mean:3,sd:null,n:1,wells:[3]}]}];
+const s=P.build(special);assert.deepEqual(s.tables[0].x,[0,.5,1]);assert.deepEqual(s.tables[0].datasets[0].columns[0].values,[0,null,2]);assert(s.pzfx.includes('A &lt; B &amp; &quot;C&quot;'));assert(s.csv.includes('0,0,'));assert(s.tsv.includes('RMC-0732120-001'));assert(s.pzfx.includes('<d/>'));
+const I=require('../selectivity-identity.js'),sel=I.prepare(source('sample.json'),{referencePlate:'all'});const plateRows=sel.curves.filter(q=>q.compound==='RMC-0741051-001'&&q.target==='Cyclin D3').map(q=>({...q,series_id:'plate-'+q.plate_number,series_label:q.compound+' plate '+q.plate_number,plate_group:String(q.plate_number)}));const plates=P.build(plateRows);assert.equal(plates.tables[0].datasets.length,2);assert.deepEqual(new Set(plates.provenance.series.map(q=>q.source_compound)),new Set(['RMC-0741051-001','RMC-0741051-002']));assert.deepEqual(plates.provenance.series.map(q=>q.report?.qualifier),plateRows.map(q=>q.report?.qualifier));assert(plates.provenance.series.every(q=>q.compound==='RMC-0741051-001'));
+assert.throws(()=>P.build([]),/Choose/);
+assert.throws(()=>P.build([{doses:[{x:1,mean:1},{x:1,mean:2}]}]),/Duplicate concentration/);
+// Round-trip through a real XML parser validates exact finite values and blank cells.
+const out='/tmp/atlas-prism-export-test.pzfx';fs.writeFileSync(out,p.pzfx);
+execFileSync('python3',['-c',`import xml.etree.ElementTree as E\nr=E.parse('${out}').getroot()\nassert r.tag=='GraphPadPrismFile'\nt=r.find('HugeTable')\nassert t.attrib['Replicates']=='96'\nassert len(t.find('YColumn').findall('Subcolumn'))==96\nassert r.find("Table[@ID='Table1']").attrib['YFormat']=='SDN'\nassert r.find('Info/Notes').text.startswith('Data-only Prism XML export')\n`]);
+console.log('PASS: Prism XML XY tables; all supplied well values; biological mean subcolumns; 96-well HugeTable; exact mean/SD/n; missing blanks and zero; separate batches; escaped labels; embedded provenance; source immutability');

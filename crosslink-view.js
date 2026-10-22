@@ -163,5 +163,5 @@ const AtlasCrosslink=(()=>{
   AtlasCrosslinkCompare.render({host:$('xlinkCompare'),data});
   update();select(selected);
  }
- return {load,render,compact,scatter,adductPlot,compoundDetails,csvRows,matchingRecords};
+ return {load,render,compact,scatter,adductPlot,adductTable,compoundDetails,csvRows,matchingRecords};
 })();

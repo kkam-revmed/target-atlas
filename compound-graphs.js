@@ -52,7 +52,7 @@ const AtlasCompoundGraphs=(()=>{
   if(showControl)body+=line(left,y(100),width-right,y(100),'#55716c','data-reference="normalization-100" data-response="100" stroke-width="1.4" stroke-dasharray="10 5"');
   const xt=AtlasGraphFormat.logTicks(xd);
   for(const v of [...new Set(xt)])body+=line(x(v),bottom,x(v),bottom+5,'#000')+text(x(v),bottom+21,F(v),'text-anchor="middle" class="axis-tick"');
-  body+=text((left+width-right)/2,bottom+43,'Concentration (µM, log scale)','text-anchor="middle" class="axis-title"')+`<text transform="translate(16 ${(top+bottom)/2}) rotate(-90)" text-anchor="middle" class="axis-title">${E(data.response_mode==='ratio'?'Ratio-normalized response (%)':'Corrected response')}</text>`;
+  body+=text((left+width-right)/2,bottom+43,'Concentration (µM, log scale)','text-anchor="middle" class="axis-title"')+`<text transform="translate(16 ${(top+bottom)/2}) rotate(-90)" text-anchor="middle" class="axis-title">${E(data.response_axis_label||(data.response_mode==='ratio'?'Ratio-normalized response (%)':'Corrected response'))}</text>`;
   const path=points=>points.map(([d,v],i)=>(i?'L':'M')+x(d).toFixed(3)+','+y(v).toFixed(3)).join(' ');
   const clipId='graph-clip-'+String(benchling+'-'+target+'-'+rows.map(q=>q?.series_id||q?.compound).join('-')).replace(/[^a-z0-9_-]/gi,'_');
   body+=`<defs><clipPath id="${clipId}"><rect x="${left}" y="${top}" width="${width-left-right}" height="${bottom-top}"/></clipPath></defs><g clip-path="url(#${clipId})">`;

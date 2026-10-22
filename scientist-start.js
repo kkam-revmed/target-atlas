@@ -5,7 +5,7 @@
   const panel = document.getElementById('scientistStart');
   if (!panel) return;
   const requestedView = new URLSearchParams(location.search).get('view');
-  panel.open = !requestedView || requestedView === 'overview';
+  panel.open = requestedView === 'overview';
   const main = document.querySelector('main');
   new MutationObserver(() => {
     if (main.classList.contains('focused-view')) panel.open = false;

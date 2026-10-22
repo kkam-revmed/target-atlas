@@ -13,6 +13,12 @@ Target Atlas uses the applicable in-vitro conventions from the owner-supplied **
 
 ## Axes and exports
 
+The compound workspace and matched CypA comparison have a **Graph options** menu beside the figure (immediately above it on mobile). Choose technical wells, separate biological runs with technical means, combined biological means, or pooled technical/biological wells. Choose measured curves with no 4PL, 4PL curves, or both. Conditions and plate groups remain separate. The menu explains the selected SD basis.
+
+Each displayed series has its own color picker. Colors are remembered during the current mounted comparison, including switching away from a replicate mode and back. **Reset colors** restores defaults. Both PNG and SVG use the current colors; changing color does not change data, SD or fits. CypA selections and display settings survive viewport resizing.
+
+**Download Prism data (.pzfx)** transfers the selected measurements and provenance as Prism tables. It does not create Prism graphs or analyses. See [Prism handoff](PRISM_HANDOFF.md) for Mac Prism 11 and the template requirement for automatic graph creation.
+
 Open **Axes & export** beside a dose-response, CypA, orientation or crosslinking figure. Set X/Y minimum and maximum, then choose **Apply axes**. Blank fields use automatic limits; **Reset to automatic** restores them. Concentration limits must be positive. Minimum must be less than maximum. Adduct distribution has a numeric X axis and categorical condition rows, so only X limits are editable.
 
 Custom limits replot and clip the figure; a visible annotation states that values outside the range are hidden. Measurements, SD, fits, data tables and selected-data CSV exports are unchanged. Changing limits does not refit or normalize data. A control outside the chosen Y range is omitted rather than moved to the plot edge. Limits are retained for that graph during the current page session, not saved to the supplied dataset. A custom range can intentionally override the common automatic range.
