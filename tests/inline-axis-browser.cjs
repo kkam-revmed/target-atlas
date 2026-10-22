@@ -5,7 +5,7 @@ try{
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--disable-dev-shm-usage']});const page=await browser.newPage({viewport:{width:1440,height:1000},acceptDownloads:true}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  for(const [url,selector,exportID] of [['?view=runComparison','#runGraph','#runSVG'],['?view=biologicalReplicates&experiment=EXP26003438','#cypaPlot','#cypaExport']]){
-  await page.goto(base+url);const editor=page.locator(selector+' [data-graph-editor]');await editor.locator('svg').waitFor();const y=editor.locator('[data-inline-axis="y"]'),x=editor.locator('[data-inline-axis="x"]');
+  await page.goto(base+url);if(url.includes('runComparison'))await require('./select-workspace.cjs')(page);const editor=page.locator(selector+' [data-graph-editor]');await editor.locator('svg').waitFor();const y=editor.locator('[data-inline-axis="y"]'),x=editor.locator('[data-inline-axis="x"]');
   const meta=()=>editor.locator('metadata').evaluate(el=>JSON.parse(el.textContent)),before=await meta();
   await y.locator('[data-axis-toggle]').click();await y.locator('[data-quick-preset]').selectOption('0,200');await y.locator('[data-quick-action="apply"]').click();assert.equal((await meta()).display_axes.y_max,200);assert.equal(await editor.locator('[data-axis-field="yMax"]').inputValue(),'200');assert.deepEqual((await meta()).curves,before.curves);
   await page.keyboard.press('Escape');assert(await y.locator('.inline-axis-panel').isHidden());assert(await y.locator('[data-axis-toggle]').evaluate(e=>e===document.activeElement));

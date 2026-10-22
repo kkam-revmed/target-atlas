@@ -6,7 +6,7 @@ try{
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--disable-dev-shm-usage']});const page=await browser.newPage({viewport:{width:1440,height:1000},acceptDownloads:true}),errors=[];page.on('pageerror',e=>errors.push(e.message));
  for(const c of [{url:'?view=runComparison',colors:'#runColors',plot:'#runGraph',svg:'#runSVG',png:'#runPNG',mode:'#runMode'},{url:'?view=biologicalReplicates&experiment=EXP26003438',colors:'#cypaGraphColors',plot:'#cypaPlot',svg:'#cypaExport',mode:'#cypaGraphMode'}]){
-  await page.setViewportSize({width:1440,height:1000});await page.goto(base+c.url);const plot=page.locator(c.plot),colors=page.locator(c.colors);await plot.locator('svg').waitFor();
+  await page.setViewportSize({width:1440,height:1000});await page.goto(base+c.url);if(c.url.includes('runComparison'))await require('./select-workspace.cjs')(page);const plot=page.locator(c.plot),colors=page.locator(c.colors);await plot.locator('svg').waitFor();
   const snapshot=()=>plot.locator('svg').evaluate(svg=>({metadata:JSON.parse(svg.querySelector('metadata').textContent),values:[...svg.querySelectorAll('[data-dose]')].map(e=>[e.dataset.dose,e.dataset.mean,e.dataset.sd])}));
   const before=await snapshot(),defaults=await colors.locator('[data-graph-color]').evaluateAll(es=>es.map(e=>e.value));
   assert.deepEqual(await page.evaluate(()=>AtlasGraphOptions.bdrPalette.map(p=>p[1])),expected);

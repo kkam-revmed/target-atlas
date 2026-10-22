@@ -41,7 +41,7 @@ async function verifyCypaValues(plot,compound,mode){
   const cases=[{name:'workspace',url:'?view=runComparison',prefix:'run',plot:'#runGraph',svg:'#runSVG',counts:[4,4,2,2]},
    {name:'cypa',url:'?view=biologicalReplicates&experiment=EXP26003438',prefix:'cypaGraph',plot:'#cypaPlot',svg:'#cypaExport',counts:[4,4,2,2]}];
   for(const c of cases.filter(c=>!process.env.GRAPH_OPTIONS_WORKSPACE_ONLY||c.name==='workspace')){
-   await page.setViewportSize({width:1440,height:1000});await page.goto(base+c.url);const plot=page.locator(c.plot);await plot.locator('svg').waitFor();if(c.name==='cypa')await page.locator('#cypaCompound').selectOption(cypaSource.reference);
+   await page.setViewportSize({width:1440,height:1000});await page.goto(base+c.url);if(c.url.includes('runComparison'))await require('./select-workspace.cjs')(page);const plot=page.locator(c.plot);await plot.locator('svg').waitFor();if(c.name==='cypa')await page.locator('#cypaCompound').selectOption(cypaSource.reference);
    const mode=page.locator('#'+c.prefix+'Mode'),style=page.locator('#'+c.prefix+'Style'),wells=page.locator('#'+c.prefix+'Wells'),colors=page.locator('#'+c.prefix+'Colors');
    await mode.waitFor();await mode.selectOption('individual');await style.selectOption('both');
    const snapshots=()=>plot.locator('svg').evaluate(svg=>({metadata:JSON.parse(svg.querySelector('metadata').textContent),values:[...svg.querySelectorAll('[data-dose]')].map(e=>[e.dataset.dose,e.dataset.mean,e.dataset.sd])}));

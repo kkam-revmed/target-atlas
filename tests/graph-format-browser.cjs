@@ -5,7 +5,7 @@ try{
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox','--disable-dev-shm-usage']});
  const page=await browser.newPage({viewport:{width:1440,height:1000},acceptDownloads:true}),errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto(base+'?view=runComparison');await page.locator('#runGraph svg').waitFor();await page.locator('#runAssay').selectOption('both');
+ await page.goto(base+'?view=runComparison');await require('./select-workspace.cjs')(page);await page.locator('#runGraph svg').waitFor();await page.locator('#runAssay').selectOption('both');
  const editor=page.locator('#runGraph [data-graph-editor]'),meta=()=>editor.locator('metadata').evaluate(e=>JSON.parse(e.textContent));
  const before=await meta(),data=await editor.locator('[data-dose]').evaluateAll(es=>es.map(e=>[e.dataset.dose,e.dataset.mean,e.dataset.sd]));
  const style=await editor.locator('.axis-tick').first().evaluate(e=>{const s=getComputedStyle(e);return [s.fontFamily,s.fontWeight,s.fontSize,s.fill];});

@@ -140,7 +140,7 @@ open -b com.GraphPad.Prism "$prism_task_script"
    // Prism registers each additional series through its supported script API.
    if(i>0)dataset.columns.forEach((column,s)=>column.values.forEach((value,r)=>{if(finite(value))insert(r+1,i+1,s+1,value);}));
   }
-  const yTitle=options.yTitle==='NanoBRET normalized (%)'?'NanoBRET normalized (%)':label(options.yTitle||'Corrected response');
+  const yTitle=['NanoBRET normalized (%)','NanoBRET normalized response (%)'].includes(options.yTitle)?options.yTitle:label(options.yTitle||'Corrected response');
   script.push('RecalcAll','GoTo R 1','SetTitle "Independent agonist 4PL"','GoTo G 1',
    `SetTitle "${label(options.title||'Atlas selected comparison')}"`,
    `SetGraphTitle "${label(options.title||'Atlas selected comparison')}"`,
