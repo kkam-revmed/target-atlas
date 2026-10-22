@@ -24,12 +24,13 @@ const root=process.env.ATLAS_ROOT||require('node:path').resolve(__dirname,'..');
     const ready=async()=>{
       await page.waitForFunction(()=>!document.querySelector('#demo').disabled && document.querySelector('#status').hidden && document.querySelector('#metrics').textContent.trim(),{timeout:60000});
     };
-    await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});
+    await page.goto('http://127.0.0.1:4173/?view=overview',{waitUntil:'networkidle'});
     await ready();
     await page.locator('#studySelect').selectOption('EXP26007301');await ready();
     assert(await page.locator('#metrics').innerText());
     const checks=['default overview'];
     async function view(id,selector){
+      await page.locator('nav details').evaluateAll(es=>es.forEach(e=>e.open=true));
       await page.locator(`nav [data-view="${id}"]`).click();
       await page.waitForFunction(({id,selector})=>{
         const el=document.querySelector('#'+id);

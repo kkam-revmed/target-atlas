@@ -8,7 +8,9 @@ try{
  for(const width of [1440,390,320]){
   const page=await browser.newPage({viewport:{width,height:1000},acceptDownloads:true}),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'?view=curves&experiment=EXP26003438&replicate=1&condition=B');await page.locator('#curveGrid svg').first().waitFor();
-  await page.locator('#compareCompoundGraphs').click();await page.locator('#graphCards svg').waitFor();
+  await page.locator('#compareCompoundGraphs').click();await page.locator('#runGraph svg').waitFor();assert.equal(await page.locator('#runAssay').inputValue(),'d1','The primary compare button opens the explicit compound workspace');
+  // Retain independent coverage of the legacy multi-compound graph view.
+  await page.goto(base+'?view=compoundGraphs&experiment=EXP26003438&replicate=1&condition=B');await page.locator('#graphCards svg').waitFor();
   await page.locator('#graphClear').click();assert.equal(await page.locator('#graphCards svg').count(),0);
   const supplied=JSON.parse(fs.readFileSync(path.join(root,'cyclind1.json'),'utf8')),ids=supplied.compounds.slice(0,7);
   const partialMatches=[...new Set(supplied.compounds.filter(id=>id.includes('051')).map(id=>id.replace(/-\d{3,}$/,'')))].sort();

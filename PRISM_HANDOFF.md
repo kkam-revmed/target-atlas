@@ -45,8 +45,31 @@ evidence of a well-constrained EC50. The 100% control does not fix a fit paramet
 X values are converted from supplied µM to log10(M); the original µM values remain
 in companion files. Automatic axes cover the selected dose range and means ±
 sample SD. Applied manual limits take precedence without removing any data.
-The native CypA graph uses NanoBRET normalized (%); the workspace export labels
-its supplied corrected-response basis explicitly.
+Both native CypA and workspace graphs use **NanoBRET normalized response (%)**.
+This is a presentation label: original corrected/normalized source bases remain
+explicit in the exported provenance, and export does not renormalize the values.
+
+## Reading the columns in Prism
+
+Open **Info → Atlas column guide and analysis** in a newly generated project.
+The readable guide maps each dataset and observation slot (for example A:Y1)
+to its input type, biological run, date and available plate/source information.
+Y1 is an observation slot, not automatically biological replicate 1. In pooled
+mode with two supplied wells from each of two runs, Y1–Y2 belong to the first
+run and Y3–Y4 to the second; the guide is generated from each actual selection
+rather than assuming those counts. Blank template slots are identified separately.
+
+The Info sheet also explains mean, sample SD, n, the selected aggregation mode,
+the fitted 4PL parameters and how Prism's observation-weighted fit can differ
+from an Atlas fit to one displayed mean per concentration. Exact physical well
+coordinates are not retained in the plotted-value export, so the guide does not
+claim that a slot is a fixed well coordinate or a matched subject across doses.
+
+The ZIP includes **COLUMN_GUIDE.txt** and **column-map.csv** for sharing/searching.
+The native project's notes describe its table, analysis and graph. Data-only
+limitations are separately labeled as notes for the companion selected-data.pzfx.
+Previously downloaded projects do not gain this guide automatically; create a
+fresh export and run its launcher to produce the new Atlas_Result.prism.
 
 The first series is inserted as full-precision native CSV using the same
 metadata structure as the validated single-compound generator. Prism registers

@@ -13,6 +13,10 @@ assert.deepEqual(map.map(c=>c.run_date),['2026-10-09','2026-10-09','2026-10-15',
 assert(map.every(c=>c.plate_group==='1'&&c.observation_type==='Individual well value'));
 assert(map.every(c=>c.physical_plate!=='Not supplied'&&c.source_files!=='Not supplied'));
 const guide=result.provenance.column_guide;
+assert(result.provenance.notes.some(note=>note.includes('native Prism 11 table')));
+assert(!result.provenance.notes.some(note=>note.includes('Data-only Prism XML export')),'Native project notes must describe its graph and analysis, not the data-only companion');
+assert(result.provenance.companion_data_export_notes.some(note=>note.includes('Data-only Prism XML export')),'Data-only limitations remain explicitly scoped to the companion export');
+assert(P.build(pooled).provenance.notes.some(note=>note.includes('Data-only Prism XML export')),'The data-only download must retain its own limitations');
 for(const text of ['A:Y5 through A:Y48 = unused','Y1 does NOT automatically mean biological replicate 1','not independent biological replicates','Bottom, Top, LogEC50 and HillSlope are free','Check Format Graph','not retained','96 wells'])assert(guide.includes(text),text);
 assert(result.entries.find(e=>e.name==='COLUMN_GUIDE.txt').data===guide);
 assert(result.entries.find(e=>e.name==='column-map.csv').data.includes('"A:Y3"'));

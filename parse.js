@@ -4,6 +4,24 @@ globalThis.AtlasInput = (() => {
   const num = v => v === null || v === undefined || String(v).trim() === '' ? null : Number.isFinite(Number(v)) ? Number(v) : null;
   const yes = v => ['true','yes','1','masked','x'].includes(String(v ?? '').trim().toLowerCase());
   const masked = v => {const text=String(v??'').trim().toLowerCase();return text!==''&&!['false','no','0'].includes(text);};
+  // Tidy imports describe one run/condition/plate context. Never discard explicit
+  // experimental identifiers and then pool their values as technical wells.
+  function tidyContext(headers,rows,name){
+    const aliases={biological_replicate:'biological_run',biological_rep:'biological_run',biological_run:'biological_run',run:'biological_run',run_id:'biological_run',
+      experiment:'experiment',experiment_id:'experiment',benchling_id:'experiment',condition:'condition',condition_code:'condition',treatment:'condition',
+      plate:'plate',plate_id:'plate',physical_plate:'plate',plate_number:'plate',plate_group:'plate_group',
+      time:'time',time_point:'time',timepoint:'time',time_hours:'time',time_point_h:'time',assay:'assay',assay_id:'assay'};
+    const context={};
+    headers.forEach((header,index)=>{
+      const key=aliases[header.replace(/[\s-]+/g,'_')];if(!key)return;
+      const values=rows.map(row=>String(row[index]??'').trim()),distinct=[...new Set(values.filter(Boolean))];
+      if(distinct.length>1||(distinct.length&&values.some(value=>!value)))throw new Error(`${name}: ${header} contains mixed or missing experimental context. Import each biological run, condition, plate and time point separately, with its context filled in consistently. No rows from this file were imported.`);
+      if(!distinct.length)return;
+      if(context[key]&&context[key]!==distinct[0])throw new Error(`${name}: conflicting ${key} context columns. Use one consistent identifier and import separate runs, conditions, plates and time points separately. No rows from this file were imported.`);
+      context[key]=distinct[0];
+    });
+    return context;
+  }
   function csvRows(text) {
     text = text.replace(/^\uFEFF/,'');
     const separator = text.split(/\r?\n/)[0].includes('\t') ? '\t' : ',';
@@ -104,10 +122,11 @@ globalThis.AtlasInput = (() => {
     if(ext==='csv') {
       const rows=csvRows(decoder.decode(bytes)),headers=(rows.shift()||[]).map(v=>v.trim().toLowerCase());
       for(const col of ['compound','target','concentration_um','response'])if(!headers.includes(col))throw new Error('CSV needs compound,target,concentration_um,response headers. Optional: replicate,masked,ignored.');
+      const context=tidyContext(headers,rows,name),contextEntries=Object.entries(context).sort(([a],[b])=>a.localeCompare(b)),contextText=contextEntries.map(([key,value])=>key+'='+value).join('; ');
       const wells=rows.map((r,i)=>{const v=key=>r[headers.indexOf(key)],compound=String(v('compound')||'').trim(),target=String(v('target')||'').trim(),x=num(v('concentration_um')),y=num(v('response'));
         if(!compound||!target||x===null||x<0||y===null)throw new Error(`${name}, row ${i+2}: identifiers, nonnegative concentration and numeric response are required.`);
-        return {compound,target,transfection:target,x,y,replicate:v('replicate')||'',excluded:yes(v('masked'))||yes(v('ignored')),source:name,source_row:i+2};});
-      return {wells,parameters:[],raw_plate_records:[],notes:[]};
+        return {compound,target,transfection:target+(contextText?' · CSV context '+JSON.stringify(contextEntries):''),...(contextText?{import_context:{...context}}:{}),x,y,replicate:v('replicate')||'',excluded:yes(v('masked'))||yes(v('ignored')),source:name,source_row:i+2};});
+      return {wells,parameters:[],raw_plate_records:[],notes:contextText?[`${name}: explicit CSV context retained: ${contextText}. The replicate column, if present, labels technical wells; it is not a biological-run grouping.`]:[]};
     }
     if(ext!=='xlsx')throw new Error('Upload .xlsx analyzer exports or a tidy .csv file.');
     return gdsRows(await excelRows(bytes),name);

@@ -23,7 +23,7 @@ function csv(text){return text.replace(/^\uFEFF/,'').split(/\r?\n/).map(line=>{c
   const page=await browser.newPage({viewport:{width:1440,height:1000},acceptDownloads:true}),errors=[];page.on('pageerror',e=>errors.push(e.message));
   const goto=async(rep,condition)=>{await page.goto(base+`?view=overview&experiment=EXP26003438&replicate=${rep}&condition=${condition}&cmax=120&ec50=all&includeReference=false`);await page.locator('#potencySummary table').waitFor();};
   await goto(2,'B');
-  assert.deepEqual(await page.locator('#d1Replicate option').allTextContents(),['Replicate 1 · 2 Sep 2026','Replicate 2 · 3 Sep 2026']);
+  assert.deepEqual(await page.locator('#d1Replicate option').allTextContents(),['Replicate 1 · 2 Sep 2026','Replicate 2 · 3 Sep 2026','Compare replicates 1 & 2']);
   const counts=async id=>page.locator(id+' tbody td').evaluateAll(els=>els.map(e=>Number((e.querySelector('button')||e.querySelector('span')).textContent)));
   assert.deepEqual(await counts('#potencySummary'),[4,35,104,47,0,0]);
   assert.deepEqual(await counts('#potencyRefitSummary'),[16,36,31,47,0]);
